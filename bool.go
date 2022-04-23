@@ -13,6 +13,14 @@ type booleanType struct {
 	reflectValue *reflect.Value
 }
 
+func (b *booleanType) Name() string {
+	return b.reflectType.Name()
+}
+
+func (b *booleanType) PackageName() string {
+	return ""
+}
+
 func (b *booleanType) HasReference() bool {
 	return b.reflectValue != nil
 }

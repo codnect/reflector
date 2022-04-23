@@ -72,6 +72,14 @@ type signedInteger struct {
 	reflectValue *reflect.Value
 }
 
+func (s *signedInteger) Name() string {
+	return s.reflectType.Name()
+}
+
+func (s *signedInteger) PackageName() string {
+	return s.reflectType.Name()
+}
+
 func (s *signedInteger) HasReference() bool {
 	return s.reflectValue != nil
 }
@@ -118,6 +126,14 @@ type unsignedInteger struct {
 
 	reflectType  reflect.Type
 	reflectValue *reflect.Value
+}
+
+func (s *unsignedInteger) Name() string {
+	return s.reflectType.Name()
+}
+
+func (s *unsignedInteger) PackageName() string {
+	return s.reflectType.Name()
 }
 
 func (s *unsignedInteger) HasReference() bool {
@@ -168,36 +184,44 @@ type float struct {
 	reflectValue *reflect.Value
 }
 
-func (s *float) HasReference() bool {
-	return s.reflectValue != nil
+func (f *float) Name() string {
+	return f.reflectType.Name()
 }
 
-func (s *float) ReflectType() reflect.Type {
-	return s.reflectType
+func (f *float) PackageName() string {
+	return f.reflectType.Name()
 }
 
-func (s *float) ReflectValue() *reflect.Value {
-	return s.reflectValue
+func (f *float) HasReference() bool {
+	return f.reflectValue != nil
 }
 
-func (s *float) BitSize() BitSize {
-	return s.bitSize
+func (f *float) ReflectType() reflect.Type {
+	return f.reflectType
 }
 
-func (s *float) Value() float64 {
+func (f *float) ReflectValue() *reflect.Value {
+	return f.reflectValue
+}
+
+func (f *float) BitSize() BitSize {
+	return f.bitSize
+}
+
+func (f *float) Value() float64 {
 	return 0
 }
 
-func (s *float) SetValue(v float64) {
+func (f *float) SetValue(v float64) {
 
 }
 
-func (s *float) Overflow(v float64) bool {
+func (f *float) Overflow(v float64) bool {
 	return false
 }
 
-func (s *float) Instantiate() any {
-	return reflect.New(s.reflectType).Interface()
+func (f *float) Instantiate() any {
+	return reflect.New(f.reflectType).Interface()
 }
 
 type Complex interface {
@@ -215,6 +239,14 @@ type complex struct {
 
 	reflectType  reflect.Type
 	reflectValue *reflect.Value
+}
+
+func (s *complex) Name() string {
+	return s.reflectType.Name()
+}
+
+func (s *complex) PackageName() string {
+	return s.reflectType.Name()
 }
 
 func (s *complex) HasReference() bool {

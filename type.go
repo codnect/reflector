@@ -3,6 +3,8 @@ package reflector
 import "reflect"
 
 type Type interface {
+	Name() string
+	PackageName() string
 	HasReference() bool
 	ReflectType() reflect.Type
 	ReflectValue() *reflect.Value
@@ -92,7 +94,7 @@ func typeOf(typ reflect.Type, val *reflect.Value) Type {
 			reflectValue: val,
 		}
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-		return &signedInteger{
+		return &unsignedInteger{
 			bitSize:      bitSize(typ.Kind()),
 			reflectType:  typ,
 			reflectValue: val,

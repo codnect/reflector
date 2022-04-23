@@ -1,6 +1,8 @@
 package reflector
 
-import "reflect"
+import (
+	"reflect"
+)
 
 type Entry interface {
 	Key() any
@@ -40,6 +42,14 @@ type mapType struct {
 
 	reflectType  reflect.Type
 	reflectValue *reflect.Value
+}
+
+func (m *mapType) Name() string {
+	return m.reflectType.Name()
+}
+
+func (m *mapType) PackageName() string {
+	return ""
 }
 
 func (m *mapType) HasReference() bool {

@@ -14,6 +14,14 @@ type pointer struct {
 	reflectValue *reflect.Value
 }
 
+func (p *pointer) Name() string {
+	return p.reflectType.Name()
+}
+
+func (p *pointer) PackageName() string {
+	return ""
+}
+
 func (p *pointer) HasReference() bool {
 	return p.reflectValue != nil
 }

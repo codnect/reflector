@@ -13,6 +13,14 @@ type stringType struct {
 	reflectValue *reflect.Value
 }
 
+func (s *stringType) Name() string {
+	return s.reflectType.Name()
+}
+
+func (s *stringType) PackageName() string {
+	return ""
+}
+
 func (s *stringType) HasReference() bool {
 	return s.reflectValue != nil
 }

@@ -13,6 +13,14 @@ type interfaceType struct {
 	reflectValue *reflect.Value
 }
 
+func (i *interfaceType) Name() string {
+	return i.reflectType.Name()
+}
+
+func (i *interfaceType) PackageName() string {
+	return i.reflectType.Name()
+}
+
 func (i *interfaceType) HasReference() bool {
 	return i.reflectValue != nil
 }

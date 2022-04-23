@@ -1,6 +1,10 @@
 package reflector
 
-import "reflect"
+import (
+	"reflect"
+	"runtime"
+	"strings"
+)
 
 type Function interface {
 	Receiver() (Type, bool)
@@ -14,6 +18,34 @@ type Function interface {
 type functionType struct {
 	reflectType  reflect.Type
 	reflectValue *reflect.Value
+}
+
+func (f *functionType) Name() string {
+	name := runtime.FuncForPC(f.reflectValue.Pointer()).Name()
+	dotLastIndex := strings.LastIndex(name, ".")
+
+	if dotLastIndex != -1 {
+		return name[dotLastIndex+1:]
+	}
+
+	return name
+}
+
+func (f *functionType) PackageName() string {
+	name := runtime.FuncForPC(f.reflectValue.Pointer()).Name()
+	dotLastIndex := strings.LastIndex(name, ".")
+
+	if dotLastIndex != -1 {
+		name = name[:dotLastIndex]
+	}
+
+	slashLastIndex := strings.LastIndex(name, "/")
+
+	if slashLastIndex != -1 {
+		name = name[slashLastIndex+1:]
+	}
+
+	return name
 }
 
 func (f *functionType) HasReference() bool {

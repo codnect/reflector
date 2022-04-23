@@ -14,9 +14,16 @@ type Test[T any] interface {
 
 func main() {
 	name := map[string]string{}
-	x := reflector.TypeOf[Test[string]]()
+	x := reflector.TypeOfAny(Person{})
 
-	if str, ok := reflector.ToInterface(x); ok {
+	h := x.Name()
+	h = x.PackageName()
+
+	if h == "" {
+
+	}
+
+	if str, ok := reflector.ToStruct(x); ok {
 
 		if str.HasReference() {
 

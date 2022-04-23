@@ -18,6 +18,14 @@ type sliceType struct {
 	reflectValue *reflect.Value
 }
 
+func (s *sliceType) Name() string {
+	return s.reflectType.Name()
+}
+
+func (s *sliceType) PackageName() string {
+	return ""
+}
+
 func (s *sliceType) CanSet() bool {
 	if s.reflectValue == nil {
 		return false

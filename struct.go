@@ -1,6 +1,9 @@
 package reflector
 
-import "reflect"
+import (
+	"reflect"
+	"strings"
+)
 
 type Struct interface {
 	Type
@@ -15,6 +18,21 @@ type Struct interface {
 type structType struct {
 	reflectType  reflect.Type
 	reflectValue *reflect.Value
+}
+
+func (s *structType) Name() string {
+	return s.reflectType.Name()
+}
+
+func (s *structType) PackageName() string {
+	name := s.reflectType.PkgPath()
+	slashLastIndex := strings.LastIndex(s.reflectType.PkgPath(), "/")
+
+	if slashLastIndex != -1 {
+		name = name[slashLastIndex+1:]
+	}
+
+	return name
 }
 
 func (s *structType) HasReference() bool {
