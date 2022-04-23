@@ -8,30 +8,23 @@ type Person struct {
 	name string
 }
 
+type Test[T any] interface {
+	Find()
+}
+
 func main() {
 	name := map[string]string{}
-	x := reflector.TypeOfAny(name)
+	x := reflector.TypeOf[Test[string]]()
 
-	if str, ok := reflector.ToMap(x); ok {
+	if str, ok := reflector.ToInterface(x); ok {
 
-		str.Put("burak", "hello")
-
-		str.Contains("burak")
-
-		keys := str.KeySet()
-		values := str.EntrySet()
-
-		if keys == nil {
+		if str.HasReference() {
 
 		}
 
-		if values == nil {
+		fields := str.Methods()
 
-		}
-
-		len := str.Len()
-
-		if len == 1 {
+		if fields != nil {
 
 		}
 	}

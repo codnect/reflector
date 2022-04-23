@@ -10,6 +10,14 @@ type Type interface {
 
 func TypeOf[T any]() Type {
 	i := *new(T)
+	val := reflect.ValueOf(i)
+
+	if val.Kind() == reflect.Invalid {
+		iface := (*T)(nil)
+		typ := reflect.TypeOf(iface)
+		return typeOf(typ, nil).(Pointer).Elem()
+	}
+
 	typ := reflect.TypeOf(i)
 	return typeOf(typ, nil)
 }
@@ -39,9 +47,14 @@ func typeOf(typ reflect.Type, val *reflect.Value) Type {
 		return ptr
 	case reflect.Struct:
 		return &structType{
-			reflectType: typ,
+			reflectType:  typ,
+			reflectValue: val,
 		}
 	case reflect.Interface:
+		return &interfaceType{
+			reflectType:  typ,
+			reflectValue: val,
+		}
 	case reflect.Map:
 		return &mapType{
 			key:          typeOf(typ.Key(), val),
@@ -57,6 +70,10 @@ func typeOf(typ reflect.Type, val *reflect.Value) Type {
 		}
 		return sliceType
 	case reflect.Func:
+		return &functionType{
+			reflectType:  typ,
+			reflectValue: val,
+		}
 	case reflect.Chan:
 	case reflect.String:
 		return &stringType{
@@ -65,6 +82,30 @@ func typeOf(typ reflect.Type, val *reflect.Value) Type {
 		}
 	case reflect.Bool:
 		return &booleanType{
+			reflectType:  typ,
+			reflectValue: val,
+		}
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+		return &signedInteger{
+			bitSize:      bitSize(typ.Kind()),
+			reflectType:  typ,
+			reflectValue: val,
+		}
+	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+		return &signedInteger{
+			bitSize:      bitSize(typ.Kind()),
+			reflectType:  typ,
+			reflectValue: val,
+		}
+	case reflect.Float32, reflect.Float64:
+		return &float{
+			bitSize:      bitSize(typ.Kind()),
+			reflectType:  typ,
+			reflectValue: val,
+		}
+	case reflect.Complex64, reflect.Complex128:
+		return &complex{
+			bitSize:      bitSize(typ.Kind()),
 			reflectType:  typ,
 			reflectValue: val,
 		}

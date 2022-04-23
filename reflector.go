@@ -1,23 +1,15 @@
 package reflector
 
 func IsPointer(typ Type) bool {
-	_, ok := typ.(Pointer)
+	_, ok := typ.(*pointer)
 	return ok
 }
 
 func ToPointer(typ Type) (Pointer, bool) {
-	if ptr, ok := typ.(Pointer); ok {
+	if ptr, ok := typ.(*pointer); ok {
 		return ptr, true
 	}
 
-	return nil, false
-}
-
-func IsBasic(typ Type) bool {
-	return true
-}
-
-func ToBasic(typ Type) (Basic, bool) {
 	return nil, false
 }
 
@@ -35,18 +27,28 @@ func ToStruct(typ Type) (Struct, bool) {
 }
 
 func IsInterface(typ Type) bool {
-	return true
+	_, ok := typ.(*interfaceType)
+	return ok
 }
 
 func ToInterface(typ Type) (Interface, bool) {
+	if interfaceType, ok := typ.(*interfaceType); ok {
+		return interfaceType, true
+	}
+
 	return nil, false
 }
 
 func IsFunction(typ Type) bool {
-	return true
+	_, ok := typ.(Function)
+	return ok
 }
 
 func ToFunction(typ Type) (Function, bool) {
+	if functionType, ok := typ.(Function); ok {
+		return functionType, true
+	}
+
 	return nil, false
 }
 
@@ -108,6 +110,70 @@ func ToBoolean(typ Type) (Boolean, bool) {
 	}
 
 	return nil, false
+}
+
+func IsInteger(typ Type) bool {
+	return IsUnsignedInteger(typ) || IsSignedInteger(typ)
+}
+
+func IsSignedInteger(typ Type) bool {
+	_, ok := typ.(SignedInteger)
+	return ok
+}
+
+func ToSignedInteger(typ Type) (SignedInteger, bool) {
+	if signedIntegerType, ok := typ.(SignedInteger); ok {
+		return signedIntegerType, true
+	}
+
+	return nil, false
+}
+
+func IsUnsignedInteger(typ Type) bool {
+	_, ok := typ.(UnsignedInteger)
+	return ok
+}
+
+func ToUnsignedInteger(typ Type) (UnsignedInteger, bool) {
+	if unsignedIntegerType, ok := typ.(UnsignedInteger); ok {
+		return unsignedIntegerType, true
+	}
+
+	return nil, false
+}
+
+func IsFloat(typ Type) bool {
+	_, ok := typ.(Float)
+	return ok
+}
+
+func ToFloat(typ Type) (Float, bool) {
+	if floatType, ok := typ.(Float); ok {
+		return floatType, true
+	}
+
+	return nil, false
+}
+
+func IsComplex(typ Type) bool {
+	_, ok := typ.(Complex)
+	return ok
+}
+
+func ToComplex(typ Type) (Complex, bool) {
+	if complexType, ok := typ.(Complex); ok {
+		return complexType, true
+	}
+
+	return nil, false
+}
+
+func IsNumber(typ Type) bool {
+	return IsInteger(typ) || IsFloat(typ) || IsComplex(typ)
+}
+
+func IsBasic(typ Type) bool {
+	return IsBoolean(typ) || IsString(typ) || IsNumber(typ)
 }
 
 func IsInstantiable(typ Type) bool {
