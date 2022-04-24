@@ -14,6 +14,7 @@ type String interface {
 }
 
 type stringType struct {
+	parent       Type
 	reflectType  reflect.Type
 	reflectValue *reflect.Value
 }
@@ -28,6 +29,10 @@ func (s *stringType) PackageName() string {
 
 func (s *stringType) HasValue() bool {
 	return s.reflectValue != nil
+}
+
+func (s *stringType) Parent() Type {
+	return s.parent
 }
 
 func (s *stringType) ReflectType() reflect.Type {

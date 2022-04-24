@@ -71,6 +71,7 @@ type SignedInteger interface {
 type signedInteger struct {
 	bitSize BitSize
 
+	parent       Type
 	reflectType  reflect.Type
 	reflectValue *reflect.Value
 }
@@ -85,6 +86,10 @@ func (s *signedInteger) PackageName() string {
 
 func (s *signedInteger) HasValue() bool {
 	return s.reflectValue != nil
+}
+
+func (s *signedInteger) Parent() Type {
+	return s.parent
 }
 
 func (s *signedInteger) ReflectType() reflect.Type {
@@ -186,6 +191,7 @@ type UnsignedInteger interface {
 type unsignedInteger struct {
 	bitSize BitSize
 
+	parent       Type
 	reflectType  reflect.Type
 	reflectValue *reflect.Value
 }
@@ -200,6 +206,10 @@ func (u *unsignedInteger) PackageName() string {
 
 func (u *unsignedInteger) HasValue() bool {
 	return u.reflectValue != nil
+}
+
+func (u *unsignedInteger) Parent() Type {
+	return u.parent
 }
 
 func (u *unsignedInteger) ReflectType() reflect.Type {
@@ -301,6 +311,7 @@ type Float interface {
 type float struct {
 	bitSize BitSize
 
+	parent       Type
 	reflectType  reflect.Type
 	reflectValue *reflect.Value
 }
@@ -315,6 +326,10 @@ func (f *float) PackageName() string {
 
 func (f *float) HasValue() bool {
 	return f.reflectValue != nil
+}
+
+func (f *float) Parent() Type {
+	return f.parent
 }
 
 func (f *float) ReflectType() reflect.Type {
@@ -403,6 +418,7 @@ type Complex interface {
 type complexType struct {
 	bitSize BitSize
 
+	parent       Type
 	reflectType  reflect.Type
 	reflectValue *reflect.Value
 }
@@ -417,6 +433,10 @@ func (c *complexType) PackageName() string {
 
 func (c *complexType) HasValue() bool {
 	return c.reflectValue != nil
+}
+
+func (c *complexType) Parent() Type {
+	return c.parent
 }
 
 func (c *complexType) ReflectType() reflect.Type {

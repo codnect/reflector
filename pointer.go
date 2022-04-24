@@ -40,6 +40,10 @@ func (p *pointer) ReflectValue() *reflect.Value {
 	return p.reflectValue
 }
 
+func (p *pointer) Parent() Type {
+	return nil
+}
+
 func (p *pointer) Elem() Type {
 	return p.base
 }

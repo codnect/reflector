@@ -8,6 +8,7 @@ import (
 type Struct interface {
 	Type
 	Instantiable
+	CanSet() bool
 	Fields() []Field
 	NumField() int
 	Methods() []Function
@@ -16,6 +17,7 @@ type Struct interface {
 }
 
 type structType struct {
+	parent       Type
 	reflectType  reflect.Type
 	reflectValue *reflect.Value
 }
@@ -26,7 +28,7 @@ func (s *structType) Name() string {
 
 func (s *structType) PackageName() string {
 	name := s.reflectType.PkgPath()
-	slashLastIndex := strings.LastIndex(s.reflectType.PkgPath(), "/")
+	slashLastIndex := strings.LastIndex(name, "/")
 
 	if slashLastIndex != -1 {
 		name = name[slashLastIndex+1:]
@@ -37,6 +39,10 @@ func (s *structType) PackageName() string {
 
 func (s *structType) HasValue() bool {
 	return s.reflectValue != nil
+}
+
+func (s *structType) Parent() Type {
+	return s.parent
 }
 
 func (s *structType) ReflectType() reflect.Type {
@@ -51,20 +57,25 @@ func (s *structType) NumField() int {
 	return s.reflectType.NumField()
 }
 
+func (s *structType) CanSet() bool {
+	if s.reflectValue == nil {
+		return false
+	}
+
+	return s.reflectValue.CanSet()
+}
+
 func (s *structType) Fields() []Field {
 	fields := make([]Field, 0)
 
 	numField := s.reflectType.NumField()
 	for i := 0; i < numField; i++ {
 		f := s.reflectType.Field(i)
-		if f.Type != nil {
-
-		}
-		x := f.Type.Name()
-		if x != "" {
-
-		}
-		fields = append(fields, &field{})
+		fields = append(fields, &field{
+			index:       i,
+			structType:  s,
+			structField: f,
+		})
 	}
 	return fields
 }
@@ -72,24 +83,40 @@ func (s *structType) Fields() []Field {
 func (s *structType) Methods() []Function {
 	functions := make([]Function, 0)
 
-	numMethod := s.reflectType.NumMethod()
-	for i := 0; i < numMethod; i++ {
-		f := s.reflectType.Field(i)
-		if f.Type != nil {
+	reflectType := s.reflectType
 
-		}
-		functions = append(functions, &functionType{})
+	if s.Parent() != nil {
+		reflectType = s.Parent().ReflectType()
+	}
+
+	numMethod := reflectType.NumMethod()
+	for i := 0; i < numMethod; i++ {
+		function := reflectType.Method(i)
+		functions = append(functions, &functionType{
+			name:        function.Name,
+			pkgPath:     function.PkgPath,
+			isExported:  function.IsExported(),
+			reflectType: function.Type,
+		})
 	}
 
 	return functions
 }
 
 func (s *structType) NumMethod() int {
+	if s.Parent() != nil {
+		return s.Parent().ReflectType().NumMethod()
+	}
+
 	return s.reflectType.NumMethod()
 }
 
 func (s *structType) Implements(i Interface) bool {
-	return false
+	if s.Parent() != nil {
+		return s.Parent().ReflectType().Implements(i.ReflectType())
+	}
+
+	return s.reflectType.Implements(i.ReflectType())
 }
 
 func (s *structType) Instantiate() Value {

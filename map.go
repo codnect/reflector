@@ -25,14 +25,14 @@ func (e entry) Value() any {
 type Map interface {
 	Type
 	Instantiable
+	CanSet() bool
 	Key() Type
 	Value() Type
-	Len() int
-	Get(key any) (any, bool)
-	Contains(key any) bool
-	Put(key any, val any)
-	KeySet() []any
-	ValueSet() []any
+	Len() (int, error)
+	Get(key any) (any, error)
+	Put(key any, val any) error
+	KeySet() ([]any, error)
+	ValueSet() ([]any, error)
 	EntrySet() []Entry
 }
 
@@ -40,6 +40,7 @@ type mapType struct {
 	key  Type
 	elem Type
 
+	parent       Type
 	reflectType  reflect.Type
 	reflectValue *reflect.Value
 }
@@ -54,6 +55,10 @@ func (m *mapType) PackageName() string {
 
 func (m *mapType) HasValue() bool {
 	return m.reflectValue != nil
+}
+
+func (m *mapType) Parent() Type {
+	return m.parent
 }
 
 func (m *mapType) ReflectType() reflect.Type {
@@ -72,22 +77,21 @@ func (m *mapType) Value() Type {
 	return m.elem
 }
 
-func (m *mapType) Len() int {
+func (m *mapType) CanSet() bool {
+	return true
+}
+
+func (m *mapType) Len() (int, error) {
 	if m.reflectValue == nil {
-		return -1
+		return -1, nil
 	}
 
-	return m.reflectValue.Len()
+	return m.reflectValue.Len(), nil
 }
 
-func (m *mapType) Contains(key any) bool {
-	_, ok := m.Get(key)
-	return ok
-}
-
-func (m *mapType) KeySet() []any {
+func (m *mapType) KeySet() ([]any, error) {
 	if m.reflectValue == nil {
-		return nil
+		return nil, nil
 	}
 
 	keySet := make([]any, 0)
@@ -97,12 +101,12 @@ func (m *mapType) KeySet() []any {
 		keySet = append(keySet, key.Interface())
 	}
 
-	return keySet
+	return keySet, nil
 }
 
-func (m *mapType) ValueSet() []any {
+func (m *mapType) ValueSet() ([]any, error) {
 	if m.reflectValue == nil {
-		return nil
+		return nil, nil
 	}
 
 	valueSet := make([]any, 0)
@@ -113,7 +117,7 @@ func (m *mapType) ValueSet() []any {
 		valueSet = append(valueSet, value.Interface())
 	}
 
-	return valueSet
+	return valueSet, nil
 }
 
 func (m *mapType) EntrySet() []Entry {
@@ -132,26 +136,27 @@ func (m *mapType) EntrySet() []Entry {
 	return valueSet
 }
 
-func (m *mapType) Get(key any) (any, bool) {
+func (m *mapType) Get(key any) (any, error) {
 	if m.reflectValue == nil {
-		return nil, false
+		return nil, nil
 	}
 
 	val := m.reflectValue.MapIndex(reflect.ValueOf(key))
 
 	if val.Kind() == reflect.Invalid {
-		return nil, false
+		return nil, nil
 	}
 
-	return val.Interface(), true
+	return val.Interface(), nil
 }
 
-func (m *mapType) Put(key any, val any) {
+func (m *mapType) Put(key any, val any) error {
 	if m.reflectValue == nil {
-		return
+		return nil
 	}
 
 	m.reflectValue.SetMapIndex(reflect.ValueOf(key), reflect.ValueOf(val))
+	return nil
 }
 
 func (m *mapType) Instantiate() Value {

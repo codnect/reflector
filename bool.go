@@ -14,6 +14,7 @@ type Boolean interface {
 }
 
 type booleanType struct {
+	parent       Type
 	reflectType  reflect.Type
 	reflectValue *reflect.Value
 }
@@ -28,6 +29,10 @@ func (b *booleanType) PackageName() string {
 
 func (b *booleanType) HasValue() bool {
 	return b.reflectValue != nil
+}
+
+func (b *booleanType) Parent() Type {
+	return b.parent
 }
 
 func (b *booleanType) ReflectType() reflect.Type {

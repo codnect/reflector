@@ -15,6 +15,7 @@ type Array interface {
 type arrayType struct {
 	elem Type
 
+	parent       Type
 	reflectType  reflect.Type
 	reflectValue *reflect.Value
 }
@@ -29,6 +30,10 @@ func (a *arrayType) PackageName() string {
 
 func (a *arrayType) HasValue() bool {
 	return a.reflectValue != nil
+}
+
+func (a *arrayType) Parent() Type {
+	return a.parent
 }
 
 func (a *arrayType) ReflectType() reflect.Type {

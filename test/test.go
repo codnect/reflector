@@ -12,20 +12,26 @@ type Test[T any] interface {
 	Find()
 }
 
+func Pea(c reflector.Type) {
+	if reflector.IsFunction(c) {
+
+	}
+}
+
 func main() {
 	name := [5]string{"hello", "world!"}
+	reflector.TypeOf[Test[any]]()
 	x := reflector.TypeOfAny(&name)
 
 	arr, _ := reflector.ToArray(x)
 	//subArr, _ := reflector.ToArray(arr.Elem())
 	//m := subArr.Instantiate().Elem().([2]int)
 
-	arr.Set(0, "burak")
+	//	arr.Set(0, "burak")
 
 	/*if len(m) == 9 {
 
 	}*/
-
 	if arr == nil {
 
 	}

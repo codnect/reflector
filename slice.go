@@ -14,6 +14,7 @@ type Slice interface {
 type sliceType struct {
 	elem Type
 
+	parent       Type
 	reflectType  reflect.Type
 	reflectValue *reflect.Value
 }
@@ -62,6 +63,10 @@ func (s *sliceType) Append(values ...any) {
 
 func (s *sliceType) HasValue() bool {
 	return s.reflectValue != nil
+}
+
+func (s *sliceType) Parent() Type {
+	return s.parent
 }
 
 func (s *sliceType) ReflectType() reflect.Type {

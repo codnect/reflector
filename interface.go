@@ -1,6 +1,9 @@
 package reflector
 
-import "reflect"
+import (
+	"reflect"
+	"strings"
+)
 
 type Interface interface {
 	Type
@@ -9,6 +12,7 @@ type Interface interface {
 }
 
 type interfaceType struct {
+	parent       Type
 	reflectType  reflect.Type
 	reflectValue *reflect.Value
 }
@@ -18,11 +22,22 @@ func (i *interfaceType) Name() string {
 }
 
 func (i *interfaceType) PackageName() string {
-	return i.reflectType.Name()
+	name := i.reflectType.PkgPath()
+	slashLastIndex := strings.LastIndex(name, "/")
+
+	if slashLastIndex != -1 {
+		name = name[slashLastIndex+1:]
+	}
+
+	return name
 }
 
 func (i *interfaceType) HasValue() bool {
 	return i.reflectValue != nil
+}
+
+func (i *interfaceType) Parent() Type {
+	return i.parent
 }
 
 func (i *interfaceType) ReflectType() reflect.Type {
@@ -39,10 +54,12 @@ func (i *interfaceType) Methods() []Function {
 
 	for index := 0; index < numMethod; index++ {
 		function := i.reflectType.Method(index)
-		if function.IsExported() {
-
-		}
-		functions = append(functions, &functionType{})
+		functions = append(functions, &functionType{
+			name:        function.Name,
+			pkgPath:     function.PkgPath,
+			isExported:  function.IsExported(),
+			reflectType: function.Type,
+		})
 	}
 
 	return functions
