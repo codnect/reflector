@@ -5,7 +5,7 @@ import "reflect"
 type Type interface {
 	Name() string
 	PackageName() string
-	HasReference() bool
+	HasValue() bool
 	ReflectType() reflect.Type
 	ReflectValue() *reflect.Value
 }
@@ -105,7 +105,7 @@ func typeOf(typ reflect.Type, val *reflect.Value) Type {
 			reflectValue: val,
 		}
 	case reflect.Complex64, reflect.Complex128:
-		return &complex{
+		return &complexType{
 			bitSize:      bitSize(typ.Kind()),
 			reflectType:  typ,
 			reflectValue: val,

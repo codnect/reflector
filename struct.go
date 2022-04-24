@@ -35,7 +35,7 @@ func (s *structType) PackageName() string {
 	return name
 }
 
-func (s *structType) HasReference() bool {
+func (s *structType) HasValue() bool {
 	return s.reflectValue != nil
 }
 

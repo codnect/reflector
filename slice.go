@@ -60,7 +60,7 @@ func (s *sliceType) Append(values ...any) {
 	}
 }
 
-func (s *sliceType) HasReference() bool {
+func (s *sliceType) HasValue() bool {
 	return s.reflectValue != nil
 }
 

@@ -52,7 +52,7 @@ func (m *mapType) PackageName() string {
 	return ""
 }
 
-func (m *mapType) HasReference() bool {
+func (m *mapType) HasValue() bool {
 	return m.reflectValue != nil
 }
 

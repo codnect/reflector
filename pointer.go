@@ -1,6 +1,9 @@
 package reflector
 
-import "reflect"
+import (
+	"reflect"
+	"strings"
+)
 
 type Pointer interface {
 	Type
@@ -15,14 +18,17 @@ type pointer struct {
 }
 
 func (p *pointer) Name() string {
-	return p.reflectType.Name()
+	var builder strings.Builder
+	builder.WriteString("*")
+	builder.WriteString(p.base.Name())
+	return builder.String()
 }
 
 func (p *pointer) PackageName() string {
-	return ""
+	return p.base.PackageName()
 }
 
-func (p *pointer) HasReference() bool {
+func (p *pointer) HasValue() bool {
 	return p.reflectValue != nil
 }
 

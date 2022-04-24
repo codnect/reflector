@@ -21,7 +21,7 @@ func (i *interfaceType) PackageName() string {
 	return i.reflectType.Name()
 }
 
-func (i *interfaceType) HasReference() bool {
+func (i *interfaceType) HasValue() bool {
 	return i.reflectValue != nil
 }
 

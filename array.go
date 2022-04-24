@@ -27,7 +27,7 @@ func (a *arrayType) PackageName() string {
 	return ""
 }
 
-func (a *arrayType) HasReference() bool {
+func (a *arrayType) HasValue() bool {
 	return a.reflectValue != nil
 }
 

@@ -48,7 +48,7 @@ func (f *functionType) PackageName() string {
 	return name
 }
 
-func (f *functionType) HasReference() bool {
+func (f *functionType) HasValue() bool {
 	return f.reflectValue != nil
 }
 

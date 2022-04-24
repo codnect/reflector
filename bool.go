@@ -26,7 +26,7 @@ func (b *booleanType) PackageName() string {
 	return ""
 }
 
-func (b *booleanType) HasReference() bool {
+func (b *booleanType) HasValue() bool {
 	return b.reflectValue != nil
 }
 
@@ -55,8 +55,8 @@ func (b *booleanType) Value() (bool, error) {
 }
 
 func (b *booleanType) SetValue(val bool) error {
-	if b.reflectValue == nil {
-		return errors.New("value reference is nil")
+	if !b.CanSet() {
+		return errors.New("value cannot be set")
 	}
 
 	b.reflectValue.Set(reflect.ValueOf(val))

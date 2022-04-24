@@ -1,11 +1,16 @@
 package reflector
 
-import "reflect"
+import (
+	"errors"
+	"reflect"
+)
 
 type String interface {
+	Type
+	Instantiable
 	CanSet() bool
-	Value() string
-	SetValue(val string)
+	Value() (string, error)
+	SetValue(val string) error
 }
 
 type stringType struct {
@@ -21,7 +26,7 @@ func (s *stringType) PackageName() string {
 	return ""
 }
 
-func (s *stringType) HasReference() bool {
+func (s *stringType) HasValue() bool {
 	return s.reflectValue != nil
 }
 
@@ -41,20 +46,21 @@ func (s *stringType) CanSet() bool {
 	return s.reflectValue.CanSet()
 }
 
-func (s *stringType) Value() string {
+func (s *stringType) Value() (string, error) {
 	if s.reflectValue == nil {
-		return ""
+		return "", errors.New("value reference is nil")
 	}
 
-	return s.reflectValue.Interface().(string)
+	return s.reflectValue.Interface().(string), nil
 }
 
-func (s *stringType) SetValue(val string) {
-	if s.reflectValue == nil {
-		return
+func (s *stringType) SetValue(val string) error {
+	if !s.CanSet() {
+		return errors.New("value cannot be set")
 	}
 
 	s.reflectValue.Set(reflect.ValueOf(val))
+	return nil
 }
 
 func (s *stringType) Instantiate() Value {

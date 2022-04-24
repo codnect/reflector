@@ -32,7 +32,7 @@ func main() {
 
 	if str, ok := reflector.ToStruct(x); ok {
 
-		if str.HasReference() {
+		if str.HasValue() {
 
 		}
 
