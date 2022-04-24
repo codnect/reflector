@@ -5,7 +5,7 @@ type Field interface {
 	CanSet() bool
 	Value() any
 	SetValue(value any)
-	Tags() []Tag
+	Tags() Tags
 }
 
 type field struct {
@@ -23,7 +23,7 @@ func (f *field) Value() any {
 	return nil
 }
 
-func (f *field) Tags() []Tag {
+func (f *field) Tags() Tags {
 	return nil
 }
 

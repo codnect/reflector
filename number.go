@@ -108,8 +108,10 @@ func (s *signedInteger) Overflow(v int64) bool {
 	return false
 }
 
-func (s *signedInteger) Instantiate() any {
-	return reflect.New(s.reflectType).Interface()
+func (s *signedInteger) Instantiate() Value {
+	return &value{
+		reflect.New(s.reflectType),
+	}
 }
 
 type UnsignedInteger interface {
@@ -128,44 +130,46 @@ type unsignedInteger struct {
 	reflectValue *reflect.Value
 }
 
-func (s *unsignedInteger) Name() string {
-	return s.reflectType.Name()
+func (u *unsignedInteger) Name() string {
+	return u.reflectType.Name()
 }
 
-func (s *unsignedInteger) PackageName() string {
-	return s.reflectType.Name()
+func (u *unsignedInteger) PackageName() string {
+	return u.reflectType.Name()
 }
 
-func (s *unsignedInteger) HasReference() bool {
-	return s.reflectValue != nil
+func (u *unsignedInteger) HasReference() bool {
+	return u.reflectValue != nil
 }
 
-func (s *unsignedInteger) ReflectType() reflect.Type {
-	return s.reflectType
+func (u *unsignedInteger) ReflectType() reflect.Type {
+	return u.reflectType
 }
 
-func (s *unsignedInteger) ReflectValue() *reflect.Value {
-	return s.reflectValue
+func (u *unsignedInteger) ReflectValue() *reflect.Value {
+	return u.reflectValue
 }
 
-func (s *unsignedInteger) BitSize() BitSize {
-	return s.bitSize
+func (u *unsignedInteger) BitSize() BitSize {
+	return u.bitSize
 }
 
-func (s *unsignedInteger) Value() uint64 {
+func (u *unsignedInteger) Value() uint64 {
 	return 0
 }
 
-func (s *unsignedInteger) SetValue(v uint64) {
+func (u *unsignedInteger) SetValue(v uint64) {
 
 }
 
-func (s *unsignedInteger) Overflow(v uint64) bool {
+func (u *unsignedInteger) Overflow(v uint64) bool {
 	return false
 }
 
-func (s *unsignedInteger) Instantiate() any {
-	return reflect.New(s.reflectType).Interface()
+func (u *unsignedInteger) Instantiate() Value {
+	return &value{
+		reflect.New(u.reflectType),
+	}
 }
 
 type Float interface {
@@ -220,8 +224,10 @@ func (f *float) Overflow(v float64) bool {
 	return false
 }
 
-func (f *float) Instantiate() any {
-	return reflect.New(f.reflectType).Interface()
+func (f *float) Instantiate() Value {
+	return &value{
+		reflect.New(f.reflectType),
+	}
 }
 
 type Complex interface {
@@ -241,46 +247,48 @@ type complex struct {
 	reflectValue *reflect.Value
 }
 
-func (s *complex) Name() string {
-	return s.reflectType.Name()
+func (c *complex) Name() string {
+	return c.reflectType.Name()
 }
 
-func (s *complex) PackageName() string {
-	return s.reflectType.Name()
+func (c *complex) PackageName() string {
+	return c.reflectType.Name()
 }
 
-func (s *complex) HasReference() bool {
-	return s.reflectValue != nil
+func (c *complex) HasReference() bool {
+	return c.reflectValue != nil
 }
 
-func (s *complex) ReflectType() reflect.Type {
-	return s.reflectType
+func (c *complex) ReflectType() reflect.Type {
+	return c.reflectType
 }
 
-func (s *complex) ReflectValue() *reflect.Value {
-	return s.reflectValue
+func (c *complex) ReflectValue() *reflect.Value {
+	return c.reflectValue
 }
 
-func (s *complex) BitSize() BitSize {
-	return s.bitSize
+func (c *complex) BitSize() BitSize {
+	return c.bitSize
 }
 
-func (s *complex) ImaginaryData() complex128 {
+func (c *complex) ImaginaryData() complex128 {
 	return 0
 }
 
-func (s *complex) RealData() complex128 {
+func (c *complex) RealData() complex128 {
 	return 0
 }
 
-func (s *complex) SetImaginaryData(val complex128) {
+func (c *complex) SetImaginaryData(val complex128) {
 
 }
 
-func (s *complex) SetRealData(val complex128) {
+func (c *complex) SetRealData(val complex128) {
 
 }
 
-func (s *complex) Instantiate() any {
-	return reflect.New(s.reflectType).Interface()
+func (c *complex) Instantiate() Value {
+	return &value{
+		reflect.New(c.reflectType),
+	}
 }

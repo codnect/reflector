@@ -154,9 +154,11 @@ func (m *mapType) Put(key any, val any) {
 	m.reflectValue.SetMapIndex(reflect.ValueOf(key), reflect.ValueOf(val))
 }
 
-func (m *mapType) Instantiate() any {
+func (m *mapType) Instantiate() Value {
 	ptr := reflect.New(m.reflectType).Interface()
-	value := reflect.MakeMapWithSize(reflect.MapOf(m.key.ReflectType(), m.elem.ReflectType()), 0)
-	reflect.ValueOf(ptr).Elem().Set(value)
-	return ptr
+	emptyMap := reflect.MakeMapWithSize(reflect.MapOf(m.key.ReflectType(), m.elem.ReflectType()), 0)
+	reflect.ValueOf(ptr).Elem().Set(emptyMap)
+	return &value{
+		reflect.ValueOf(ptr),
+	}
 }

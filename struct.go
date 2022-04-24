@@ -92,6 +92,8 @@ func (s *structType) Implements(i Interface) bool {
 	return false
 }
 
-func (s *structType) Instantiate() any {
-	return reflect.New(s.reflectType).Interface()
+func (s *structType) Instantiate() Value {
+	return &value{
+		reflect.New(s.reflectType),
+	}
 }

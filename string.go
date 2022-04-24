@@ -57,6 +57,8 @@ func (s *stringType) SetValue(val string) {
 	s.reflectValue.Set(reflect.ValueOf(val))
 }
 
-func (s *stringType) Instantiate() any {
-	return reflect.New(s.reflectType).Interface()
+func (s *stringType) Instantiate() Value {
+	return &value{
+		reflect.New(s.reflectType),
+	}
 }

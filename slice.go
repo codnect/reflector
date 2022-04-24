@@ -72,6 +72,8 @@ func (s *sliceType) ReflectValue() *reflect.Value {
 	return s.reflectValue
 }
 
-func (s *sliceType) Instantiate() any {
-	return reflect.New(s.reflectType).Interface()
+func (s *sliceType) Instantiate() Value {
+	return &value{
+		reflect.New(s.reflectType),
+	}
 }

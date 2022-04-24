@@ -1,11 +1,16 @@
 package reflector
 
-import "reflect"
+import (
+	"errors"
+	"reflect"
+)
 
 type Boolean interface {
+	Type
+	Instantiable
 	CanSet() bool
-	Value() bool
-	SetValue(val bool)
+	Value() (bool, error)
+	SetValue(val bool) error
 }
 
 type booleanType struct {
@@ -41,22 +46,25 @@ func (b *booleanType) CanSet() bool {
 	return b.reflectValue.CanSet()
 }
 
-func (b *booleanType) Value() bool {
+func (b *booleanType) Value() (bool, error) {
 	if b.reflectValue == nil {
-		return false
+		return false, errors.New("value reference is nil")
 	}
 
-	return b.reflectValue.Interface().(bool)
+	return b.reflectValue.Interface().(bool), nil
 }
 
-func (b *booleanType) SetValue(val bool) {
+func (b *booleanType) SetValue(val bool) error {
 	if b.reflectValue == nil {
-		return
+		return errors.New("value reference is nil")
 	}
 
 	b.reflectValue.Set(reflect.ValueOf(val))
+	return nil
 }
 
-func (b *booleanType) Instantiate() any {
-	return reflect.New(b.reflectType).Interface()
+func (b *booleanType) Instantiate() Value {
+	return &value{
+		reflect.New(b.reflectType),
+	}
 }

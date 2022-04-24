@@ -11,17 +11,9 @@ type Type interface {
 }
 
 func TypeOf[T any]() Type {
-	i := *new(T)
-	val := reflect.ValueOf(i)
-
-	if val.Kind() == reflect.Invalid {
-		iface := (*T)(nil)
-		typ := reflect.TypeOf(iface)
-		return typeOf(typ, nil).(Pointer).Elem()
-	}
-
-	typ := reflect.TypeOf(i)
-	return typeOf(typ, nil)
+	iface := (*T)(nil)
+	typ := reflect.TypeOf(iface)
+	return typeOf(typ, nil).(Pointer).Elem()
 }
 
 func TypeOfAny(obj any) Type {
@@ -65,6 +57,13 @@ func typeOf(typ reflect.Type, val *reflect.Value) Type {
 			reflectValue: val,
 		}
 	case reflect.Array:
+		sliceType := &arrayType{
+			reflectType:  typ,
+			reflectValue: val,
+
+			elem: typeOf(typ.Elem(), val),
+		}
+		return sliceType
 	case reflect.Slice:
 		sliceType := &sliceType{
 			reflectType:  typ,

@@ -13,13 +13,20 @@ type Test[T any] interface {
 }
 
 func main() {
-	name := map[string]string{}
-	x := reflector.TypeOfAny(Person{})
+	name := [5]string{"hello", "world!"}
+	x := reflector.TypeOfAny(&name)
 
-	h := x.Name()
-	h = x.PackageName()
+	arr, _ := reflector.ToArray(x)
+	//subArr, _ := reflector.ToArray(arr.Elem())
+	//m := subArr.Instantiate().Elem().([2]int)
 
-	if h == "" {
+	arr.Set(0, "burak")
+
+	/*if len(m) == 9 {
+
+	}*/
+
+	if arr == nil {
 
 	}
 
@@ -36,7 +43,4 @@ func main() {
 		}
 	}
 
-	if name == nil {
-
-	}
 }

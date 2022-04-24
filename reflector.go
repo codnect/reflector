@@ -53,10 +53,15 @@ func ToFunction(typ Type) (Function, bool) {
 }
 
 func IsArray(typ Type) bool {
-	return true
+	_, ok := typ.(Array)
+	return ok
 }
 
 func ToArray(typ Type) (Array, bool) {
+	if arrayType, ok := typ.(Array); ok {
+		return arrayType, true
+	}
+
 	return nil, false
 }
 
