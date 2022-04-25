@@ -15,6 +15,7 @@ type Function interface {
 	NumParameter() int
 	Results() []Type
 	NumResult() int
+	Invoke(args ...any) ([]any, error)
 }
 
 type functionType struct {
@@ -127,4 +128,8 @@ func (f *functionType) Results() []Type {
 
 func (f *functionType) NumResult() int {
 	return f.reflectType.NumOut()
+}
+
+func (f *functionType) Invoke(args ...any) ([]any, error) {
+	return nil, nil
 }

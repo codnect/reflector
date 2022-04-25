@@ -7,6 +7,7 @@ import (
 
 type Interface interface {
 	Type
+	Elem() Type
 	Methods() []Function
 	NumMethod() int
 }
@@ -46,6 +47,10 @@ func (i *interfaceType) ReflectType() reflect.Type {
 
 func (i *interfaceType) ReflectValue() *reflect.Value {
 	return i.reflectValue
+}
+
+func (i *interfaceType) Elem() Type {
+	return nil
 }
 
 func (i *interfaceType) Methods() []Function {

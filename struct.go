@@ -1,6 +1,7 @@
 package reflector
 
 import (
+	"errors"
 	"reflect"
 	"strings"
 )
@@ -9,6 +10,8 @@ type Struct interface {
 	Type
 	Instantiable
 	CanSet() bool
+	Value() (any, error)
+	SetValue(val any) error
 	Fields() []Field
 	NumField() int
 	Methods() []Function
@@ -63,6 +66,23 @@ func (s *structType) CanSet() bool {
 	}
 
 	return s.reflectValue.CanSet()
+}
+
+func (s *structType) Value() (any, error) {
+	if s.reflectValue == nil {
+		return "", errors.New("value reference is nil")
+	}
+
+	return s.reflectValue.Interface(), nil
+}
+
+func (s *structType) SetValue(val any) error {
+	if !s.CanSet() {
+		return errors.New("value cannot be set")
+	}
+
+	s.reflectValue.Set(reflect.ValueOf(val))
+	return nil
 }
 
 func (s *structType) Fields() []Field {

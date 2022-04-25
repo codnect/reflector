@@ -68,7 +68,7 @@ type SignedInteger interface {
 	Overflow(v int64) bool
 }
 
-type signedInteger struct {
+type signedIntegerType struct {
 	bitSize BitSize
 
 	parent       Type
@@ -76,35 +76,35 @@ type signedInteger struct {
 	reflectValue *reflect.Value
 }
 
-func (s *signedInteger) Name() string {
+func (s *signedIntegerType) Name() string {
 	return s.reflectType.Name()
 }
 
-func (s *signedInteger) PackageName() string {
+func (s *signedIntegerType) PackageName() string {
 	return ""
 }
 
-func (s *signedInteger) HasValue() bool {
+func (s *signedIntegerType) HasValue() bool {
 	return s.reflectValue != nil
 }
 
-func (s *signedInteger) Parent() Type {
+func (s *signedIntegerType) Parent() Type {
 	return s.parent
 }
 
-func (s *signedInteger) ReflectType() reflect.Type {
+func (s *signedIntegerType) ReflectType() reflect.Type {
 	return s.reflectType
 }
 
-func (s *signedInteger) ReflectValue() *reflect.Value {
+func (s *signedIntegerType) ReflectValue() *reflect.Value {
 	return s.reflectValue
 }
 
-func (s *signedInteger) BitSize() BitSize {
+func (s *signedIntegerType) BitSize() BitSize {
 	return s.bitSize
 }
 
-func (s *signedInteger) CanSet() bool {
+func (s *signedIntegerType) CanSet() bool {
 	if s.reflectValue == nil {
 		return false
 	}
@@ -112,7 +112,7 @@ func (s *signedInteger) CanSet() bool {
 	return s.reflectValue.CanSet()
 }
 
-func (s *signedInteger) Value() (int64, error) {
+func (s *signedIntegerType) Value() (int64, error) {
 	if s.reflectValue == nil {
 		return -1, errors.New("value reference is nil")
 	}
@@ -133,7 +133,7 @@ func (s *signedInteger) Value() (int64, error) {
 	}
 }
 
-func (s *signedInteger) SetValue(v int64) error {
+func (s *signedIntegerType) SetValue(v int64) error {
 	if !s.CanSet() {
 		return errors.New("value cannot be set")
 	}
@@ -158,7 +158,7 @@ func (s *signedInteger) SetValue(v int64) error {
 	return nil
 }
 
-func (s *signedInteger) Overflow(v int64) bool {
+func (s *signedIntegerType) Overflow(v int64) bool {
 	overflow := false
 
 	if BitSize8 == s.bitSize && (math.MinInt8 > v || math.MaxInt8 < v) {
@@ -172,7 +172,7 @@ func (s *signedInteger) Overflow(v int64) bool {
 	return overflow
 }
 
-func (s *signedInteger) Instantiate() Value {
+func (s *signedIntegerType) Instantiate() Value {
 	return &value{
 		reflect.New(s.reflectType),
 	}
@@ -188,7 +188,7 @@ type UnsignedInteger interface {
 	Overflow(v uint64) bool
 }
 
-type unsignedInteger struct {
+type unsignedIntegerType struct {
 	bitSize BitSize
 
 	parent       Type
@@ -196,35 +196,35 @@ type unsignedInteger struct {
 	reflectValue *reflect.Value
 }
 
-func (u *unsignedInteger) Name() string {
+func (u *unsignedIntegerType) Name() string {
 	return u.reflectType.Name()
 }
 
-func (u *unsignedInteger) PackageName() string {
+func (u *unsignedIntegerType) PackageName() string {
 	return ""
 }
 
-func (u *unsignedInteger) HasValue() bool {
+func (u *unsignedIntegerType) HasValue() bool {
 	return u.reflectValue != nil
 }
 
-func (u *unsignedInteger) Parent() Type {
+func (u *unsignedIntegerType) Parent() Type {
 	return u.parent
 }
 
-func (u *unsignedInteger) ReflectType() reflect.Type {
+func (u *unsignedIntegerType) ReflectType() reflect.Type {
 	return u.reflectType
 }
 
-func (u *unsignedInteger) ReflectValue() *reflect.Value {
+func (u *unsignedIntegerType) ReflectValue() *reflect.Value {
 	return u.reflectValue
 }
 
-func (u *unsignedInteger) BitSize() BitSize {
+func (u *unsignedIntegerType) BitSize() BitSize {
 	return u.bitSize
 }
 
-func (u *unsignedInteger) CanSet() bool {
+func (u *unsignedIntegerType) CanSet() bool {
 	if u.reflectValue == nil {
 		return false
 	}
@@ -232,7 +232,7 @@ func (u *unsignedInteger) CanSet() bool {
 	return u.reflectValue.CanSet()
 }
 
-func (u *unsignedInteger) Value() (uint64, error) {
+func (u *unsignedIntegerType) Value() (uint64, error) {
 	if u.reflectValue == nil {
 		return 0, errors.New("value reference is nil")
 	}
@@ -253,7 +253,7 @@ func (u *unsignedInteger) Value() (uint64, error) {
 	}
 }
 
-func (u *unsignedInteger) SetValue(v uint64) error {
+func (u *unsignedIntegerType) SetValue(v uint64) error {
 	if !u.CanSet() {
 		return errors.New("value cannot be set")
 	}
@@ -278,7 +278,7 @@ func (u *unsignedInteger) SetValue(v uint64) error {
 	return nil
 }
 
-func (u *unsignedInteger) Overflow(v uint64) bool {
+func (u *unsignedIntegerType) Overflow(v uint64) bool {
 	overflow := false
 
 	if BitSize8 == u.bitSize && math.MaxUint8 < v {
@@ -292,7 +292,7 @@ func (u *unsignedInteger) Overflow(v uint64) bool {
 	return overflow
 }
 
-func (u *unsignedInteger) Instantiate() Value {
+func (u *unsignedIntegerType) Instantiate() Value {
 	return &value{
 		reflect.New(u.reflectType),
 	}
@@ -308,7 +308,7 @@ type Float interface {
 	Overflow(v float64) bool
 }
 
-type float struct {
+type floatType struct {
 	bitSize BitSize
 
 	parent       Type
@@ -316,35 +316,35 @@ type float struct {
 	reflectValue *reflect.Value
 }
 
-func (f *float) Name() string {
+func (f *floatType) Name() string {
 	return f.reflectType.Name()
 }
 
-func (f *float) PackageName() string {
+func (f *floatType) PackageName() string {
 	return ""
 }
 
-func (f *float) HasValue() bool {
+func (f *floatType) HasValue() bool {
 	return f.reflectValue != nil
 }
 
-func (f *float) Parent() Type {
+func (f *floatType) Parent() Type {
 	return f.parent
 }
 
-func (f *float) ReflectType() reflect.Type {
+func (f *floatType) ReflectType() reflect.Type {
 	return f.reflectType
 }
 
-func (f *float) ReflectValue() *reflect.Value {
+func (f *floatType) ReflectValue() *reflect.Value {
 	return f.reflectValue
 }
 
-func (f *float) BitSize() BitSize {
+func (f *floatType) BitSize() BitSize {
 	return f.bitSize
 }
 
-func (f *float) Value() (float64, error) {
+func (f *floatType) Value() (float64, error) {
 	if f.reflectValue == nil {
 		return 0, errors.New("value reference is nil")
 	}
@@ -359,7 +359,7 @@ func (f *float) Value() (float64, error) {
 	}
 }
 
-func (f *float) CanSet() bool {
+func (f *floatType) CanSet() bool {
 	if f.reflectValue == nil {
 		return false
 	}
@@ -367,7 +367,7 @@ func (f *float) CanSet() bool {
 	return f.reflectValue.CanSet()
 }
 
-func (f *float) SetValue(v float64) error {
+func (f *floatType) SetValue(v float64) error {
 	if !f.CanSet() {
 		return errors.New("value cannot be set")
 	}
@@ -386,7 +386,7 @@ func (f *float) SetValue(v float64) error {
 	return nil
 }
 
-func (f *float) Overflow(v float64) bool {
+func (f *floatType) Overflow(v float64) bool {
 	overflow := false
 	if BitSize32 == f.bitSize && math.MaxFloat32 < v {
 		overflow = true
@@ -396,7 +396,7 @@ func (f *float) Overflow(v float64) bool {
 	return overflow
 }
 
-func (f *float) Instantiate() Value {
+func (f *floatType) Instantiate() Value {
 	return &value{
 		reflect.New(f.reflectType),
 	}

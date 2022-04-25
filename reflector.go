@@ -14,12 +14,12 @@ func ToPointer(typ Type) (Pointer, bool) {
 }
 
 func IsStruct(typ Type) bool {
-	_, ok := typ.(Struct)
+	_, ok := typ.(*structType)
 	return ok
 }
 
 func ToStruct(typ Type) (Struct, bool) {
-	if structType, ok := typ.(Struct); ok {
+	if structType, ok := typ.(*structType); ok {
 		return structType, true
 	}
 
@@ -40,12 +40,12 @@ func ToInterface(typ Type) (Interface, bool) {
 }
 
 func IsFunction(typ Type) bool {
-	_, ok := typ.(Function)
+	_, ok := typ.(*functionType)
 	return ok
 }
 
 func ToFunction(typ Type) (Function, bool) {
-	if functionType, ok := typ.(Function); ok {
+	if functionType, ok := typ.(*functionType); ok {
 		return functionType, true
 	}
 
@@ -53,12 +53,12 @@ func ToFunction(typ Type) (Function, bool) {
 }
 
 func IsArray(typ Type) bool {
-	_, ok := typ.(Array)
+	_, ok := typ.(*arrayType)
 	return ok
 }
 
 func ToArray(typ Type) (Array, bool) {
-	if arrayType, ok := typ.(Array); ok {
+	if arrayType, ok := typ.(*arrayType); ok {
 		return arrayType, true
 	}
 
@@ -66,12 +66,12 @@ func ToArray(typ Type) (Array, bool) {
 }
 
 func IsSlice(typ Type) bool {
-	_, ok := typ.(Slice)
+	_, ok := typ.(*sliceType)
 	return ok
 }
 
 func ToSlice(typ Type) (Slice, bool) {
-	if sliceType, ok := typ.(Slice); ok {
+	if sliceType, ok := typ.(*sliceType); ok {
 		return sliceType, true
 	}
 
@@ -79,12 +79,12 @@ func ToSlice(typ Type) (Slice, bool) {
 }
 
 func IsMap(typ Type) bool {
-	_, ok := typ.(Map)
+	_, ok := typ.(*mapType)
 	return ok
 }
 
 func ToMap(typ Type) (Map, bool) {
-	if mapType, ok := typ.(Map); ok {
+	if mapType, ok := typ.(*mapType); ok {
 		return mapType, true
 	}
 
@@ -92,12 +92,12 @@ func ToMap(typ Type) (Map, bool) {
 }
 
 func IsString(typ Type) bool {
-	_, ok := typ.(String)
+	_, ok := typ.(*stringType)
 	return ok
 }
 
 func ToString(typ Type) (String, bool) {
-	if stringType, ok := typ.(String); ok {
+	if stringType, ok := typ.(*stringType); ok {
 		return stringType, true
 	}
 
@@ -105,12 +105,12 @@ func ToString(typ Type) (String, bool) {
 }
 
 func IsBoolean(typ Type) bool {
-	_, ok := typ.(Boolean)
+	_, ok := typ.(*booleanType)
 	return ok
 }
 
 func ToBoolean(typ Type) (Boolean, bool) {
-	if stringType, ok := typ.(Boolean); ok {
+	if stringType, ok := typ.(*booleanType); ok {
 		return stringType, true
 	}
 
