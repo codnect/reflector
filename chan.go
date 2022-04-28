@@ -46,6 +46,10 @@ func (i *chanType) ReflectValue() *reflect.Value {
 	return i.reflectValue
 }
 
+func (i *chanType) Direction() ChanDirection {
+	return SEND
+}
+
 func (i *chanType) Elem() Type {
 	return nil
 }

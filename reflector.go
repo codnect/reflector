@@ -122,12 +122,12 @@ func IsInteger(typ Type) bool {
 }
 
 func IsSignedInteger(typ Type) bool {
-	_, ok := typ.(SignedInteger)
+	_, ok := typ.(*signedIntegerType)
 	return ok
 }
 
 func ToSignedInteger(typ Type) (SignedInteger, bool) {
-	if signedIntegerType, ok := typ.(SignedInteger); ok {
+	if signedIntegerType, ok := typ.(*signedIntegerType); ok {
 		return signedIntegerType, true
 	}
 
@@ -135,12 +135,12 @@ func ToSignedInteger(typ Type) (SignedInteger, bool) {
 }
 
 func IsUnsignedInteger(typ Type) bool {
-	_, ok := typ.(UnsignedInteger)
+	_, ok := typ.(*unsignedIntegerType)
 	return ok
 }
 
 func ToUnsignedInteger(typ Type) (UnsignedInteger, bool) {
-	if unsignedIntegerType, ok := typ.(UnsignedInteger); ok {
+	if unsignedIntegerType, ok := typ.(*unsignedIntegerType); ok {
 		return unsignedIntegerType, true
 	}
 
@@ -148,12 +148,12 @@ func ToUnsignedInteger(typ Type) (UnsignedInteger, bool) {
 }
 
 func IsFloat(typ Type) bool {
-	_, ok := typ.(Float)
+	_, ok := typ.(*floatType)
 	return ok
 }
 
 func ToFloat(typ Type) (Float, bool) {
-	if floatType, ok := typ.(Float); ok {
+	if floatType, ok := typ.(*floatType); ok {
 		return floatType, true
 	}
 
@@ -161,12 +161,12 @@ func ToFloat(typ Type) (Float, bool) {
 }
 
 func IsComplex(typ Type) bool {
-	_, ok := typ.(Complex)
+	_, ok := typ.(*complexType)
 	return ok
 }
 
 func ToComplex(typ Type) (Complex, bool) {
-	if complexType, ok := typ.(Complex); ok {
+	if complexType, ok := typ.(*complexType); ok {
 		return complexType, true
 	}
 
@@ -179,6 +179,19 @@ func IsNumber(typ Type) bool {
 
 func IsBasic(typ Type) bool {
 	return IsBoolean(typ) || IsString(typ) || IsNumber(typ)
+}
+
+func IsChan(typ Type) bool {
+	_, ok := typ.(*chanType)
+	return ok
+}
+
+func ToChan(typ Type) (Chan, bool) {
+	if chanType, ok := typ.(*chanType); ok {
+		return chanType, true
+	}
+
+	return nil, false
 }
 
 func IsInstantiable(typ Type) bool {

@@ -19,6 +19,10 @@ type interfaceType struct {
 }
 
 func (i *interfaceType) Name() string {
+	if i.reflectType.Name() == "" {
+		return "any"
+	}
+
 	return i.reflectType.Name()
 }
 

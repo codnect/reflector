@@ -115,6 +115,7 @@ func TestTypeOfStringObject(t *testing.T) {
 
 	err = stringType.SetValue("world")
 	assert.NotNil(t, err)
+	assert.NotEqual(t, "world", val)
 
 	newString := stringType.Instantiate()
 	assert.NotNil(t, newString)

@@ -1,7 +1,9 @@
 package reflector
 
 import (
+	"errors"
 	"reflect"
+	"strings"
 )
 
 type Entry interface {
@@ -26,14 +28,18 @@ type Map interface {
 	Type
 	Instantiable
 	CanSet() bool
+	Value() (any, error)
+	SetValue(val any) error
 	Key() Type
-	Value() Type
+	Elem() Type
 	Len() (int, error)
 	Get(key any) (any, error)
 	Put(key any, val any) error
+	Delete(key any) error
+	Clear() error
 	KeySet() ([]any, error)
 	ValueSet() ([]any, error)
-	EntrySet() []Entry
+	EntrySet() ([]Entry, error)
 }
 
 type mapType struct {
@@ -46,7 +52,12 @@ type mapType struct {
 }
 
 func (m *mapType) Name() string {
-	return m.reflectType.Name()
+	var builder strings.Builder
+	builder.WriteString("map[")
+	builder.WriteString(m.key.Name())
+	builder.WriteString("]")
+	builder.WriteString(m.elem.Name())
+	return builder.String()
 }
 
 func (m *mapType) PackageName() string {
@@ -73,17 +84,38 @@ func (m *mapType) Key() Type {
 	return m.key
 }
 
-func (m *mapType) Value() Type {
+func (m *mapType) Elem() Type {
 	return m.elem
 }
 
 func (m *mapType) CanSet() bool {
-	return true
+	if m.reflectValue == nil {
+		return false
+	}
+
+	return m.reflectValue.CanSet()
+}
+
+func (m *mapType) Value() (any, error) {
+	if m.reflectValue == nil {
+		return "", errors.New("value reference is nil")
+	}
+
+	return m.reflectValue.Interface(), nil
+}
+
+func (m *mapType) SetValue(val any) error {
+	if !m.CanSet() {
+		return errors.New("value cannot be set")
+	}
+
+	m.reflectValue.Set(reflect.ValueOf(val))
+	return nil
 }
 
 func (m *mapType) Len() (int, error) {
 	if m.reflectValue == nil {
-		return -1, nil
+		return -1, errors.New("value reference is nil")
 	}
 
 	return m.reflectValue.Len(), nil
@@ -91,7 +123,7 @@ func (m *mapType) Len() (int, error) {
 
 func (m *mapType) KeySet() ([]any, error) {
 	if m.reflectValue == nil {
-		return nil, nil
+		return nil, errors.New("value reference is nil")
 	}
 
 	keySet := make([]any, 0)
@@ -106,7 +138,7 @@ func (m *mapType) KeySet() ([]any, error) {
 
 func (m *mapType) ValueSet() ([]any, error) {
 	if m.reflectValue == nil {
-		return nil, nil
+		return nil, errors.New("value reference is nil")
 	}
 
 	valueSet := make([]any, 0)
@@ -120,9 +152,9 @@ func (m *mapType) ValueSet() ([]any, error) {
 	return valueSet, nil
 }
 
-func (m *mapType) EntrySet() []Entry {
+func (m *mapType) EntrySet() ([]Entry, error) {
 	if m.reflectValue == nil {
-		return nil
+		return nil, errors.New("value reference is nil")
 	}
 
 	valueSet := make([]Entry, 0)
@@ -133,12 +165,12 @@ func (m *mapType) EntrySet() []Entry {
 		valueSet = append(valueSet, entry{key: key.Interface(), val: value.Interface()})
 	}
 
-	return valueSet
+	return valueSet, nil
 }
 
 func (m *mapType) Get(key any) (any, error) {
 	if m.reflectValue == nil {
-		return nil, nil
+		return nil, errors.New("value reference is nil")
 	}
 
 	val := m.reflectValue.MapIndex(reflect.ValueOf(key))
@@ -152,10 +184,32 @@ func (m *mapType) Get(key any) (any, error) {
 
 func (m *mapType) Put(key any, val any) error {
 	if m.reflectValue == nil {
-		return nil
+		return errors.New("value reference is nil")
 	}
 
 	m.reflectValue.SetMapIndex(reflect.ValueOf(key), reflect.ValueOf(val))
+	return nil
+}
+
+func (m *mapType) Delete(key any) error {
+	if m.reflectValue == nil {
+		return errors.New("value reference is nil")
+	}
+
+	m.reflectValue.SetMapIndex(reflect.ValueOf(key), reflect.Value{})
+	return nil
+}
+
+func (m *mapType) Clear() error {
+	if m.reflectValue == nil {
+		return errors.New("value reference is nil")
+	}
+
+	keys := m.reflectValue.MapKeys()
+
+	for _, key := range keys {
+		m.reflectValue.SetMapIndex(key, reflect.Value{})
+	}
 	return nil
 }
 
