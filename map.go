@@ -2,6 +2,7 @@ package reflector
 
 import (
 	"errors"
+	"fmt"
 	"reflect"
 	"strings"
 )
@@ -33,6 +34,7 @@ type Map interface {
 	Key() Type
 	Elem() Type
 	Len() (int, error)
+	Contains(key any) (bool, error)
 	Get(key any) (any, error)
 	Put(key any, val any) error
 	Delete(key any) error
@@ -168,6 +170,16 @@ func (m *mapType) EntrySet() ([]Entry, error) {
 	return valueSet, nil
 }
 
+func (m *mapType) Contains(key any) (bool, error) {
+	_, err := m.Get(key)
+
+	if err != nil {
+		return false, err
+	}
+
+	return true, err
+}
+
 func (m *mapType) Get(key any) (any, error) {
 	if m.reflectValue == nil {
 		return nil, errors.New("value reference is nil")
@@ -176,7 +188,7 @@ func (m *mapType) Get(key any) (any, error) {
 	val := m.reflectValue.MapIndex(reflect.ValueOf(key))
 
 	if val.Kind() == reflect.Invalid {
-		return nil, nil
+		return nil, fmt.Errorf("element with key '%v' does not exist", key)
 	}
 
 	return val.Interface(), nil

@@ -37,6 +37,10 @@ func TestTypeOfMap(t *testing.T) {
 	assert.Nil(t, v)
 	assert.NotNil(t, err)
 
+	exists, err := mapType.Contains("key1")
+	assert.NotNil(t, err)
+	assert.False(t, exists)
+
 	keySet, err := mapType.KeySet()
 	assert.Nil(t, v)
 	assert.NotNil(t, err)
@@ -51,6 +55,10 @@ func TestTypeOfMap(t *testing.T) {
 
 	err = mapType.Put("key2", true)
 	assert.NotNil(t, err)
+
+	exists, err = mapType.Contains("key2")
+	assert.NotNil(t, err)
+	assert.False(t, exists)
 
 	value, err = mapType.Value()
 	assert.Empty(t, value)
@@ -171,6 +179,10 @@ func TestTypeOfMapPointer(t *testing.T) {
 	assert.Nil(t, v)
 	assert.NotNil(t, err)
 
+	exists, err := mapType.Contains("key1")
+	assert.NotNil(t, err)
+	assert.False(t, exists)
+
 	keySet, err := mapType.KeySet()
 	assert.Nil(t, v)
 	assert.NotNil(t, err)
@@ -185,6 +197,10 @@ func TestTypeOfMapPointer(t *testing.T) {
 
 	err = mapType.Put("key2", true)
 	assert.NotNil(t, err)
+
+	exists, err = mapType.Contains("key2")
+	assert.NotNil(t, err)
+	assert.False(t, exists)
 
 	value, err = mapType.Value()
 	assert.Empty(t, value)
@@ -296,6 +312,10 @@ func TestTypeOfMapObject(t *testing.T) {
 	assert.Equal(t, "value1", v.(string))
 	assert.Nil(t, err)
 
+	exists, err := mapType.Contains("key1")
+	assert.Nil(t, err)
+	assert.True(t, exists)
+
 	keySet, err := mapType.KeySet()
 	assert.Len(t, keySet, 1)
 	assert.Contains(t, keySet, "key1")
@@ -311,6 +331,10 @@ func TestTypeOfMapObject(t *testing.T) {
 
 	err = mapType.Put("key2", true)
 	assert.Nil(t, err)
+
+	exists, err = mapType.Contains("key2")
+	assert.Nil(t, err)
+	assert.True(t, exists)
 
 	value, err = mapType.Value()
 	assert.NotEmpty(t, value)
@@ -337,6 +361,10 @@ func TestTypeOfMapObject(t *testing.T) {
 	err = mapType.Delete("key1")
 	assert.Nil(t, err)
 
+	exists, err = mapType.Contains("key2")
+	assert.Nil(t, err)
+	assert.True(t, exists)
+
 	value, err = mapType.Value()
 	assert.NotEmpty(t, value)
 	assert.Nil(t, err)
@@ -361,6 +389,10 @@ func TestTypeOfMapObject(t *testing.T) {
 
 	err = mapType.Clear()
 	assert.Nil(t, err)
+
+	exists, err = mapType.Contains("key2")
+	assert.NotNil(t, v)
+	assert.False(t, exists)
 
 	value, err = mapType.Value()
 	assert.Empty(t, value)
@@ -443,6 +475,10 @@ func TestTypeOfMapObjectPointer(t *testing.T) {
 	assert.Equal(t, "value1", v.(string))
 	assert.Nil(t, err)
 
+	exists, err := mapType.Contains("key1")
+	assert.Nil(t, err)
+	assert.True(t, exists)
+
 	keySet, err := mapType.KeySet()
 	assert.Len(t, keySet, 1)
 	assert.Contains(t, keySet, "key1")
@@ -458,6 +494,10 @@ func TestTypeOfMapObjectPointer(t *testing.T) {
 
 	err = mapType.Put("key2", true)
 	assert.Nil(t, err)
+
+	exists, err = mapType.Contains("key2")
+	assert.Nil(t, err)
+	assert.True(t, exists)
 
 	value, err = mapType.Value()
 	assert.NotEmpty(t, value)
