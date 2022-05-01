@@ -42,6 +42,10 @@ func (a *arrayType) PackageName() string {
 	return ""
 }
 
+func (a *arrayType) PackagePath() string {
+	return ""
+}
+
 func (a *arrayType) HasValue() bool {
 	return a.reflectValue != nil
 }
@@ -138,7 +142,7 @@ func (a *arrayType) Copy(dst any) (int, error) {
 	}
 
 	// TODO BUG: It causes app to crash
-	return reflect.Copy(reflect.ValueOf(dst), *a.reflectValue), nil
+	return reflect.Copy(reflect.ValueOf(dst), reflect.ValueOf(a.reflectValue.Slice(0, a.Len()))), nil
 }
 
 func (a *arrayType) Instantiate() Value {

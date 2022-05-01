@@ -27,6 +27,10 @@ func (b *booleanType) PackageName() string {
 	return ""
 }
 
+func (b *booleanType) PackagePath() string {
+	return ""
+}
+
 func (b *booleanType) HasValue() bool {
 	return b.reflectValue != nil
 }

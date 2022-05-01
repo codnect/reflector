@@ -5,6 +5,7 @@ import "reflect"
 type Type interface {
 	Name() string
 	PackageName() string
+	PackagePath() string
 	HasValue() bool
 	Parent() Type
 	ReflectType() reflect.Type
@@ -18,6 +19,10 @@ func TypeOf[T any]() Type {
 }
 
 func TypeOfAny(obj any) Type {
+	if obj == nil {
+		return nil
+	}
+
 	typ := reflect.TypeOf(obj)
 	val := reflect.ValueOf(obj)
 	return typeOf(typ, &val, nil)
@@ -61,19 +66,21 @@ func typeOf(typ reflect.Type, val *reflect.Value, parent Type) Type {
 			reflectValue: val,
 		}
 	case reflect.Array:
-		sliceType := &arrayType{
+		arrayType := &arrayType{
 			parent:       parent,
 			reflectType:  typ,
 			reflectValue: val,
 
 			elem: typeOf(typ.Elem(), val, nil),
 		}
-		return sliceType
+		return arrayType
 	case reflect.Slice:
 		sliceType := &sliceType{
 			parent:       parent,
 			reflectType:  typ,
 			reflectValue: val,
+
+			elem: typeOf(typ.Elem(), val, nil),
 		}
 		return sliceType
 	case reflect.Func:
@@ -87,6 +94,7 @@ func typeOf(typ reflect.Type, val *reflect.Value, parent Type) Type {
 			parent:       parent,
 			reflectType:  typ,
 			reflectValue: val,
+			elem:         typeOf(typ.Elem(), val, nil),
 		}
 	case reflect.String:
 		return &stringType{

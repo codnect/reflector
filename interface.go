@@ -37,6 +37,10 @@ func (i *interfaceType) PackageName() string {
 	return name
 }
 
+func (i *interfaceType) PackagePath() string {
+	return i.reflectType.PkgPath()
+}
+
 func (i *interfaceType) HasValue() bool {
 	return i.reflectValue != nil
 }

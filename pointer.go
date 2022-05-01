@@ -28,6 +28,10 @@ func (p *pointer) PackageName() string {
 	return p.base.PackageName()
 }
 
+func (p *pointer) PackagePath() string {
+	return p.base.PackagePath()
+}
+
 func (p *pointer) HasValue() bool {
 	return p.reflectValue != nil
 }

@@ -1,6 +1,8 @@
 package reflector
 
 import (
+	"errors"
+	"fmt"
 	"reflect"
 	"runtime"
 	"strings"
@@ -15,6 +17,7 @@ type Function interface {
 	NumParameter() int
 	Results() []Type
 	NumResult() int
+	IsVariadic() bool
 	Invoke(args ...any) ([]any, error)
 }
 
@@ -34,6 +37,10 @@ func (f *functionType) Name() string {
 		return f.name
 	}
 
+	if f.reflectValue == nil {
+		return f.getFunctionName()
+	}
+
 	name := runtime.FuncForPC(f.reflectValue.Pointer()).Name()
 	dotLastIndex := strings.LastIndex(name, ".")
 
@@ -41,7 +48,42 @@ func (f *functionType) Name() string {
 		return name[dotLastIndex+1:]
 	}
 
+	if f.name == "" {
+		return f.getFunctionName()
+	}
+
 	return name
+}
+
+func (f *functionType) getFunctionName() string {
+	var builder strings.Builder
+	builder.WriteString("func(")
+
+	for index, parameter := range f.Parameters() {
+		builder.WriteString(parameter.Name())
+		if index != f.NumParameter()-1 {
+			builder.WriteString(",")
+		}
+	}
+
+	builder.WriteString(")")
+
+	if f.NumResult() > 1 {
+		builder.WriteString(" (")
+	}
+
+	for index, result := range f.Results() {
+		builder.WriteString(result.Name())
+		if index != f.NumResult()-1 {
+			builder.WriteString(",")
+		}
+	}
+
+	if f.NumResult() > 1 {
+		builder.WriteString(")")
+	}
+
+	return builder.String()
 }
 
 func (f *functionType) PackageName() string {
@@ -54,6 +96,10 @@ func (f *functionType) PackageName() string {
 		}
 
 		return name
+	}
+
+	if f.reflectValue == nil {
+		return ""
 	}
 
 	name := runtime.FuncForPC(f.reflectValue.Pointer()).Name()
@@ -70,6 +116,10 @@ func (f *functionType) PackageName() string {
 	}
 
 	return name
+}
+
+func (f *functionType) PackagePath() string {
+	return ""
 }
 
 func (f *functionType) HasValue() bool {
@@ -130,6 +180,75 @@ func (f *functionType) NumResult() int {
 	return f.reflectType.NumOut()
 }
 
+func (f *functionType) IsVariadic() bool {
+	return f.reflectType.IsVariadic()
+}
+
 func (f *functionType) Invoke(args ...any) ([]any, error) {
-	return nil, nil
+	if f.reflectValue == nil {
+		return nil, errors.New("value reference is nil")
+	}
+
+	if (f.IsVariadic() && len(args) < f.NumParameter()) || (!f.IsVariadic() && len(args) != f.NumParameter()) {
+		return nil, fmt.Errorf("invalid parameter count, expected %d but got %d", f.NumParameter(), len(args))
+	}
+
+	inputs := make([]reflect.Value, 0)
+
+	variadicIndex := -1
+	var variadicType Slice
+
+	if f.IsVariadic() {
+		variadicIndex = f.NumResult() - 1
+		paramType := f.Parameters()[f.NumParameter()-1]
+		sliceType, isSlice := ToSlice(paramType)
+
+		if isSlice {
+			newInstance := sliceType.Instantiate().Val()
+			newInstanceType := TypeOfAny(newInstance)
+			pointerType, _ := ToPointer(newInstanceType)
+			variadicType, _ = ToSlice(pointerType.Elem())
+		}
+	}
+
+	for index, arg := range args {
+		actualParamType := TypeOfAny(arg)
+
+		if index > variadicIndex && variadicType != nil {
+			if arg == nil {
+				variadicType.Append(reflect.New(variadicType.ReflectType()).Interface())
+				continue
+			} else if variadicType.Elem().Name() != "any" && actualParamType.Name() != variadicType.Elem().Name() {
+				return nil, fmt.Errorf("expected %s but got %s at index %d", variadicType.Elem().Name(), actualParamType.Name(), index)
+			}
+
+			variadicType.Append(arg)
+			continue
+		}
+
+		expectedParamType := f.Parameters()[index]
+
+		if arg == nil {
+			inputs = append(inputs, reflect.Zero(expectedParamType.ReflectType()))
+		} else {
+			if expectedParamType.Name() != "any" && actualParamType.Name() != expectedParamType.Name() {
+				return nil, fmt.Errorf("expected %s but got %s at index %d", expectedParamType.Name(), actualParamType.Name(), index)
+			}
+			inputs = append(inputs, reflect.ValueOf(arg))
+		}
+	}
+
+	if variadicType != nil {
+		inputs = append(inputs, *variadicType.ReflectValue())
+	}
+
+	outputs := make([]any, 0)
+
+	results := f.reflectValue.Call(inputs)
+
+	for _, outputParam := range results {
+		outputs = append(outputs, outputParam.Interface())
+	}
+
+	return outputs, nil
 }

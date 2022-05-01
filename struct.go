@@ -40,6 +40,10 @@ func (s *structType) PackageName() string {
 	return name
 }
 
+func (s *structType) PackagePath() string {
+	return s.reflectType.PkgPath()
+}
+
 func (s *structType) HasValue() bool {
 	return s.reflectValue != nil
 }

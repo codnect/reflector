@@ -84,6 +84,10 @@ func (s *signedIntegerType) PackageName() string {
 	return ""
 }
 
+func (s *signedIntegerType) PackagePath() string {
+	return ""
+}
+
 func (s *signedIntegerType) HasValue() bool {
 	return s.reflectValue != nil
 }
@@ -201,6 +205,10 @@ func (u *unsignedIntegerType) Name() string {
 }
 
 func (u *unsignedIntegerType) PackageName() string {
+	return ""
+}
+
+func (u *unsignedIntegerType) PackagePath() string {
 	return ""
 }
 
@@ -324,6 +332,10 @@ func (f *floatType) PackageName() string {
 	return ""
 }
 
+func (f *floatType) PackagePath() string {
+	return ""
+}
+
 func (f *floatType) HasValue() bool {
 	return f.reflectValue != nil
 }
@@ -428,6 +440,10 @@ func (c *complexType) Name() string {
 }
 
 func (c *complexType) PackageName() string {
+	return ""
+}
+
+func (c *complexType) PackagePath() string {
 	return ""
 }
 

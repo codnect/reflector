@@ -27,6 +27,10 @@ func (s *stringType) PackageName() string {
 	return ""
 }
 
+func (s *stringType) PackagePath() string {
+	return ""
+}
+
 func (s *stringType) HasValue() bool {
 	return s.reflectValue != nil
 }

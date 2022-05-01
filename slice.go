@@ -3,10 +3,12 @@ package reflector
 import (
 	"errors"
 	"reflect"
+	"strings"
 )
 
 type Slice interface {
 	Type
+	Instantiable
 	CanSet() bool
 	Elem() Type
 	Value() (any, error)
@@ -29,10 +31,17 @@ type sliceType struct {
 }
 
 func (s *sliceType) Name() string {
-	return s.reflectType.Name()
+	var builder strings.Builder
+	builder.WriteString("[]")
+	builder.WriteString(s.elem.Name())
+	return builder.String()
 }
 
 func (s *sliceType) PackageName() string {
+	return ""
+}
+
+func (s *sliceType) PackagePath() string {
 	return ""
 }
 
