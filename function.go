@@ -195,41 +195,32 @@ func (f *functionType) Invoke(args ...any) ([]any, error) {
 
 	inputs := make([]reflect.Value, 0)
 
-	variadicIndex := -1
 	var variadicType Slice
 
 	if f.IsVariadic() {
-		variadicIndex = f.NumResult() - 1
 		paramType := f.Parameters()[f.NumParameter()-1]
-		sliceType, isSlice := ToSlice(paramType)
-
-		if isSlice {
-			newInstance := sliceType.Instantiate().Val()
-			newInstanceType := TypeOfAny(newInstance)
-			pointerType, _ := ToPointer(newInstanceType)
-			variadicType, _ = ToSlice(pointerType.Elem())
-		}
+		variadicType, _ = ToSlice(paramType)
 	}
 
 	for index, arg := range args {
 		actualParamType := TypeOfAny(arg)
 
-		if index > variadicIndex && variadicType != nil {
+		if f.IsVariadic() && index > f.NumResult()-1 {
 			if arg == nil {
-				variadicType.Append(reflect.New(variadicType.ReflectType()).Interface())
+				inputs = append(inputs, reflect.New(variadicType.Elem().ReflectType()).Elem())
 				continue
 			} else if variadicType.Elem().Name() != "any" && actualParamType.Name() != variadicType.Elem().Name() {
 				return nil, fmt.Errorf("expected %s but got %s at index %d", variadicType.Elem().Name(), actualParamType.Name(), index)
 			}
 
-			variadicType.Append(arg)
+			inputs = append(inputs, reflect.ValueOf(arg))
 			continue
 		}
 
 		expectedParamType := f.Parameters()[index]
 
 		if arg == nil {
-			inputs = append(inputs, reflect.Zero(expectedParamType.ReflectType()))
+			inputs = append(inputs, reflect.New(variadicType.Elem().ReflectType()).Elem())
 		} else {
 			if expectedParamType.Name() != "any" && actualParamType.Name() != expectedParamType.Name() {
 				return nil, fmt.Errorf("expected %s but got %s at index %d", expectedParamType.Name(), actualParamType.Name(), index)
@@ -238,12 +229,7 @@ func (f *functionType) Invoke(args ...any) ([]any, error) {
 		}
 	}
 
-	if variadicType != nil {
-		inputs = append(inputs, *variadicType.ReflectValue())
-	}
-
 	outputs := make([]any, 0)
-
 	results := f.reflectValue.Call(inputs)
 
 	for _, outputParam := range results {

@@ -121,7 +121,7 @@ func (s *sliceType) Append(values ...any) {
 	}
 
 	for _, value := range values {
-		*s.reflectValue = reflect.Append(*s.reflectValue, reflect.ValueOf(value))
+		s.SetValue(reflect.Append(*s.reflectValue, reflect.ValueOf(value)).Interface())
 	}
 }
 
