@@ -205,7 +205,7 @@ func (f *functionType) Invoke(args ...any) ([]any, error) {
 	for index, arg := range args {
 		actualParamType := TypeOfAny(arg)
 
-		if f.IsVariadic() && index > f.NumResult()-1 {
+		if f.IsVariadic() && index > f.NumResult() {
 			if arg == nil {
 				inputs = append(inputs, reflect.New(variadicType.Elem().ReflectType()).Elem())
 				continue
@@ -220,7 +220,7 @@ func (f *functionType) Invoke(args ...any) ([]any, error) {
 		expectedParamType := f.Parameters()[index]
 
 		if arg == nil {
-			inputs = append(inputs, reflect.New(variadicType.Elem().ReflectType()).Elem())
+			inputs = append(inputs, reflect.New(expectedParamType.ReflectType()).Elem())
 		} else {
 			if expectedParamType.Name() != "any" && actualParamType.Name() != expectedParamType.Name() {
 				return nil, fmt.Errorf("expected %s but got %s at index %d", expectedParamType.Name(), actualParamType.Name(), index)

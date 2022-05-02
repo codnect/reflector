@@ -17,7 +17,7 @@ type Slice interface {
 	Cap() (int, error)
 	Get(index int) (any, error)
 	Set(index int, val any) error
-	Append(values ...any)
+	Append(values ...any) (any, error)
 	Slice(low, high int) (any, error)
 	Copy(dst any) (int, error)
 }
@@ -115,14 +115,18 @@ func (s *sliceType) Set(index int, val any) error {
 	return nil
 }
 
-func (s *sliceType) Append(values ...any) {
+func (s *sliceType) Append(values ...any) (any, error) {
 	if !s.CanSet() {
-		return
+		return nil, errors.New("value cannot be set")
 	}
 
+	slice := *s.reflectValue
+
 	for _, value := range values {
-		s.SetValue(reflect.Append(*s.reflectValue, reflect.ValueOf(value)).Interface())
+		slice = reflect.Append(slice, reflect.ValueOf(value))
 	}
+
+	return slice.Interface(), nil
 }
 
 func (s *sliceType) Slice(low, high int) (any, error) {
@@ -146,6 +150,10 @@ func (s *sliceType) Copy(dst any) (int, error) {
 		return -1, errors.New("value reference is nil")
 	}
 
+	if dst == nil {
+		return -1, errors.New("dst should not be nil")
+	}
+
 	return reflect.Copy(reflect.ValueOf(dst), *s.reflectValue), nil
 }
 
@@ -166,7 +174,10 @@ func (s *sliceType) ReflectValue() *reflect.Value {
 }
 
 func (s *sliceType) Instantiate() Value {
+	ptr := reflect.New(s.reflectType).Interface()
+	emptySlice := reflect.MakeSlice(s.reflectType, 0, 0)
+	reflect.ValueOf(ptr).Elem().Set(emptySlice)
 	return &value{
-		reflect.New(s.reflectType),
+		reflect.ValueOf(ptr),
 	}
 }

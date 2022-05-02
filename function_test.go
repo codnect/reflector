@@ -66,26 +66,6 @@ func TestTypeOfFunction(t *testing.T) {
 	outputs, err := functionType.Invoke("anyTestValue1", []int{2, 5}, "anyTestValue2", 6)
 	assert.Nil(t, outputs)
 	assert.NotNil(t, err)
-
-	//assert.False(t, stringType.CanSet())
-
-	//value, err := stringType.Value()
-	//assert.Empty(t, value)
-	//assert.NotNil(t, err)
-
-	//err = stringType.SetValue("hello")
-	//assert.NotNil(t, err)
-
-	//newString := stringType.Instantiate()
-	//assert.NotNil(t, newString)
-
-	//stringPtrVal, ok := newString.Val().(*string)
-	//assert.True(t, ok)
-	//assert.Empty(t, *stringPtrVal)
-
-	//stringVal, ok := newString.Elem().(string)
-	//assert.True(t, ok)
-	//assert.Empty(t, stringVal)
 }
 
 func TestTypeOfFunctionPointer(t *testing.T) {
@@ -304,12 +284,12 @@ func TestTypeOfFunctionObjectPointer(t *testing.T) {
 	assert.NotNil(t, err)
 }
 
-func Function1(param1 *string, param2 []int, param3 ...any) (int, error) {
+func Function1(param1 *string, param2 []int, param3 string, param4 ...any) (int, error) {
 	return 25, errors.New("Function1")
 }
 
 func TestTypeOfTestFunction(t *testing.T) {
-	var val func(param1 *string, param2 []int, param3 ...any) (int, error)
+	var val func(param1 *string, param2 []int, param3 string, param4 ...any) (int, error)
 	val = Function1
 
 	typ := TypeOfAny(val)
@@ -334,9 +314,9 @@ func TestTypeOfTestFunction(t *testing.T) {
 	assert.Nil(t, receiverType)
 	assert.False(t, ok)
 
-	assert.Equal(t, 3, functionType.NumParameter())
+	assert.Equal(t, 4, functionType.NumParameter())
 	params := functionType.Parameters()
-	assert.Len(t, params, 3)
+	assert.Len(t, params, 4)
 
 	param := functionType.Parameters()[0]
 	assert.True(t, IsPointer(param))
@@ -355,6 +335,11 @@ func TestTypeOfTestFunction(t *testing.T) {
 	assert.Equal(t, "[]int", sliceParamType.Name())
 
 	param = functionType.Parameters()[2]
+	stringParamType, isString = ToString(param)
+	assert.True(t, isString)
+	assert.Equal(t, "string", stringParamType.Name())
+
+	param = functionType.Parameters()[3]
 	sliceParamType, isSlice = ToSlice(param)
 	assert.True(t, isSlice)
 	assert.Equal(t, "[]any", sliceParamType.Name())
@@ -374,7 +359,7 @@ func TestTypeOfTestFunction(t *testing.T) {
 	assert.True(t, isInterface)
 	assert.Equal(t, "error", interfaceResultType.Name())
 
-	outputs, err := functionType.Invoke(new(string), []int{2, 5}, nil, 6, 8, 10)
+	outputs, err := functionType.Invoke(new(string), []int{2, 5}, nil, nil, 6, 8, 10)
 	assert.NotNil(t, outputs)
 	assert.Nil(t, err)
 
