@@ -173,6 +173,10 @@ func (s *sliceType) ReflectValue() *reflect.Value {
 	return s.reflectValue
 }
 
+func (s *sliceType) Compare(another Type) bool {
+	return false
+}
+
 func (s *sliceType) Instantiate() Value {
 	ptr := reflect.New(s.reflectType).Interface()
 	emptySlice := reflect.MakeSlice(s.reflectType, 0, 0)

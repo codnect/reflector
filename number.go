@@ -104,6 +104,10 @@ func (s *signedIntegerType) ReflectValue() *reflect.Value {
 	return s.reflectValue
 }
 
+func (s *signedIntegerType) Compare(another Type) bool {
+	return false
+}
+
 func (s *signedIntegerType) BitSize() BitSize {
 	return s.bitSize
 }
@@ -226,6 +230,10 @@ func (u *unsignedIntegerType) ReflectType() reflect.Type {
 
 func (u *unsignedIntegerType) ReflectValue() *reflect.Value {
 	return u.reflectValue
+}
+
+func (u *unsignedIntegerType) Compare(another Type) bool {
+	return false
 }
 
 func (u *unsignedIntegerType) BitSize() BitSize {
@@ -352,6 +360,10 @@ func (f *floatType) ReflectValue() *reflect.Value {
 	return f.reflectValue
 }
 
+func (f *floatType) Compare(another Type) bool {
+	return false
+}
+
 func (f *floatType) BitSize() BitSize {
 	return f.bitSize
 }
@@ -461,6 +473,10 @@ func (c *complexType) ReflectType() reflect.Type {
 
 func (c *complexType) ReflectValue() *reflect.Value {
 	return c.reflectValue
+}
+
+func (c *complexType) Compare(another Type) bool {
+	return false
 }
 
 func (c *complexType) BitSize() BitSize {

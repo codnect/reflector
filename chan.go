@@ -79,6 +79,10 @@ func (c *chanType) ReflectValue() *reflect.Value {
 	return c.reflectValue
 }
 
+func (c *chanType) Compare(another Type) bool {
+	return false
+}
+
 func (c *chanType) CanSet() bool {
 	if c.reflectValue == nil {
 		return false

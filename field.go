@@ -8,6 +8,7 @@ import (
 
 type Field interface {
 	Name() string
+	Index() int
 	IsExported() bool
 	IsAnonymous() bool
 	Type() Type
@@ -15,6 +16,7 @@ type Field interface {
 	Value() (any, error)
 	SetValue(value any) error
 	Tags() Tags
+	ReflectStructField() reflect.StructField
 }
 
 type field struct {
@@ -27,6 +29,10 @@ func (f *field) Name() string {
 	return f.structField.Name
 }
 
+func (f *field) Index() int {
+	return f.index
+}
+
 func (f *field) IsExported() bool {
 	return f.structField.IsExported()
 }
@@ -36,8 +42,12 @@ func (f *field) IsAnonymous() bool {
 }
 
 func (f *field) Type() Type {
+	if f.structType.reflectValue == nil {
+		return typeOf(nil, f.structField.Type, nil, f.structType)
+	}
+
 	v := f.structType.reflectValue.Field(f.index)
-	return typeOf(f.structField.Type, &v, f.structType)
+	return typeOf(nil, f.structField.Type, &v, f.structType)
 }
 
 func (f *field) CanSet() bool {
@@ -49,6 +59,10 @@ func (f *field) Value() (any, error) {
 		return nil, errors.New("value reference is nil")
 	}
 
+	if !f.IsExported() {
+		return nil, errors.New("the field is unexported")
+	}
+
 	return f.structType.reflectValue.Field(f.index).Interface(), nil
 }
 
@@ -57,8 +71,16 @@ func (f *field) SetValue(value any) error {
 		return errors.New("value cannot be set")
 	}
 
+	if !f.IsExported() {
+		return errors.New("the field is unexported")
+	}
+
 	f.structType.reflectValue.Field(f.index).Set(reflect.ValueOf(value))
 	return nil
+}
+
+func (f *field) ReflectStructField() reflect.StructField {
+	return f.structField
 }
 
 func (f *field) Tags() Tags {

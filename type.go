@@ -1,6 +1,8 @@
 package reflector
 
-import "reflect"
+import (
+	"reflect"
+)
 
 type Type interface {
 	Name() string
@@ -10,25 +12,23 @@ type Type interface {
 	Parent() Type
 	ReflectType() reflect.Type
 	ReflectValue() *reflect.Value
+	Compare(another Type) bool
 }
 
 func TypeOf[T any]() Type {
-	iface := (*T)(nil)
-	typ := reflect.TypeOf(iface)
-	return typeOf(typ, nil, nil).(Pointer).Elem()
+	typ := reflect.TypeOf((*T)(nil))
+	return typeOf(typ, typ.Elem(), nil, nil)
 }
 
-func TypeOfAny(obj any) Type {
-	if obj == nil {
-		return nil
-	}
+func TypeOfAny[T any](obj T) Type {
+	nilType := reflect.TypeOf((*T)(nil))
 
 	typ := reflect.TypeOf(obj)
 	val := reflect.ValueOf(obj)
-	return typeOf(typ, &val, nil)
+	return typeOf(nilType, typ, &val, nil)
 }
 
-func typeOf(typ reflect.Type, val *reflect.Value, parent Type) Type {
+func typeOf(nilType reflect.Type, typ reflect.Type, val *reflect.Value, parent Type) Type {
 
 	switch typ.Kind() {
 	case reflect.Ptr:
@@ -39,15 +39,16 @@ func typeOf(typ reflect.Type, val *reflect.Value, parent Type) Type {
 
 		if val != nil {
 			elem := val.Elem()
-			ptr.base = typeOf(typ.Elem(), &elem, ptr)
+			ptr.base = typeOf(nilType, typ.Elem(), &elem, ptr)
 		} else {
-			ptr.base = typeOf(typ.Elem(), nil, ptr)
+			ptr.base = typeOf(nilType, typ.Elem(), nil, ptr)
 		}
 
 		return ptr
 	case reflect.Struct:
 		return &structType{
 			parent:       parent,
+			nilType:      nilType,
 			reflectType:  typ,
 			reflectValue: val,
 		}
@@ -60,8 +61,8 @@ func typeOf(typ reflect.Type, val *reflect.Value, parent Type) Type {
 	case reflect.Map:
 		return &mapType{
 			parent:       parent,
-			key:          typeOf(typ.Key(), val, nil),
-			elem:         typeOf(typ.Elem(), val, nil),
+			key:          typeOf(nil, typ.Key(), val, nil),
+			elem:         typeOf(nil, typ.Elem(), val, nil),
 			reflectType:  typ,
 			reflectValue: val,
 		}
@@ -71,7 +72,7 @@ func typeOf(typ reflect.Type, val *reflect.Value, parent Type) Type {
 			reflectType:  typ,
 			reflectValue: val,
 
-			elem: typeOf(typ.Elem(), val, nil),
+			elem: typeOf(nil, typ.Elem(), val, nil),
 		}
 		return arrayType
 	case reflect.Slice:
@@ -80,7 +81,7 @@ func typeOf(typ reflect.Type, val *reflect.Value, parent Type) Type {
 			reflectType:  typ,
 			reflectValue: val,
 
-			elem: typeOf(typ.Elem(), val, nil),
+			elem: typeOf(nil, typ.Elem(), val, nil),
 		}
 		return sliceType
 	case reflect.Func:
@@ -94,7 +95,7 @@ func typeOf(typ reflect.Type, val *reflect.Value, parent Type) Type {
 			parent:       parent,
 			reflectType:  typ,
 			reflectValue: val,
-			elem:         typeOf(typ.Elem(), val, nil),
+			elem:         typeOf(nil, typ.Elem(), val, nil),
 		}
 	case reflect.String:
 		return &stringType{
@@ -136,7 +137,11 @@ func typeOf(typ reflect.Type, val *reflect.Value, parent Type) Type {
 			reflectType:  typ,
 			reflectValue: val,
 		}
+	default:
+		return &customType{
+			parent:       parent,
+			reflectType:  typ,
+			reflectValue: val,
+		}
 	}
-
-	return nil
 }

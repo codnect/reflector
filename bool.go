@@ -47,6 +47,10 @@ func (b *booleanType) ReflectValue() *reflect.Value {
 	return b.reflectValue
 }
 
+func (b *booleanType) Compare(another Type) bool {
+	return false
+}
+
 func (b *booleanType) CanSet() bool {
 	if b.reflectValue == nil {
 		return false

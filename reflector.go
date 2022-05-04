@@ -26,6 +26,19 @@ func ToStruct(typ Type) (Struct, bool) {
 	return nil, false
 }
 
+func IsCustom(typ Type) bool {
+	_, ok := typ.(*customType)
+	return ok
+}
+
+func ToCustom(typ Type) (Custom, bool) {
+	if customType, ok := typ.(*customType); ok {
+		return customType, true
+	}
+
+	return nil, false
+}
+
 func IsInterface(typ Type) bool {
 	_, ok := typ.(*interfaceType)
 	return ok

@@ -138,6 +138,10 @@ func (f *functionType) ReflectValue() *reflect.Value {
 	return f.reflectValue
 }
 
+func (f *functionType) Compare(another Type) bool {
+	return false
+}
+
 func (f *functionType) IsExported() bool {
 	return f.isExported
 }
@@ -156,7 +160,7 @@ func (f *functionType) Parameters() []Type {
 
 	for index := 0; index < numIn; index++ {
 		typ := f.reflectType.In(index)
-		parameters = append(parameters, typeOf(typ, nil, nil))
+		parameters = append(parameters, typeOf(nil, typ, nil, nil))
 	}
 	return parameters
 }
@@ -171,7 +175,7 @@ func (f *functionType) Results() []Type {
 
 	for index := 0; index < numOut; index++ {
 		typ := f.reflectType.Out(index)
-		results = append(results, typeOf(typ, nil, nil))
+		results = append(results, typeOf(nil, typ, nil, nil))
 	}
 	return results
 }

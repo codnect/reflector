@@ -5,35 +5,70 @@ import (
 	"testing"
 )
 
-type Test interface {
-	Print()
+type TestInterface1 interface {
+	Method1() int
+	Method2()
 }
 
-type Wrapper struct {
-	Name string
+type TestInterface2 interface {
+	Method3() error
 }
 
-type Dessert struct {
-	Wrapper Wrapper
+type TestInterface3 interface {
+	Method4()
 }
 
-func (d Dessert) Print() {
+type TestInterface4 interface {
+	Method5()
+	Method6()
+}
+
+type TestInterface5 interface {
+	Method7()
+}
+
+type TestEmbeddedStruct struct {
+	ExportedAndEmbeddedField   byte
+	unexportedAndEmbeddedField int16
+}
+
+type TestStruct1 struct {
+	TestInterface5       `json:"TestInterface5"`
+	TestEmbeddedStruct   `json:"TestEmbeddedStruct"`
+	ExportedField        string `json:"ExportedField"`
+	ExportedPointerField *int   `json:"ExportedPointerField"`
+	ExportedPointerSlice []int  `json:"ExportedPointerSlice"`
+	unexportedField      rune
+	unexportedChanField  chan<- string
+}
+
+func (t TestStruct1) Method4() {
 
 }
 
-func (d Dessert) Eat() string {
-	return ""
+func (t TestStruct1) Method1() int {
+	return 0
 }
 
-func (d Dessert) Buy() {
+func (t *TestStruct1) Method2() {
+}
 
+func (t *TestStruct1) Method5() {
+}
+
+func (t *TestStruct1) Method6() {
+}
+
+type TestStruct2 struct {
+}
+
+func (t *TestStruct2) Method7() {
 }
 
 func TestTypeOfStruct(t *testing.T) {
-
-	typ := TypeOf[Dessert]()
+	typ := TypeOf[TestStruct1]()
 	assert.True(t, IsStruct(typ))
-	assert.Equal(t, "Dessert", typ.Name())
+	assert.Equal(t, "TestStruct1", typ.Name())
 	assert.Equal(t, "reflector", typ.PackageName())
 
 	assert.False(t, typ.HasValue())
@@ -45,26 +80,219 @@ func TestTypeOfStruct(t *testing.T) {
 	assert.NotNil(t, structType)
 	assert.True(t, isStruct)
 
-	//	assert.Equal(t, 2, structType.NumMethod())
+	assert.Equal(t, 6, structType.NumMethod())
+	assert.Equal(t, 7, structType.NumField())
 
-	y := TypeOf[Test]()
-	i, _ := ToInterface(y)
-	b := structType.Implements(i)
-	if b {
+	testInterface1 := TypeOf[TestInterface1]()
+	interfaceType, isInterface := ToInterface(testInterface1)
+	assert.NotNil(t, interfaceType)
+	assert.True(t, isInterface)
 
-	}
+	implements, _ := structType.Implements(interfaceType)
+	assert.False(t, implements)
+
+	testInterface2 := TypeOf[TestInterface2]()
+	interfaceType, isInterface = ToInterface(testInterface2)
+	assert.NotNil(t, interfaceType)
+	assert.True(t, isInterface)
+
+	implements, _ = structType.Implements(interfaceType)
+	assert.False(t, implements)
+
+	testInterface3 := TypeOf[TestInterface3]()
+	interfaceType, isInterface = ToInterface(testInterface3)
+	assert.NotNil(t, interfaceType)
+	assert.True(t, isInterface)
+
+	implements, _ = structType.Implements(interfaceType)
+	assert.True(t, implements)
+
+	testInterface4 := TypeOf[TestInterface4]()
+	interfaceType, isInterface = ToInterface(testInterface4)
+	assert.NotNil(t, interfaceType)
+	assert.True(t, isInterface)
+
+	implements, _ = structType.Implements(interfaceType)
+	assert.False(t, implements)
+
+	testInterface5 := TypeOf[TestInterface5]()
+	interfaceType, isInterface = ToInterface(testInterface5)
+	assert.NotNil(t, interfaceType)
+	assert.True(t, isInterface)
+
+	implements, _ = structType.Implements(interfaceType)
+	assert.True(t, implements)
+
+	fields := structType.Fields()
+	assert.NotNil(t, fields)
+
+	field := fields[0]
+	assert.Equal(t, "TestInterface5", field.Name())
+	assert.True(t, field.IsExported())
+	assert.True(t, field.IsAnonymous())
+	assert.Equal(t, "TestInterface5", field.Type().Name())
+
+	fieldVal, err := field.Value()
+	assert.Nil(t, fieldVal)
+	assert.NotNil(t, err)
+
+	err = field.SetValue("anyTestValue")
+	assert.NotNil(t, err)
+
+	tags := field.Tags()
+	assert.NotNil(t, tags)
+	assert.Len(t, tags, 1)
+	assert.True(t, tags.Contains("json"))
+	tag, exists := tags.Find("json")
+	assert.True(t, exists)
+	assert.NotNil(t, tag)
+	assert.Equal(t, "json", tag.Name())
+	assert.Equal(t, field.Name(), tag.Value())
+
+	field = fields[1]
+	assert.Equal(t, "TestEmbeddedStruct", field.Name())
+	assert.True(t, field.IsExported())
+	assert.True(t, field.IsAnonymous())
+	assert.Equal(t, "TestEmbeddedStruct", field.Type().Name())
+
+	fieldVal, err = field.Value()
+	assert.Nil(t, fieldVal)
+	assert.NotNil(t, err)
+
+	err = field.SetValue("anyTestValue")
+	assert.NotNil(t, err)
+
+	tags = field.Tags()
+	assert.NotNil(t, tags)
+	assert.Len(t, tags, 1)
+	assert.True(t, tags.Contains("json"))
+	tag, exists = tags.Find("json")
+	assert.True(t, exists)
+	assert.NotNil(t, tag)
+	assert.Equal(t, "json", tag.Name())
+	assert.Equal(t, field.Name(), tag.Value())
+
+	field = fields[2]
+	assert.Equal(t, "ExportedField", field.Name())
+	assert.True(t, field.IsExported())
+	assert.False(t, field.IsAnonymous())
+	assert.Equal(t, "string", field.Type().Name())
+
+	fieldVal, err = field.Value()
+	assert.Nil(t, fieldVal)
+	assert.NotNil(t, err)
+
+	err = field.SetValue("anyTestValue")
+	assert.NotNil(t, err)
+
+	tags = field.Tags()
+	assert.NotNil(t, tags)
+	assert.Len(t, tags, 1)
+	assert.True(t, tags.Contains("json"))
+	tag, exists = tags.Find("json")
+	assert.True(t, exists)
+	assert.NotNil(t, tag)
+	assert.Equal(t, "json", tag.Name())
+	assert.Equal(t, field.Name(), tag.Value())
+
+	field = fields[3]
+	assert.Equal(t, "ExportedPointerField", field.Name())
+	assert.True(t, field.IsExported())
+	assert.False(t, field.IsAnonymous())
+	assert.Equal(t, "*int", field.Type().Name())
+
+	fieldVal, err = field.Value()
+	assert.Nil(t, fieldVal)
+	assert.NotNil(t, err)
+
+	err = field.SetValue("anyTestValue")
+	assert.NotNil(t, err)
+
+	tags = field.Tags()
+	assert.NotNil(t, tags)
+	assert.Len(t, tags, 1)
+	assert.True(t, tags.Contains("json"))
+	tag, exists = tags.Find("json")
+	assert.True(t, exists)
+	assert.NotNil(t, tag)
+	assert.Equal(t, "json", tag.Name())
+	assert.Equal(t, field.Name(), tag.Value())
+
+	field = fields[4]
+	assert.Equal(t, "ExportedPointerSlice", field.Name())
+	assert.True(t, field.IsExported())
+	assert.False(t, field.IsAnonymous())
+	assert.Equal(t, "[]int", field.Type().Name())
+
+	fieldVal, err = field.Value()
+	assert.Nil(t, fieldVal)
+	assert.NotNil(t, err)
+
+	err = field.SetValue("anyTestValue")
+	assert.NotNil(t, err)
+
+	tags = field.Tags()
+	assert.NotNil(t, tags)
+	assert.Len(t, tags, 1)
+	assert.True(t, tags.Contains("json"))
+	tag, exists = tags.Find("json")
+	assert.True(t, exists)
+	assert.NotNil(t, tag)
+	assert.Equal(t, "json", tag.Name())
+	assert.Equal(t, field.Name(), tag.Value())
+
+	field = fields[5]
+	assert.Equal(t, "unexportedField", field.Name())
+	assert.False(t, field.IsExported())
+	assert.False(t, field.IsAnonymous())
+	assert.Equal(t, "int32", field.Type().Name())
+
+	fieldVal, err = field.Value()
+	assert.Nil(t, fieldVal)
+	assert.NotNil(t, err)
+
+	err = field.SetValue("anyTestValue")
+	assert.NotNil(t, err)
+
+	tags = field.Tags()
+	assert.NotNil(t, tags)
+	assert.Len(t, tags, 0)
+	assert.False(t, tags.Contains("json"))
+	tag, exists = tags.Find("json")
+	assert.False(t, exists)
+	assert.Nil(t, tag)
+
+	field = fields[6]
+	assert.Equal(t, "unexportedChanField", field.Name())
+	assert.False(t, field.IsExported())
+	assert.False(t, field.IsAnonymous())
+	assert.Equal(t, "chan<- string", field.Type().Name())
+
+	fieldVal, err = field.Value()
+	assert.Nil(t, fieldVal)
+	assert.NotNil(t, err)
+
+	err = field.SetValue("anyTestValue")
+	assert.NotNil(t, err)
+
+	tags = field.Tags()
+	assert.NotNil(t, tags)
+	assert.Len(t, tags, 0)
+	assert.False(t, tags.Contains("json"))
+	tag, exists = tags.Find("json")
+	assert.False(t, exists)
+	assert.Nil(t, tag)
 }
 
 func TestTypeOfStructPointer(t *testing.T) {
-	ptrType := TypeOf[*Dessert]()
-
+	ptrType := TypeOf[*TestStruct1]()
 	assert.True(t, IsPointer(ptrType))
 	ptr, isPtr := ToPointer(ptrType)
 
 	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
-	assert.Equal(t, "*Dessert", ptr.Name())
+	assert.Equal(t, "*TestStruct1", ptr.Name())
 	assert.Equal(t, "reflector", ptr.PackageName())
 	assert.NotNil(t, ptr.ReflectType())
 	assert.Nil(t, ptr.ReflectValue())
@@ -72,7 +300,7 @@ func TestTypeOfStructPointer(t *testing.T) {
 	typ := ptr.Elem()
 
 	assert.True(t, IsStruct(typ))
-	assert.Equal(t, "Dessert", typ.Name())
+	assert.Equal(t, "TestStruct1", typ.Name())
 	assert.Equal(t, "reflector", typ.PackageName())
 
 	assert.False(t, typ.HasValue())
@@ -84,32 +312,229 @@ func TestTypeOfStructPointer(t *testing.T) {
 	assert.NotNil(t, structType)
 	assert.True(t, isStruct)
 
-	assert.Equal(t, 3, structType.NumMethod())
-	structType.Methods()
+	assert.Equal(t, 6, structType.NumMethod())
+	assert.Equal(t, 7, structType.NumField())
 
-	y := TypeOf[Test]()
-	i, _ := ToInterface(y)
-	b := structType.Implements(i)
-	if b {
+	testInterface1 := TypeOf[TestInterface1]()
+	interfaceType, isInterface := ToInterface(testInterface1)
+	assert.NotNil(t, interfaceType)
+	assert.True(t, isInterface)
 
-	}
+	implements, _ := structType.Implements(interfaceType)
+	assert.True(t, implements)
 
+	testInterface2 := TypeOf[TestInterface2]()
+	interfaceType, isInterface = ToInterface(testInterface2)
+	assert.NotNil(t, interfaceType)
+	assert.True(t, isInterface)
+
+	implements, _ = structType.Implements(interfaceType)
+	assert.False(t, implements)
+
+	testInterface3 := TypeOf[TestInterface3]()
+	interfaceType, isInterface = ToInterface(testInterface3)
+	assert.NotNil(t, interfaceType)
+	assert.True(t, isInterface)
+
+	implements, _ = structType.Implements(interfaceType)
+	assert.True(t, implements)
+
+	testInterface4 := TypeOf[TestInterface4]()
+	interfaceType, isInterface = ToInterface(testInterface4)
+	assert.NotNil(t, interfaceType)
+	assert.True(t, isInterface)
+
+	implements, _ = structType.Implements(interfaceType)
+	assert.True(t, implements)
+
+	testInterface5 := TypeOf[TestInterface5]()
+	interfaceType, isInterface = ToInterface(testInterface5)
+	assert.NotNil(t, interfaceType)
+	assert.True(t, isInterface)
+
+	implements, _ = structType.Implements(interfaceType)
+	assert.True(t, implements)
+
+	fields := structType.Fields()
+	assert.NotNil(t, fields)
+
+	field := fields[0]
+	assert.Equal(t, "TestInterface5", field.Name())
+	assert.True(t, field.IsExported())
+	assert.True(t, field.IsAnonymous())
+	assert.Equal(t, "TestInterface5", field.Type().Name())
+
+	fieldVal, err := field.Value()
+	assert.Nil(t, fieldVal)
+	assert.NotNil(t, err)
+
+	err = field.SetValue("anyTestValue")
+	assert.NotNil(t, err)
+
+	tags := field.Tags()
+	assert.NotNil(t, tags)
+	assert.Len(t, tags, 1)
+	assert.True(t, tags.Contains("json"))
+	tag, exists := tags.Find("json")
+	assert.True(t, exists)
+	assert.NotNil(t, tag)
+	assert.Equal(t, "json", tag.Name())
+	assert.Equal(t, field.Name(), tag.Value())
+
+	field = fields[1]
+	assert.Equal(t, "TestEmbeddedStruct", field.Name())
+	assert.True(t, field.IsExported())
+	assert.True(t, field.IsAnonymous())
+	assert.Equal(t, "TestEmbeddedStruct", field.Type().Name())
+
+	fieldVal, err = field.Value()
+	assert.Nil(t, fieldVal)
+	assert.NotNil(t, err)
+
+	err = field.SetValue("anyTestValue")
+	assert.NotNil(t, err)
+
+	tags = field.Tags()
+	assert.NotNil(t, tags)
+	assert.Len(t, tags, 1)
+	assert.True(t, tags.Contains("json"))
+	tag, exists = tags.Find("json")
+	assert.True(t, exists)
+	assert.NotNil(t, tag)
+	assert.Equal(t, "json", tag.Name())
+	assert.Equal(t, field.Name(), tag.Value())
+
+	field = fields[2]
+	assert.Equal(t, "ExportedField", field.Name())
+	assert.True(t, field.IsExported())
+	assert.False(t, field.IsAnonymous())
+	assert.Equal(t, "string", field.Type().Name())
+
+	fieldVal, err = field.Value()
+	assert.Nil(t, fieldVal)
+	assert.NotNil(t, err)
+
+	err = field.SetValue("anyTestValue")
+	assert.NotNil(t, err)
+
+	tags = field.Tags()
+	assert.NotNil(t, tags)
+	assert.Len(t, tags, 1)
+	assert.True(t, tags.Contains("json"))
+	tag, exists = tags.Find("json")
+	assert.True(t, exists)
+	assert.NotNil(t, tag)
+	assert.Equal(t, "json", tag.Name())
+	assert.Equal(t, field.Name(), tag.Value())
+
+	field = fields[3]
+	assert.Equal(t, "ExportedPointerField", field.Name())
+	assert.True(t, field.IsExported())
+	assert.False(t, field.IsAnonymous())
+	assert.Equal(t, "*int", field.Type().Name())
+
+	fieldVal, err = field.Value()
+	assert.Nil(t, fieldVal)
+	assert.NotNil(t, err)
+
+	err = field.SetValue("anyTestValue")
+	assert.NotNil(t, err)
+
+	tags = field.Tags()
+	assert.NotNil(t, tags)
+	assert.Len(t, tags, 1)
+	assert.True(t, tags.Contains("json"))
+	tag, exists = tags.Find("json")
+	assert.True(t, exists)
+	assert.NotNil(t, tag)
+	assert.Equal(t, "json", tag.Name())
+	assert.Equal(t, field.Name(), tag.Value())
+
+	field = fields[4]
+	assert.Equal(t, "ExportedPointerSlice", field.Name())
+	assert.True(t, field.IsExported())
+	assert.False(t, field.IsAnonymous())
+	assert.Equal(t, "[]int", field.Type().Name())
+
+	fieldVal, err = field.Value()
+	assert.Nil(t, fieldVal)
+	assert.NotNil(t, err)
+
+	err = field.SetValue("anyTestValue")
+	assert.NotNil(t, err)
+
+	tags = field.Tags()
+	assert.NotNil(t, tags)
+	assert.Len(t, tags, 1)
+	assert.True(t, tags.Contains("json"))
+	tag, exists = tags.Find("json")
+	assert.True(t, exists)
+	assert.NotNil(t, tag)
+	assert.Equal(t, "json", tag.Name())
+	assert.Equal(t, field.Name(), tag.Value())
+
+	field = fields[5]
+	assert.Equal(t, "unexportedField", field.Name())
+	assert.False(t, field.IsExported())
+	assert.False(t, field.IsAnonymous())
+	assert.Equal(t, "int32", field.Type().Name())
+
+	fieldVal, err = field.Value()
+	assert.Nil(t, fieldVal)
+	assert.NotNil(t, err)
+
+	err = field.SetValue("anyTestValue")
+	assert.NotNil(t, err)
+
+	tags = field.Tags()
+	assert.NotNil(t, tags)
+	assert.Len(t, tags, 0)
+	assert.False(t, tags.Contains("json"))
+	tag, exists = tags.Find("json")
+	assert.False(t, exists)
+	assert.Nil(t, tag)
+
+	field = fields[6]
+	assert.Equal(t, "unexportedChanField", field.Name())
+	assert.False(t, field.IsExported())
+	assert.False(t, field.IsAnonymous())
+	assert.Equal(t, "chan<- string", field.Type().Name())
+
+	fieldVal, err = field.Value()
+	assert.Nil(t, fieldVal)
+	assert.NotNil(t, err)
+
+	err = field.SetValue("anyTestValue")
+	assert.NotNil(t, err)
+
+	tags = field.Tags()
+	assert.NotNil(t, tags)
+	assert.Len(t, tags, 0)
+	assert.False(t, tags.Contains("json"))
+	tag, exists = tags.Find("json")
+	assert.False(t, exists)
+	assert.Nil(t, tag)
 }
 
 func TestTypeOfStructObject(t *testing.T) {
-	dessert := Dessert{
-		Wrapper: Wrapper{
-			Name: "burak",
+	i := -1
+
+	val := TestStruct1{
+		TestInterface5: &TestStruct2{},
+		TestEmbeddedStruct: TestEmbeddedStruct{
+			ExportedAndEmbeddedField:   byte('0'),
+			unexportedAndEmbeddedField: 13,
 		},
+		ExportedField:        "TestValue",
+		ExportedPointerField: &i,
+		ExportedPointerSlice: []int{1, 3, 5},
+		unexportedField:      'A',
+		unexportedChanField:  make(chan string),
 	}
 
-	ptrType := TypeOfAny(&dessert)
-
-	ptr, _ := ToPointer(ptrType)
-	typ := ptr.Elem()
-
+	typ := TypeOfAny(val)
 	assert.True(t, IsStruct(typ))
-	assert.Equal(t, "Dessert", typ.Name())
+	assert.Equal(t, "TestStruct1", typ.Name())
 	assert.Equal(t, "reflector", typ.PackageName())
 
 	assert.True(t, typ.HasValue())
@@ -120,27 +545,514 @@ func TestTypeOfStructObject(t *testing.T) {
 
 	assert.NotNil(t, structType)
 	assert.True(t, isStruct)
-	assert.True(t, structType.CanSet())
 
-	e := structType.Fields()[0]
-	s, _ := ToStruct(e.Type())
+	assert.Equal(t, 6, structType.NumMethod())
+	assert.Equal(t, 7, structType.NumField())
 
-	ft := s.Fields()[0].Type()
-	str, _ := ToString(ft)
-	str.SetValue("hello")
+	testInterface1 := TypeOf[TestInterface1]()
+	interfaceType, isInterface := ToInterface(testInterface1)
+	assert.NotNil(t, interfaceType)
+	assert.True(t, isInterface)
 
-	v := s.Fields()[0].CanSet()
+	implements, _ := structType.Implements(interfaceType)
+	assert.False(t, implements)
 
-	if v {
+	testInterface2 := TypeOf[TestInterface2]()
+	interfaceType, isInterface = ToInterface(testInterface2)
+	assert.NotNil(t, interfaceType)
+	assert.True(t, isInterface)
 
+	implements, _ = structType.Implements(interfaceType)
+	assert.False(t, implements)
+
+	testInterface3 := TypeOf[TestInterface3]()
+	interfaceType, isInterface = ToInterface(testInterface3)
+	assert.NotNil(t, interfaceType)
+	assert.True(t, isInterface)
+
+	implements, _ = structType.Implements(interfaceType)
+	assert.True(t, implements)
+
+	testInterface4 := TypeOf[TestInterface4]()
+	interfaceType, isInterface = ToInterface(testInterface4)
+	assert.NotNil(t, interfaceType)
+	assert.True(t, isInterface)
+
+	implements, _ = structType.Implements(interfaceType)
+	assert.False(t, implements)
+
+	testInterface5 := TypeOf[TestInterface5]()
+	interfaceType, isInterface = ToInterface(testInterface5)
+	assert.NotNil(t, interfaceType)
+	assert.True(t, isInterface)
+
+	implements, _ = structType.Implements(interfaceType)
+	assert.True(t, implements)
+
+	fields := structType.Fields()
+	assert.NotNil(t, fields)
+
+	field := fields[0]
+	assert.Equal(t, "TestInterface5", field.Name())
+	assert.True(t, field.IsExported())
+	assert.True(t, field.IsAnonymous())
+	assert.Equal(t, "TestInterface5", field.Type().Name())
+
+	fieldVal, err := field.Value()
+	assert.NotNil(t, fieldVal)
+	assert.Nil(t, err)
+
+	_, ok := fieldVal.(*TestStruct2)
+	assert.True(t, ok)
+
+	err = field.SetValue("anyTestValue")
+	assert.NotNil(t, err)
+
+	tags := field.Tags()
+	assert.NotNil(t, tags)
+	assert.Len(t, tags, 1)
+	assert.True(t, tags.Contains("json"))
+	tag, exists := tags.Find("json")
+	assert.True(t, exists)
+	assert.NotNil(t, tag)
+	assert.Equal(t, "json", tag.Name())
+	assert.Equal(t, field.Name(), tag.Value())
+
+	field = fields[1]
+	assert.Equal(t, "TestEmbeddedStruct", field.Name())
+	assert.True(t, field.IsExported())
+	assert.True(t, field.IsAnonymous())
+	assert.Equal(t, "TestEmbeddedStruct", field.Type().Name())
+
+	fieldVal, err = field.Value()
+	assert.NotNil(t, fieldVal)
+	assert.Nil(t, err)
+
+	testEmbeddedStructVal, ok := fieldVal.(TestEmbeddedStruct)
+	assert.True(t, ok)
+	assert.NotNil(t, testEmbeddedStructVal)
+	assert.Equal(t, val.TestEmbeddedStruct, testEmbeddedStructVal)
+
+	err = field.SetValue("anyTestValue")
+	assert.NotNil(t, err)
+
+	tags = field.Tags()
+	assert.NotNil(t, tags)
+	assert.Len(t, tags, 1)
+	assert.True(t, tags.Contains("json"))
+	tag, exists = tags.Find("json")
+	assert.True(t, exists)
+	assert.NotNil(t, tag)
+	assert.Equal(t, "json", tag.Name())
+	assert.Equal(t, field.Name(), tag.Value())
+
+	field = fields[2]
+	assert.Equal(t, "ExportedField", field.Name())
+	assert.True(t, field.IsExported())
+	assert.False(t, field.IsAnonymous())
+	assert.Equal(t, "string", field.Type().Name())
+
+	fieldVal, err = field.Value()
+	assert.NotNil(t, fieldVal)
+	assert.Nil(t, err)
+
+	assert.Equal(t, val.ExportedField, fieldVal)
+
+	err = field.SetValue("anyTestValue")
+	assert.NotNil(t, err)
+
+	tags = field.Tags()
+	assert.NotNil(t, tags)
+	assert.Len(t, tags, 1)
+	assert.True(t, tags.Contains("json"))
+	tag, exists = tags.Find("json")
+	assert.True(t, exists)
+	assert.NotNil(t, tag)
+	assert.Equal(t, "json", tag.Name())
+	assert.Equal(t, field.Name(), tag.Value())
+
+	field = fields[3]
+	assert.Equal(t, "ExportedPointerField", field.Name())
+	assert.True(t, field.IsExported())
+	assert.False(t, field.IsAnonymous())
+	assert.Equal(t, "*int", field.Type().Name())
+
+	fieldVal, err = field.Value()
+	assert.NotNil(t, fieldVal)
+	assert.Nil(t, err)
+
+	assert.Equal(t, val.ExportedPointerField, fieldVal)
+
+	err = field.SetValue("anyTestValue")
+	assert.NotNil(t, err)
+
+	tags = field.Tags()
+	assert.NotNil(t, tags)
+	assert.Len(t, tags, 1)
+	assert.True(t, tags.Contains("json"))
+	tag, exists = tags.Find("json")
+	assert.True(t, exists)
+	assert.NotNil(t, tag)
+	assert.Equal(t, "json", tag.Name())
+	assert.Equal(t, field.Name(), tag.Value())
+
+	field = fields[4]
+	assert.Equal(t, "ExportedPointerSlice", field.Name())
+	assert.True(t, field.IsExported())
+	assert.False(t, field.IsAnonymous())
+	assert.Equal(t, "[]int", field.Type().Name())
+
+	fieldVal, err = field.Value()
+	assert.NotNil(t, fieldVal)
+	assert.Nil(t, err)
+
+	assert.Equal(t, val.ExportedPointerSlice, fieldVal)
+
+	err = field.SetValue("anyTestValue")
+	assert.NotNil(t, err)
+
+	tags = field.Tags()
+	assert.NotNil(t, tags)
+	assert.Len(t, tags, 1)
+	assert.True(t, tags.Contains("json"))
+	tag, exists = tags.Find("json")
+	assert.True(t, exists)
+	assert.NotNil(t, tag)
+	assert.Equal(t, "json", tag.Name())
+	assert.Equal(t, field.Name(), tag.Value())
+
+	field = fields[5]
+	assert.Equal(t, "unexportedField", field.Name())
+	assert.False(t, field.IsExported())
+	assert.False(t, field.IsAnonymous())
+	assert.Equal(t, "int32", field.Type().Name())
+
+	fieldVal, err = field.Value()
+	assert.Nil(t, fieldVal)
+	assert.NotNil(t, err)
+
+	err = field.SetValue("anyTestValue")
+	assert.NotNil(t, err)
+
+	tags = field.Tags()
+	assert.NotNil(t, tags)
+	assert.Len(t, tags, 0)
+	assert.False(t, tags.Contains("json"))
+	tag, exists = tags.Find("json")
+	assert.False(t, exists)
+	assert.Nil(t, tag)
+
+	field = fields[6]
+	assert.Equal(t, "unexportedChanField", field.Name())
+	assert.False(t, field.IsExported())
+	assert.False(t, field.IsAnonymous())
+	assert.Equal(t, "chan<- string", field.Type().Name())
+
+	fieldVal, err = field.Value()
+	assert.Nil(t, fieldVal)
+	assert.NotNil(t, err)
+
+	err = field.SetValue("anyTestValue")
+	assert.NotNil(t, err)
+
+	tags = field.Tags()
+	assert.NotNil(t, tags)
+	assert.Len(t, tags, 0)
+	assert.False(t, tags.Contains("json"))
+	tag, exists = tags.Find("json")
+	assert.False(t, exists)
+	assert.Nil(t, tag)
+}
+
+func TestTypeOfStructObjectPointer(t *testing.T) {
+	i := -1
+
+	val := TestStruct1{
+		TestInterface5: &TestStruct2{},
+		TestEmbeddedStruct: TestEmbeddedStruct{
+			ExportedAndEmbeddedField:   byte('0'),
+			unexportedAndEmbeddedField: 13,
+		},
+		ExportedField:        "TestValue",
+		ExportedPointerField: &i,
+		ExportedPointerSlice: []int{1, 3, 5},
+		unexportedField:      'A',
+		unexportedChanField:  make(chan string),
 	}
 
-	//	assert.Equal(t, 2, structType.NumMethod())
+	ptrType := TypeOfAny(&val)
+	assert.True(t, IsPointer(ptrType))
+	ptr, isPtr := ToPointer(ptrType)
 
-	y := TypeOf[Test]()
-	i, _ := ToInterface(y)
-	b := structType.Implements(i)
-	if b {
+	assert.True(t, isPtr)
+	assert.NotNil(t, ptr)
 
+	assert.Equal(t, "*TestStruct1", ptr.Name())
+	assert.Equal(t, "reflector", ptr.PackageName())
+	assert.NotNil(t, ptr.ReflectType())
+	assert.NotNil(t, ptr.ReflectValue())
+
+	typ := ptr.Elem()
+
+	assert.True(t, IsStruct(typ))
+	assert.Equal(t, "TestStruct1", typ.Name())
+	assert.Equal(t, "reflector", typ.PackageName())
+
+	assert.True(t, typ.HasValue())
+	assert.NotNil(t, typ.ReflectType())
+	assert.NotNil(t, typ.ReflectValue())
+
+	structType, isStruct := ToStruct(typ)
+
+	assert.NotNil(t, structType)
+	assert.True(t, isStruct)
+
+	assert.Equal(t, 6, structType.NumMethod())
+	assert.Equal(t, 7, structType.NumField())
+
+	testInterface1 := TypeOf[TestInterface1]()
+	interfaceType, isInterface := ToInterface(testInterface1)
+	assert.NotNil(t, interfaceType)
+	assert.True(t, isInterface)
+
+	implements, _ := structType.Implements(interfaceType)
+	assert.True(t, implements)
+
+	testInterface2 := TypeOf[TestInterface2]()
+	interfaceType, isInterface = ToInterface(testInterface2)
+	assert.NotNil(t, interfaceType)
+	assert.True(t, isInterface)
+
+	implements, _ = structType.Implements(interfaceType)
+	assert.False(t, implements)
+
+	testInterface3 := TypeOf[TestInterface3]()
+	interfaceType, isInterface = ToInterface(testInterface3)
+	assert.NotNil(t, interfaceType)
+	assert.True(t, isInterface)
+
+	implements, _ = structType.Implements(interfaceType)
+	assert.True(t, implements)
+
+	testInterface4 := TypeOf[TestInterface4]()
+	interfaceType, isInterface = ToInterface(testInterface4)
+	assert.NotNil(t, interfaceType)
+	assert.True(t, isInterface)
+
+	implements, _ = structType.Implements(interfaceType)
+	assert.True(t, implements)
+
+	testInterface5 := TypeOf[TestInterface5]()
+	interfaceType, isInterface = ToInterface(testInterface5)
+	assert.NotNil(t, interfaceType)
+	assert.True(t, isInterface)
+
+	implements, _ = structType.Implements(interfaceType)
+	assert.True(t, implements)
+
+	fields := structType.Fields()
+	assert.NotNil(t, fields)
+
+	field := fields[0]
+	assert.Equal(t, "TestInterface5", field.Name())
+	assert.True(t, field.IsExported())
+	assert.True(t, field.IsAnonymous())
+	assert.Equal(t, "TestInterface5", field.Type().Name())
+
+	fieldVal, err := field.Value()
+	assert.NotNil(t, fieldVal)
+	assert.Nil(t, err)
+
+	_, ok := fieldVal.(*TestStruct2)
+	assert.True(t, ok)
+
+	anotherTestStruct := &TestStruct2{}
+	err = field.SetValue(anotherTestStruct)
+	assert.Nil(t, err)
+
+	fieldVal, err = field.Value()
+	assert.NotNil(t, fieldVal)
+	assert.Nil(t, err)
+	assert.Equal(t, anotherTestStruct, fieldVal)
+
+	tags := field.Tags()
+	assert.NotNil(t, tags)
+	assert.Len(t, tags, 1)
+	assert.True(t, tags.Contains("json"))
+	tag, exists := tags.Find("json")
+	assert.True(t, exists)
+	assert.NotNil(t, tag)
+	assert.Equal(t, "json", tag.Name())
+	assert.Equal(t, field.Name(), tag.Value())
+
+	field = fields[1]
+	assert.Equal(t, "TestEmbeddedStruct", field.Name())
+	assert.True(t, field.IsExported())
+	assert.True(t, field.IsAnonymous())
+	assert.Equal(t, "TestEmbeddedStruct", field.Type().Name())
+
+	fieldVal, err = field.Value()
+	assert.NotNil(t, fieldVal)
+	assert.Nil(t, err)
+
+	testEmbeddedStructVal, ok := fieldVal.(TestEmbeddedStruct)
+	assert.True(t, ok)
+	assert.NotNil(t, testEmbeddedStructVal)
+	assert.Equal(t, val.TestEmbeddedStruct, testEmbeddedStructVal)
+
+	anotherEmbeddedStruct := TestEmbeddedStruct{
+		ExportedAndEmbeddedField:   6,
+		unexportedAndEmbeddedField: 1,
 	}
+	err = field.SetValue(anotherEmbeddedStruct)
+	assert.Nil(t, err)
+
+	fieldVal, err = field.Value()
+	assert.NotNil(t, fieldVal)
+	assert.Nil(t, err)
+	assert.Equal(t, anotherEmbeddedStruct, fieldVal)
+
+	tags = field.Tags()
+	assert.NotNil(t, tags)
+	assert.Len(t, tags, 1)
+	assert.True(t, tags.Contains("json"))
+	tag, exists = tags.Find("json")
+	assert.True(t, exists)
+	assert.NotNil(t, tag)
+	assert.Equal(t, "json", tag.Name())
+	assert.Equal(t, field.Name(), tag.Value())
+
+	field = fields[2]
+	assert.Equal(t, "ExportedField", field.Name())
+	assert.True(t, field.IsExported())
+	assert.False(t, field.IsAnonymous())
+	assert.Equal(t, "string", field.Type().Name())
+
+	fieldVal, err = field.Value()
+	assert.NotNil(t, fieldVal)
+	assert.Nil(t, err)
+
+	assert.Equal(t, val.ExportedField, fieldVal)
+
+	err = field.SetValue("anyTestValue")
+	assert.Nil(t, err)
+
+	fieldVal, err = field.Value()
+	assert.NotNil(t, fieldVal)
+	assert.Nil(t, err)
+	assert.Equal(t, "anyTestValue", fieldVal)
+
+	tags = field.Tags()
+	assert.NotNil(t, tags)
+	assert.Len(t, tags, 1)
+	assert.True(t, tags.Contains("json"))
+	tag, exists = tags.Find("json")
+	assert.True(t, exists)
+	assert.NotNil(t, tag)
+	assert.Equal(t, "json", tag.Name())
+	assert.Equal(t, field.Name(), tag.Value())
+
+	field = fields[3]
+	assert.Equal(t, "ExportedPointerField", field.Name())
+	assert.True(t, field.IsExported())
+	assert.False(t, field.IsAnonymous())
+	assert.Equal(t, "*int", field.Type().Name())
+
+	fieldVal, err = field.Value()
+	assert.NotNil(t, fieldVal)
+	assert.Nil(t, err)
+
+	assert.Equal(t, val.ExportedPointerField, fieldVal)
+
+	anotherInt := 29
+	err = field.SetValue(&anotherInt)
+	assert.Nil(t, err)
+
+	fieldVal, err = field.Value()
+	assert.NotNil(t, fieldVal)
+	assert.Nil(t, err)
+	assert.Equal(t, &anotherInt, fieldVal)
+
+	tags = field.Tags()
+	assert.NotNil(t, tags)
+	assert.Len(t, tags, 1)
+	assert.True(t, tags.Contains("json"))
+	tag, exists = tags.Find("json")
+	assert.True(t, exists)
+	assert.NotNil(t, tag)
+	assert.Equal(t, "json", tag.Name())
+	assert.Equal(t, field.Name(), tag.Value())
+
+	field = fields[4]
+	assert.Equal(t, "ExportedPointerSlice", field.Name())
+	assert.True(t, field.IsExported())
+	assert.False(t, field.IsAnonymous())
+	assert.Equal(t, "[]int", field.Type().Name())
+
+	fieldVal, err = field.Value()
+	assert.NotNil(t, fieldVal)
+	assert.Nil(t, err)
+
+	assert.Equal(t, val.ExportedPointerSlice, fieldVal)
+
+	anotherSlice := []int{7, 1, 8}
+	err = field.SetValue(anotherSlice)
+	assert.Nil(t, err)
+
+	fieldVal, err = field.Value()
+	assert.NotNil(t, fieldVal)
+	assert.Nil(t, err)
+	assert.Equal(t, anotherSlice, fieldVal)
+
+	tags = field.Tags()
+	assert.NotNil(t, tags)
+	assert.Len(t, tags, 1)
+	assert.True(t, tags.Contains("json"))
+	tag, exists = tags.Find("json")
+	assert.True(t, exists)
+	assert.NotNil(t, tag)
+	assert.Equal(t, "json", tag.Name())
+	assert.Equal(t, field.Name(), tag.Value())
+
+	field = fields[5]
+	assert.Equal(t, "unexportedField", field.Name())
+	assert.False(t, field.IsExported())
+	assert.False(t, field.IsAnonymous())
+	assert.Equal(t, "int32", field.Type().Name())
+
+	fieldVal, err = field.Value()
+	assert.Nil(t, fieldVal)
+	assert.NotNil(t, err)
+
+	err = field.SetValue(32)
+	assert.NotNil(t, err)
+
+	tags = field.Tags()
+	assert.NotNil(t, tags)
+	assert.Len(t, tags, 0)
+	assert.False(t, tags.Contains("json"))
+	tag, exists = tags.Find("json")
+	assert.False(t, exists)
+	assert.Nil(t, tag)
+
+	field = fields[6]
+	assert.Equal(t, "unexportedChanField", field.Name())
+	assert.False(t, field.IsExported())
+	assert.False(t, field.IsAnonymous())
+	assert.Equal(t, "chan<- string", field.Type().Name())
+
+	fieldVal, err = field.Value()
+	assert.Nil(t, fieldVal)
+	assert.NotNil(t, err)
+
+	err = field.SetValue(make(chan<- string))
+	assert.NotNil(t, err)
+
+	tags = field.Tags()
+	assert.NotNil(t, tags)
+	assert.Len(t, tags, 0)
+	assert.False(t, tags.Contains("json"))
+	tag, exists = tags.Find("json")
+	assert.False(t, exists)
+	assert.Nil(t, tag)
 }

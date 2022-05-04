@@ -57,6 +57,10 @@ func (i *interfaceType) ReflectValue() *reflect.Value {
 	return i.reflectValue
 }
 
+func (i *interfaceType) Compare(another Type) bool {
+	return false
+}
+
 func (i *interfaceType) Elem() Type {
 	return nil
 }

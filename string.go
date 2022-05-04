@@ -47,6 +47,10 @@ func (s *stringType) ReflectValue() *reflect.Value {
 	return s.reflectValue
 }
 
+func (s *stringType) Compare(another Type) bool {
+	return false
+}
+
 func (s *stringType) CanSet() bool {
 	if s.reflectValue == nil {
 		return false

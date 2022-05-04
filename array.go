@@ -62,6 +62,10 @@ func (a *arrayType) ReflectValue() *reflect.Value {
 	return a.reflectValue
 }
 
+func (a *arrayType) Compare(another Type) bool {
+	return false
+}
+
 func (a *arrayType) CanSet() bool {
 	if a.reflectValue == nil {
 		return false

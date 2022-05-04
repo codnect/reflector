@@ -86,6 +86,10 @@ func (m *mapType) ReflectValue() *reflect.Value {
 	return m.reflectValue
 }
 
+func (m *mapType) Compare(another Type) bool {
+	return false
+}
+
 func (m *mapType) Key() Type {
 	return m.key
 }

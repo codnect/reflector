@@ -51,3 +51,7 @@ func (p *pointer) Parent() Type {
 func (p *pointer) Elem() Type {
 	return p.base
 }
+
+func (p *pointer) Compare(another Type) bool {
+	return false
+}
