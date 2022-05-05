@@ -8,11 +8,7 @@ import (
 
 type Slice interface {
 	Type
-	Instantiable
-	CanSet() bool
 	Elem() Type
-	Value() (any, error)
-	SetValue(val any) error
 	Len() (int, error)
 	Cap() (int, error)
 	Get(index int) (any, error)
@@ -53,8 +49,8 @@ func (s *sliceType) CanSet() bool {
 	return s.reflectValue.CanSet()
 }
 
-func (s *sliceType) Elem() Type {
-	return s.elem
+func (s *sliceType) HasValue() bool {
+	return s.reflectValue != nil
 }
 
 func (s *sliceType) Value() (any, error) {
@@ -72,6 +68,43 @@ func (s *sliceType) SetValue(val any) error {
 
 	s.reflectValue.Set(reflect.ValueOf(val))
 	return nil
+}
+
+func (s *sliceType) Parent() Type {
+	return s.parent
+}
+
+func (s *sliceType) ReflectType() reflect.Type {
+	return s.reflectType
+}
+
+func (s *sliceType) ReflectValue() *reflect.Value {
+	return s.reflectValue
+}
+
+func (s *sliceType) Compare(another Type) bool {
+	if another == nil {
+		return false
+	}
+
+	return s.reflectType == another.ReflectType()
+}
+
+func (s *sliceType) IsInstantiable() bool {
+	return true
+}
+
+func (s *sliceType) Instantiate() (Value, error) {
+	ptr := reflect.New(s.reflectType).Interface()
+	emptySlice := reflect.MakeSlice(s.reflectType, 0, 0)
+	reflect.ValueOf(ptr).Elem().Set(emptySlice)
+	return &value{
+		reflect.ValueOf(ptr),
+	}, nil
+}
+
+func (s *sliceType) Elem() Type {
+	return s.elem
 }
 
 func (s *sliceType) Len() (int, error) {
@@ -155,33 +188,4 @@ func (s *sliceType) Copy(dst any) (int, error) {
 	}
 
 	return reflect.Copy(reflect.ValueOf(dst), *s.reflectValue), nil
-}
-
-func (s *sliceType) HasValue() bool {
-	return s.reflectValue != nil
-}
-
-func (s *sliceType) Parent() Type {
-	return s.parent
-}
-
-func (s *sliceType) ReflectType() reflect.Type {
-	return s.reflectType
-}
-
-func (s *sliceType) ReflectValue() *reflect.Value {
-	return s.reflectValue
-}
-
-func (s *sliceType) Compare(another Type) bool {
-	return false
-}
-
-func (s *sliceType) Instantiate() Value {
-	ptr := reflect.New(s.reflectType).Interface()
-	emptySlice := reflect.MakeSlice(s.reflectType, 0, 0)
-	reflect.ValueOf(ptr).Elem().Set(emptySlice)
-	return &value{
-		reflect.ValueOf(ptr),
-	}
 }

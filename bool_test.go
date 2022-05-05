@@ -21,16 +21,28 @@ func TestTypeOfBoolean(t *testing.T) {
 	assert.True(t, isBoolean)
 
 	assert.False(t, booleanType.CanSet())
+	assert.True(t, booleanType.IsInstantiable())
+	assert.True(t, booleanType.Compare(TypeOf[bool]()))
+	assert.False(t, booleanType.Compare(TypeOf[*bool]()))
+	assert.False(t, booleanType.Compare(TypeOf[string]()))
 
 	value, err := booleanType.Value()
-	assert.False(t, value)
+	assert.False(t, value.(bool))
 	assert.NotNil(t, err)
 
 	err = booleanType.SetValue(true)
 	assert.NotNil(t, err)
 
-	newBool := booleanType.Instantiate()
+	booleanValue, err := booleanType.BooleanValue()
+	assert.False(t, booleanValue)
+	assert.NotNil(t, err)
+
+	err = booleanType.SetBooleanValue(false)
+	assert.NotNil(t, err)
+
+	newBool, err := booleanType.Instantiate()
 	assert.NotNil(t, newBool)
+	assert.Nil(t, err)
 
 	boolPtrVal, ok := newBool.Val().(*bool)
 	assert.True(t, ok)
@@ -54,6 +66,35 @@ func TestTypeOfBooleanPointer(t *testing.T) {
 	assert.NotNil(t, ptr.ReflectType())
 	assert.Nil(t, ptr.ReflectValue())
 
+	assert.False(t, ptrType.CanSet())
+	assert.True(t, ptrType.IsInstantiable())
+	assert.False(t, ptrType.Compare(TypeOf[bool]()))
+	assert.True(t, ptrType.Compare(TypeOf[*bool]()))
+	assert.False(t, ptrType.Compare(TypeOf[string]()))
+
+	value, err := ptrType.Value()
+	assert.Nil(t, value)
+	assert.NotNil(t, err)
+
+	err = ptrType.SetValue(nil)
+	assert.NotNil(t, err)
+
+	value, err = ptrType.Value()
+	assert.Nil(t, value)
+	assert.NotNil(t, err)
+
+	newBool, err := ptrType.Instantiate()
+	assert.NotNil(t, newBool)
+	assert.Nil(t, err)
+
+	boolPtrVal, ok := newBool.Val().(*bool)
+	assert.True(t, ok)
+	assert.False(t, *boolPtrVal)
+
+	boolVal, ok := newBool.Elem().(bool)
+	assert.True(t, ok)
+	assert.False(t, boolVal)
+
 	typ := ptr.Elem()
 
 	assert.True(t, IsBoolean(typ))
@@ -70,22 +111,34 @@ func TestTypeOfBooleanPointer(t *testing.T) {
 	assert.True(t, isBoolean)
 
 	assert.False(t, booleanType.CanSet())
+	assert.True(t, booleanType.IsInstantiable())
+	assert.True(t, booleanType.Compare(TypeOf[bool]()))
+	assert.False(t, booleanType.Compare(TypeOf[*bool]()))
+	assert.False(t, booleanType.Compare(TypeOf[string]()))
 
-	value, err := booleanType.Value()
-	assert.False(t, value)
+	value, err = booleanType.Value()
+	assert.False(t, value.(bool))
 	assert.NotNil(t, err)
 
 	err = booleanType.SetValue(true)
 	assert.NotNil(t, err)
 
-	newBool := booleanType.Instantiate()
-	assert.NotNil(t, newBool)
+	booleanValue, err := booleanType.BooleanValue()
+	assert.False(t, booleanValue)
+	assert.NotNil(t, err)
 
-	boolPtrVal, ok := newBool.Val().(*bool)
+	err = booleanType.SetBooleanValue(false)
+	assert.NotNil(t, err)
+
+	newBool, err = booleanType.Instantiate()
+	assert.NotNil(t, newBool)
+	assert.Nil(t, err)
+
+	boolPtrVal, ok = newBool.Val().(*bool)
 	assert.True(t, ok)
 	assert.False(t, *boolPtrVal)
 
-	boolVal, ok := newBool.Elem().(bool)
+	boolVal, ok = newBool.Elem().(bool)
 	assert.True(t, ok)
 	assert.False(t, boolVal)
 }
@@ -108,17 +161,28 @@ func TestTypeOfBooleanObject(t *testing.T) {
 	assert.True(t, isBoolean)
 
 	assert.False(t, booleanType.CanSet())
+	assert.True(t, booleanType.IsInstantiable())
+	assert.True(t, booleanType.Compare(TypeOf[bool]()))
+	assert.False(t, booleanType.Compare(TypeOf[*bool]()))
+	assert.False(t, booleanType.Compare(TypeOf[string]()))
 
 	value, err := booleanType.Value()
-	assert.True(t, value)
+	assert.True(t, value.(bool))
 	assert.Nil(t, err)
 
-	err = booleanType.SetValue(false)
+	err = booleanType.SetValue(true)
 	assert.NotNil(t, err)
-	assert.True(t, val)
 
-	newBool := booleanType.Instantiate()
+	booleanValue, err := booleanType.BooleanValue()
+	assert.True(t, booleanValue)
+	assert.Nil(t, err)
+
+	err = booleanType.SetBooleanValue(false)
+	assert.NotNil(t, err)
+
+	newBool, err := booleanType.Instantiate()
 	assert.NotNil(t, newBool)
+	assert.Nil(t, err)
 
 	boolPtrVal, ok := newBool.Val().(*bool)
 	assert.True(t, ok)
@@ -144,6 +208,35 @@ func TestTypeOfBooleanObjectPointer(t *testing.T) {
 	assert.NotNil(t, ptr.ReflectType())
 	assert.NotNil(t, ptr.ReflectValue())
 
+	assert.False(t, ptrType.CanSet())
+	assert.True(t, ptrType.IsInstantiable())
+	assert.False(t, ptrType.Compare(TypeOf[bool]()))
+	assert.True(t, ptrType.Compare(TypeOf[*bool]()))
+	assert.False(t, ptrType.Compare(TypeOf[string]()))
+
+	value, err := ptrType.Value()
+	assert.NotNil(t, value)
+	assert.Nil(t, err)
+
+	err = ptrType.SetValue(&val)
+	assert.NotNil(t, err)
+
+	value, err = ptrType.Value()
+	assert.NotNil(t, value)
+	assert.Nil(t, err)
+
+	newBool, err := ptrType.Instantiate()
+	assert.NotNil(t, newBool)
+	assert.Nil(t, err)
+
+	boolPtrVal, ok := newBool.Val().(*bool)
+	assert.True(t, ok)
+	assert.False(t, *boolPtrVal)
+
+	boolVal, ok := newBool.Elem().(bool)
+	assert.True(t, ok)
+	assert.False(t, boolVal)
+
 	typ := ptr.Elem()
 
 	assert.True(t, IsBoolean(typ))
@@ -160,23 +253,34 @@ func TestTypeOfBooleanObjectPointer(t *testing.T) {
 	assert.True(t, isBoolean)
 
 	assert.True(t, booleanType.CanSet())
+	assert.True(t, booleanType.IsInstantiable())
+	assert.True(t, booleanType.Compare(TypeOf[bool]()))
+	assert.False(t, booleanType.Compare(TypeOf[*bool]()))
+	assert.False(t, booleanType.Compare(TypeOf[string]()))
 
-	value, err := booleanType.Value()
-	assert.True(t, value)
+	value, err = booleanType.Value()
+	assert.True(t, value.(bool))
 	assert.Nil(t, err)
 
 	err = booleanType.SetValue(false)
 	assert.Nil(t, err)
-	assert.False(t, val)
 
-	newBool := booleanType.Instantiate()
+	booleanValue, err := booleanType.BooleanValue()
+	assert.False(t, booleanValue)
+	assert.Nil(t, err)
+
+	err = booleanType.SetBooleanValue(false)
+	assert.Nil(t, err)
+
+	newBool, err = booleanType.Instantiate()
 	assert.NotNil(t, newBool)
+	assert.Nil(t, err)
 
-	boolPtrVal, ok := newBool.Val().(*bool)
+	boolPtrVal, ok = newBool.Val().(*bool)
 	assert.True(t, ok)
 	assert.False(t, *boolPtrVal)
 
-	boolVal, ok := newBool.Elem().(bool)
+	boolVal, ok = newBool.Elem().(bool)
 	assert.True(t, ok)
 	assert.False(t, boolVal)
 }

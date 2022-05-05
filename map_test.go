@@ -123,7 +123,7 @@ func TestTypeOfMap(t *testing.T) {
 	entrySet, err = mapType.EntrySet()
 	assert.Len(t, entrySet, 0)
 
-	newMap := mapType.Instantiate()
+	newMap, _ := mapType.Instantiate()
 
 	mapPtrVal, ok := newMap.Val().(*map[string]bool)
 	assert.True(t, ok)
@@ -265,7 +265,7 @@ func TestTypeOfMapPointer(t *testing.T) {
 	entrySet, err = mapType.EntrySet()
 	assert.Len(t, entrySet, 0)
 
-	newMap := mapType.Instantiate()
+	newMap, _ := mapType.Instantiate()
 
 	mapPtrVal, ok := newMap.Val().(*map[string]bool)
 	assert.True(t, ok)
@@ -412,7 +412,7 @@ func TestTypeOfMapObject(t *testing.T) {
 	entrySet, err = mapType.EntrySet()
 	assert.Len(t, entrySet, 0)
 
-	newMap := mapType.Instantiate()
+	newMap, _ := mapType.Instantiate()
 
 	mapPtrVal, ok := newMap.Val().(*map[string]any)
 	assert.True(t, ok)
@@ -567,7 +567,7 @@ func TestTypeOfMapObjectPointer(t *testing.T) {
 	entrySet, err = mapType.EntrySet()
 	assert.Len(t, entrySet, 0)
 
-	newMap := mapType.Instantiate()
+	newMap, _ := mapType.Instantiate()
 
 	mapPtrVal, ok := newMap.Val().(*map[string]any)
 	assert.True(t, ok)

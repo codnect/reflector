@@ -206,16 +206,3 @@ func ToChan(typ Type) (Chan, bool) {
 
 	return nil, false
 }
-
-func IsInstantiable(typ Type) bool {
-	_, ok := typ.(Instantiable)
-	return ok
-}
-
-func ToInstantiable(typ Type) (Instantiable, bool) {
-	if instantiableType, ok := typ.(Instantiable); ok {
-		return instantiableType, true
-	}
-
-	return nil, false
-}

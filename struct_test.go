@@ -35,9 +35,10 @@ type TestEmbeddedStruct struct {
 type TestStruct1 struct {
 	TestInterface5       `json:"TestInterface5"`
 	TestEmbeddedStruct   `json:"TestEmbeddedStruct"`
-	ExportedField        string `json:"ExportedField"`
-	ExportedPointerField *int   `json:"ExportedPointerField"`
-	ExportedPointerSlice []int  `json:"ExportedPointerSlice"`
+	ExportedStructField  TestStruct2 `json:"ExportedStructField"`
+	ExportedField        string      `json:"ExportedField"`
+	ExportedPointerField *int        `json:"ExportedPointerField"`
+	ExportedPointerSlice []int       `json:"ExportedPointerSlice"`
 	unexportedField      rune
 	unexportedChanField  chan<- string
 }
@@ -60,9 +61,14 @@ func (t *TestStruct1) Method6() {
 }
 
 type TestStruct2 struct {
+	ExportedInnerStructField TestStruct3
 }
 
 func (t *TestStruct2) Method7() {
+}
+
+type TestStruct3 struct {
+	ExportedIntegerField int
 }
 
 func TestTypeOfStruct(t *testing.T) {
@@ -773,6 +779,11 @@ func TestTypeOfStructObjectPointer(t *testing.T) {
 			ExportedAndEmbeddedField:   byte('0'),
 			unexportedAndEmbeddedField: 13,
 		},
+		ExportedStructField: TestStruct2{
+			TestStruct3{
+				102,
+			},
+		},
 		ExportedField:        "TestValue",
 		ExportedPointerField: &i,
 		ExportedPointerSlice: []int{1, 3, 5},
@@ -808,7 +819,7 @@ func TestTypeOfStructObjectPointer(t *testing.T) {
 	assert.True(t, isStruct)
 
 	assert.Equal(t, 6, structType.NumMethod())
-	assert.Equal(t, 7, structType.NumField())
+	assert.Equal(t, 8, structType.NumField())
 
 	testInterface1 := TypeOf[TestInterface1]()
 	interfaceType, isInterface := ToInterface(testInterface1)
@@ -923,6 +934,63 @@ func TestTypeOfStructObjectPointer(t *testing.T) {
 	assert.Equal(t, field.Name(), tag.Value())
 
 	field = fields[2]
+
+	assert.Equal(t, "ExportedStructField", field.Name())
+	assert.True(t, field.IsExported())
+	assert.False(t, field.IsAnonymous())
+	assert.Equal(t, "TestStruct2", field.Type().Name())
+
+	fieldVal, err = field.Value()
+	assert.NotNil(t, fieldVal)
+	assert.Nil(t, err)
+
+	testStruct2Val, ok := fieldVal.(TestStruct2)
+	assert.True(t, ok)
+	assert.NotNil(t, testStruct2Val)
+	assert.Equal(t, val.ExportedStructField, testStruct2Val)
+
+	fieldType := field.Type()
+	testStruct2Type, isStruct := ToStruct(fieldType)
+	assert.True(t, isStruct)
+	assert.NotNil(t, testStruct2Type)
+
+	fieldVal, err = testStruct2Type.Value()
+	assert.Nil(t, err)
+	assert.Equal(t, val.ExportedStructField, testStruct2Val)
+
+	innerField := testStruct2Type.Fields()[0]
+	innerFieldVal, err := innerField.Value()
+	assert.Nil(t, err)
+	assert.Equal(t, val.ExportedStructField.ExportedInnerStructField, innerFieldVal)
+
+	anotherTestStruct3 := TestStruct3{ExportedIntegerField: 111}
+	err = innerField.SetValue(anotherTestStruct3)
+	assert.Nil(t, err)
+
+	innerFieldVal, err = innerField.Value()
+	assert.Nil(t, err)
+	assert.Equal(t, anotherTestStruct3, innerFieldVal)
+
+	anotherTestStruct2Val := TestStruct2{TestStruct3{ExportedIntegerField: 6}}
+	err = field.SetValue(anotherTestStruct2Val)
+	assert.Nil(t, err)
+
+	fieldVal, err = field.Value()
+	assert.NotNil(t, fieldVal)
+	assert.Nil(t, err)
+	assert.Equal(t, anotherTestStruct2Val, fieldVal)
+
+	tags = field.Tags()
+	assert.NotNil(t, tags)
+	assert.Len(t, tags, 1)
+	assert.True(t, tags.Contains("json"))
+	tag, exists = tags.Find("json")
+	assert.True(t, exists)
+	assert.NotNil(t, tag)
+	assert.Equal(t, "json", tag.Name())
+	assert.Equal(t, field.Name(), tag.Value())
+
+	field = fields[3]
 	assert.Equal(t, "ExportedField", field.Name())
 	assert.True(t, field.IsExported())
 	assert.False(t, field.IsAnonymous())
@@ -952,7 +1020,7 @@ func TestTypeOfStructObjectPointer(t *testing.T) {
 	assert.Equal(t, "json", tag.Name())
 	assert.Equal(t, field.Name(), tag.Value())
 
-	field = fields[3]
+	field = fields[4]
 	assert.Equal(t, "ExportedPointerField", field.Name())
 	assert.True(t, field.IsExported())
 	assert.False(t, field.IsAnonymous())
@@ -983,7 +1051,7 @@ func TestTypeOfStructObjectPointer(t *testing.T) {
 	assert.Equal(t, "json", tag.Name())
 	assert.Equal(t, field.Name(), tag.Value())
 
-	field = fields[4]
+	field = fields[5]
 	assert.Equal(t, "ExportedPointerSlice", field.Name())
 	assert.True(t, field.IsExported())
 	assert.False(t, field.IsAnonymous())
@@ -1014,7 +1082,7 @@ func TestTypeOfStructObjectPointer(t *testing.T) {
 	assert.Equal(t, "json", tag.Name())
 	assert.Equal(t, field.Name(), tag.Value())
 
-	field = fields[5]
+	field = fields[6]
 	assert.Equal(t, "unexportedField", field.Name())
 	assert.False(t, field.IsExported())
 	assert.False(t, field.IsAnonymous())
@@ -1035,7 +1103,7 @@ func TestTypeOfStructObjectPointer(t *testing.T) {
 	assert.False(t, exists)
 	assert.Nil(t, tag)
 
-	field = fields[6]
+	field = fields[7]
 	assert.Equal(t, "unexportedChanField", field.Name())
 	assert.False(t, field.IsExported())
 	assert.False(t, field.IsAnonymous())
@@ -1055,4 +1123,30 @@ func TestTypeOfStructObjectPointer(t *testing.T) {
 	tag, exists = tags.Find("json")
 	assert.False(t, exists)
 	assert.Nil(t, tag)
+
+	field, exists = structType.FieldByName("ExportedField")
+	assert.True(t, exists)
+	assert.NotNil(t, field)
+
+	err = field.SetValue("FieldByName")
+	assert.Nil(t, err)
+
+	fieldVal, err = field.Value()
+	assert.Equal(t, "FieldByName", fieldVal)
+	assert.Nil(t, err)
+
+	field, exists = structType.FieldByName("NotExist")
+	assert.False(t, exists)
+	assert.Nil(t, field)
+
+	field, exists = structType.Field(3)
+	assert.True(t, exists)
+	assert.NotNil(t, field)
+
+	err = field.SetValue("FieldByIndex")
+	assert.Nil(t, err)
+
+	fieldVal, err = field.Value()
+	assert.Equal(t, "FieldByIndex", fieldVal)
+	assert.Nil(t, err)
 }

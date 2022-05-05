@@ -8,17 +8,13 @@ import (
 
 type Struct interface {
 	Type
-	Instantiable
-	CanSet() bool
-	Value() (any, error)
-	SetValue(val any) error
 	Fields() []Field
 	Field(index int) (Field, bool)
 	FieldByName(name string) (Field, bool)
 	NumField() int
-	Methods() []Function
-	Method(index int) (Function, bool)
-	MethodByName(name string) (Function, bool)
+	Methods() []Method
+	Method(index int) (Method, bool)
+	MethodByName(name string) (Method, bool)
 	NumMethod() int
 	Implements(i Interface) (bool, error)
 	Embeds(another Type) (bool, error)
@@ -54,26 +50,6 @@ func (s *structType) HasValue() bool {
 	return s.reflectValue != nil
 }
 
-func (s *structType) Parent() Type {
-	return s.parent
-}
-
-func (s *structType) ReflectType() reflect.Type {
-	return s.reflectType
-}
-
-func (s *structType) ReflectValue() *reflect.Value {
-	return s.reflectValue
-}
-
-func (s *structType) Compare(another Type) bool {
-	return false
-}
-
-func (s *structType) NumField() int {
-	return s.reflectType.NumField()
-}
-
 func (s *structType) CanSet() bool {
 	if s.reflectValue == nil {
 		return false
@@ -99,6 +75,40 @@ func (s *structType) SetValue(val any) error {
 	return nil
 }
 
+func (s *structType) Parent() Type {
+	return s.parent
+}
+
+func (s *structType) ReflectType() reflect.Type {
+	return s.reflectType
+}
+
+func (s *structType) ReflectValue() *reflect.Value {
+	return s.reflectValue
+}
+
+func (s *structType) Compare(another Type) bool {
+	if another == nil {
+		return false
+	}
+
+	return s.reflectType == another.ReflectType()
+}
+
+func (s *structType) IsInstantiable() bool {
+	return true
+}
+
+func (s *structType) Instantiate() (Value, error) {
+	return &value{
+		reflect.New(s.reflectType),
+	}, nil
+}
+
+func (s *structType) NumField() int {
+	return s.reflectType.NumField()
+}
+
 func (s *structType) Fields() []Field {
 	fields := make([]Field, 0)
 
@@ -117,20 +127,40 @@ func (s *structType) Fields() []Field {
 }
 
 func (s *structType) Field(index int) (Field, bool) {
-	return nil, false
+	if index < 0 || index >= s.NumField() {
+		return nil, false
+	}
+
+	structField := s.reflectType.Field(index)
+
+	return &field{
+		index:       index,
+		structType:  s,
+		structField: structField,
+	}, true
 }
 
 func (s *structType) FieldByName(name string) (Field, bool) {
-	return nil, false
+	structField, exists := s.reflectType.FieldByName(name)
+
+	if !exists {
+		return nil, false
+	}
+
+	return &field{
+		index:       structField.Index[0],
+		structType:  s,
+		structField: structField,
+	}, true
 }
 
-func (s *structType) Methods() []Function {
-	functions := make([]Function, 0)
+func (s *structType) Methods() []Method {
+	functions := make([]Method, 0)
 
 	numMethod := s.nilType.NumMethod()
 	for i := 0; i < numMethod; i++ {
 		function := s.nilType.Method(i)
-		functions = append(functions, &functionType{
+		functions = append(functions, &methodType{
 			name:        function.Name,
 			pkgPath:     function.PkgPath,
 			isExported:  function.IsExported(),
@@ -141,11 +171,11 @@ func (s *structType) Methods() []Function {
 	return functions
 }
 
-func (s *structType) Method(index int) (Function, bool) {
+func (s *structType) Method(index int) (Method, bool) {
 	return nil, false
 }
 
-func (s *structType) MethodByName(name string) (Function, bool) {
+func (s *structType) MethodByName(name string) (Method, bool) {
 	return nil, false
 }
 
@@ -221,10 +251,4 @@ func (s *structType) embeds(candidate Type, visitedMap map[string]bool) (bool, e
 	}
 
 	return false, nil
-}
-
-func (s *structType) Instantiate() Value {
-	return &value{
-		reflect.New(s.reflectType),
-	}
 }

@@ -8,84 +8,87 @@ import (
 	"strings"
 )
 
-type Function interface {
+type Method interface {
 	Type
 	IsExported() bool
+	Receiver() Type
 	Parameters() []Type
 	NumParameter() int
 	Results() []Type
 	NumResult() int
 	IsVariadic() bool
 	Invoke(args ...any) ([]any, error)
+	//ReflectMethod() reflect.Method
 }
 
-type functionType struct {
+type methodType struct {
 	name       string
 	pkgPath    string
 	isExported bool
+	receiver   Type
 
 	parent       Type
 	reflectType  reflect.Type
 	reflectValue *reflect.Value
 }
 
-func (f *functionType) Name() string {
-	if f.name != "" {
-		return f.name
+func (m *methodType) Name() string {
+	if m.name != "" {
+		return m.name
 	}
 
-	if f.reflectValue == nil {
-		return f.getFunctionName()
+	if m.reflectValue == nil {
+		return m.getFunctionName()
 	}
 
-	name := runtime.FuncForPC(f.reflectValue.Pointer()).Name()
+	name := runtime.FuncForPC(m.reflectValue.Pointer()).Name()
 	dotLastIndex := strings.LastIndex(name, ".")
 
 	if dotLastIndex != -1 {
 		return name[dotLastIndex+1:]
 	}
 
-	if f.name == "" {
-		return f.getFunctionName()
+	if m.name == "" {
+		return m.getFunctionName()
 	}
 
 	return name
 }
 
-func (f *functionType) getFunctionName() string {
+func (m *methodType) getFunctionName() string {
 	var builder strings.Builder
 	builder.WriteString("func(")
 
-	for index, parameter := range f.Parameters() {
+	for index, parameter := range m.Parameters() {
 		builder.WriteString(parameter.Name())
-		if index != f.NumParameter()-1 {
+		if index != m.NumParameter()-1 {
 			builder.WriteString(",")
 		}
 	}
 
 	builder.WriteString(")")
 
-	if f.NumResult() > 1 {
+	if m.NumResult() > 1 {
 		builder.WriteString(" (")
 	}
 
-	for index, result := range f.Results() {
+	for index, result := range m.Results() {
 		builder.WriteString(result.Name())
-		if index != f.NumResult()-1 {
+		if index != m.NumResult()-1 {
 			builder.WriteString(",")
 		}
 	}
 
-	if f.NumResult() > 1 {
+	if m.NumResult() > 1 {
 		builder.WriteString(")")
 	}
 
 	return builder.String()
 }
 
-func (f *functionType) PackageName() string {
-	if f.pkgPath != "" {
-		name := f.pkgPath
+func (m *methodType) PackageName() string {
+	if m.pkgPath != "" {
+		name := m.pkgPath
 		slashLastIndex := strings.LastIndex(name, "/")
 
 		if slashLastIndex != -1 {
@@ -95,11 +98,11 @@ func (f *functionType) PackageName() string {
 		return name
 	}
 
-	if f.reflectValue == nil {
+	if m.reflectValue == nil {
 		return ""
 	}
 
-	name := runtime.FuncForPC(f.reflectValue.Pointer()).Name()
+	name := runtime.FuncForPC(m.reflectValue.Pointer()).Name()
 	dotLastIndex := strings.LastIndex(name, ".")
 
 	if dotLastIndex != -1 {
@@ -115,127 +118,127 @@ func (f *functionType) PackageName() string {
 	return name
 }
 
-func (f *functionType) PackagePath() string {
+func (m *methodType) PackagePath() string {
 	return ""
 }
 
-func (f *functionType) CanSet() bool {
-	if f.reflectValue == nil {
+func (m *methodType) CanSet() bool {
+	if m.reflectValue == nil {
 		return false
 	}
 
-	return f.reflectValue.CanSet()
+	return m.reflectValue.CanSet()
 }
 
-func (f *functionType) HasValue() bool {
-	return f.reflectValue != nil
+func (m *methodType) HasValue() bool {
+	return m.reflectValue != nil
 }
 
-func (f *functionType) Value() (any, error) {
-	if f.reflectValue == nil {
+func (m *methodType) Value() (any, error) {
+	if m.reflectValue == nil {
 		return "", errors.New("value reference is nil")
 	}
 
-	return f.reflectValue.Interface(), nil
+	return m.reflectValue.Interface(), nil
 }
 
-func (f *functionType) SetValue(val any) error {
-	if !f.CanSet() {
+func (m *methodType) SetValue(val any) error {
+	if !m.CanSet() {
 		return errors.New("value cannot be set")
 	}
 
-	f.reflectValue.Set(reflect.ValueOf(val))
+	m.reflectValue.Set(reflect.ValueOf(val))
 	return nil
 }
 
-func (f *functionType) Parent() Type {
-	return f.parent
+func (m *methodType) Parent() Type {
+	return m.parent
 }
 
-func (f *functionType) ReflectType() reflect.Type {
-	return f.reflectType
+func (m *methodType) ReflectType() reflect.Type {
+	return m.reflectType
 }
 
-func (f *functionType) ReflectValue() *reflect.Value {
-	return f.reflectValue
+func (m *methodType) ReflectValue() *reflect.Value {
+	return m.reflectValue
 }
 
-func (f *functionType) Compare(another Type) bool {
-	if another == nil {
-		return false
-	}
-
-	return f.reflectType == another.ReflectType()
-}
-
-func (f *functionType) IsInstantiable() bool {
+func (m *methodType) Compare(another Type) bool {
 	return false
 }
 
-func (f *functionType) Instantiate() (Value, error) {
-	return nil, errors.New("functions are not instantiable")
+func (m *methodType) IsInstantiable() bool {
+	return false
 }
 
-func (f *functionType) IsExported() bool {
-	return f.isExported
+func (m *methodType) Instantiate() (Value, error) {
+	return nil, nil
 }
 
-func (f *functionType) Parameters() []Type {
+func (m *methodType) IsExported() bool {
+	return m.isExported
+}
+
+func (m *methodType) Receiver() Type {
+	return nil
+}
+
+func (m *methodType) Parameters() []Type {
 	parameters := make([]Type, 0)
-	numIn := f.reflectType.NumIn()
+	numIn := m.reflectType.NumIn()
 
 	for index := 0; index < numIn; index++ {
-		typ := f.reflectType.In(index)
+		typ := m.reflectType.In(index)
 		parameters = append(parameters, typeOf(nil, typ, nil, nil))
 	}
 	return parameters
 }
 
-func (f *functionType) NumParameter() int {
-	return f.reflectType.NumIn()
+func (m *methodType) NumParameter() int {
+	return m.reflectType.NumIn()
 }
 
-func (f *functionType) Results() []Type {
+func (m *methodType) Results() []Type {
 	results := make([]Type, 0)
-	numOut := f.reflectType.NumOut()
+	numOut := m.reflectType.NumOut()
 
 	for index := 0; index < numOut; index++ {
-		typ := f.reflectType.Out(index)
+		typ := m.reflectType.Out(index)
 		results = append(results, typeOf(nil, typ, nil, nil))
 	}
 	return results
 }
 
-func (f *functionType) NumResult() int {
-	return f.reflectType.NumOut()
+func (m *methodType) NumResult() int {
+	return m.reflectType.NumOut()
 }
 
-func (f *functionType) IsVariadic() bool {
-	return f.reflectType.IsVariadic()
+func (m *methodType) IsVariadic() bool {
+	return m.reflectType.IsVariadic()
 }
 
-func (f *functionType) Invoke(args ...any) ([]any, error) {
-	if f.reflectValue == nil {
+func (m *methodType) Invoke(args ...any) ([]any, error) {
+	if m.reflectValue == nil {
 		return nil, errors.New("value reference is nil")
 	}
 
-	if (f.IsVariadic() && len(args) < f.NumParameter()) || (!f.IsVariadic() && len(args) != f.NumParameter()) {
-		return nil, fmt.Errorf("invalid parameter count, expected %d but got %d", f.NumParameter(), len(args))
+	if (m.IsVariadic() && len(args) < m.NumParameter()) || (!m.IsVariadic() && len(args) != m.NumParameter()) {
+		return nil, fmt.Errorf("invalid parameter count, expected %d but got %d", m.NumParameter(), len(args))
 	}
 
 	inputs := make([]reflect.Value, 0)
 
 	var variadicType Slice
 
-	if f.IsVariadic() {
-		paramType := f.Parameters()[f.NumParameter()-1]
+	if m.IsVariadic() {
+		paramType := m.Parameters()[m.NumParameter()-1]
 		variadicType, _ = ToSlice(paramType)
 	}
 
 	for index, arg := range args {
 		actualParamType := TypeOfAny(arg)
 
-		if f.IsVariadic() && index > f.NumResult() {
+		if m.IsVariadic() && index > m.NumResult() {
 			if arg == nil {
 				inputs = append(inputs, reflect.New(variadicType.Elem().ReflectType()).Elem())
 				continue
@@ -247,7 +250,7 @@ func (f *functionType) Invoke(args ...any) ([]any, error) {
 			continue
 		}
 
-		expectedParamType := f.Parameters()[index]
+		expectedParamType := m.Parameters()[index]
 
 		if arg == nil {
 			inputs = append(inputs, reflect.New(expectedParamType.ReflectType()).Elem())
@@ -260,7 +263,7 @@ func (f *functionType) Invoke(args ...any) ([]any, error) {
 	}
 
 	outputs := make([]any, 0)
-	results := f.reflectValue.Call(inputs)
+	results := m.reflectValue.Call(inputs)
 
 	for _, outputParam := range results {
 		outputs = append(outputs, outputParam.Interface())

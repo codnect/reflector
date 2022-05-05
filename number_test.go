@@ -39,7 +39,7 @@ func TestTypeOfInt8(t *testing.T) {
 	assert.False(t, signedInteger.Overflow(-127))
 	assert.True(t, signedInteger.Overflow(-179))
 
-	newInteger := signedInteger.Instantiate()
+	newInteger, _ := signedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*int8)
@@ -97,7 +97,7 @@ func TestTypeOfInt8Pointer(t *testing.T) {
 	assert.False(t, signedInteger.Overflow(-127))
 	assert.True(t, signedInteger.Overflow(-179))
 
-	newInteger := signedInteger.Instantiate()
+	newInteger, _ := signedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*int8)
@@ -144,7 +144,7 @@ func TestTypeOfInt8Object(t *testing.T) {
 	assert.False(t, signedInteger.Overflow(-127))
 	assert.True(t, signedInteger.Overflow(-179))
 
-	newInteger := signedInteger.Instantiate()
+	newInteger, _ := signedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*int8)
@@ -209,7 +209,7 @@ func TestTypeOfInt8ObjectPointer(t *testing.T) {
 	assert.False(t, signedInteger.Overflow(-127))
 	assert.True(t, signedInteger.Overflow(-179))
 
-	newInteger := signedInteger.Instantiate()
+	newInteger, _ := signedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*int8)
@@ -254,7 +254,7 @@ func TestTypeOfInt16(t *testing.T) {
 	assert.False(t, signedInteger.Overflow(-127))
 	assert.True(t, signedInteger.Overflow(-33632))
 
-	newInteger := signedInteger.Instantiate()
+	newInteger, _ := signedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*int16)
@@ -312,7 +312,7 @@ func TestTypeOfInt16Pointer(t *testing.T) {
 	assert.False(t, signedInteger.Overflow(-127))
 	assert.True(t, signedInteger.Overflow(-33632))
 
-	newInteger := signedInteger.Instantiate()
+	newInteger, _ := signedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*int16)
@@ -359,7 +359,7 @@ func TestTypeOfInt16Object(t *testing.T) {
 	assert.False(t, signedInteger.Overflow(-4546))
 	assert.True(t, signedInteger.Overflow(-33632))
 
-	newInteger := signedInteger.Instantiate()
+	newInteger, _ := signedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*int16)
@@ -424,7 +424,7 @@ func TestTypeOfInt16ObjectPointer(t *testing.T) {
 	assert.False(t, signedInteger.Overflow(-4546))
 	assert.True(t, signedInteger.Overflow(-33632))
 
-	newInteger := signedInteger.Instantiate()
+	newInteger, _ := signedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*int16)
@@ -469,7 +469,7 @@ func TestTypeOfInt32(t *testing.T) {
 	assert.False(t, signedInteger.Overflow(-654756))
 	assert.True(t, signedInteger.Overflow(-2447483647))
 
-	newInteger := signedInteger.Instantiate()
+	newInteger, _ := signedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*int32)
@@ -527,7 +527,7 @@ func TestTypeOfInt32Pointer(t *testing.T) {
 	assert.False(t, signedInteger.Overflow(-654756))
 	assert.True(t, signedInteger.Overflow(-2447483647))
 
-	newInteger := signedInteger.Instantiate()
+	newInteger, _ := signedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*int32)
@@ -574,7 +574,7 @@ func TestTypeOfInt32Object(t *testing.T) {
 	assert.False(t, signedInteger.Overflow(-654756))
 	assert.True(t, signedInteger.Overflow(-2447483647))
 
-	newInteger := signedInteger.Instantiate()
+	newInteger, _ := signedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*int32)
@@ -639,7 +639,7 @@ func TestTypeOfInt32ObjectPointer(t *testing.T) {
 	assert.False(t, signedInteger.Overflow(-654756))
 	assert.True(t, signedInteger.Overflow(-2447483647))
 
-	newInteger := signedInteger.Instantiate()
+	newInteger, _ := signedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*int32)
@@ -679,7 +679,7 @@ func TestTypeOfInt64(t *testing.T) {
 	err = signedInteger.SetValue(435)
 	assert.NotNil(t, err)
 
-	newInteger := signedInteger.Instantiate()
+	newInteger, _ := signedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*int64)
@@ -732,7 +732,7 @@ func TestTypeOfInt64Pointer(t *testing.T) {
 	err = signedInteger.SetValue(435)
 	assert.NotNil(t, err)
 
-	newInteger := signedInteger.Instantiate()
+	newInteger, _ := signedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*int64)
@@ -774,7 +774,7 @@ func TestTypeOfInt64Object(t *testing.T) {
 	err = signedInteger.SetValue(435)
 	assert.NotNil(t, err)
 
-	newInteger := signedInteger.Instantiate()
+	newInteger, _ := signedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*int64)
@@ -830,7 +830,7 @@ func TestTypeOfInt64ObjectPointer(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, int64(7032), val)
 
-	newInteger := signedInteger.Instantiate()
+	newInteger, _ := signedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*int64)
@@ -870,7 +870,7 @@ func TestTypeOfInt(t *testing.T) {
 	err = signedInteger.SetValue(435)
 	assert.NotNil(t, err)
 
-	newInteger := signedInteger.Instantiate()
+	newInteger, _ := signedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*int)
@@ -923,7 +923,7 @@ func TestTypeOfIntPointer(t *testing.T) {
 	err = signedInteger.SetValue(435)
 	assert.NotNil(t, err)
 
-	newInteger := signedInteger.Instantiate()
+	newInteger, _ := signedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*int)
@@ -965,7 +965,7 @@ func TestTypeOfIntObject(t *testing.T) {
 	err = signedInteger.SetValue(435)
 	assert.NotNil(t, err)
 
-	newInteger := signedInteger.Instantiate()
+	newInteger, _ := signedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*int)
@@ -1021,7 +1021,7 @@ func TestTypeOfIntObjectPointer(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, int(7032), val)
 
-	newInteger := signedInteger.Instantiate()
+	newInteger, _ := signedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*int)
@@ -1066,7 +1066,7 @@ func TestTypeOfUint8(t *testing.T) {
 	assert.False(t, unsignedInteger.Overflow(212))
 	assert.True(t, unsignedInteger.Overflow(7653))
 
-	newInteger := unsignedInteger.Instantiate()
+	newInteger, _ := unsignedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*uint8)
@@ -1124,7 +1124,7 @@ func TestTypeOfUint8Pointer(t *testing.T) {
 	assert.False(t, unsignedInteger.Overflow(212))
 	assert.True(t, unsignedInteger.Overflow(7653))
 
-	newInteger := unsignedInteger.Instantiate()
+	newInteger, _ := unsignedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*uint8)
@@ -1171,7 +1171,7 @@ func TestTypeOfUint8Object(t *testing.T) {
 	assert.False(t, unsignedInteger.Overflow(212))
 	assert.True(t, unsignedInteger.Overflow(7653))
 
-	newInteger := unsignedInteger.Instantiate()
+	newInteger, _ := unsignedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*uint8)
@@ -1236,7 +1236,7 @@ func TestTypeOfUint8ObjectPointer(t *testing.T) {
 	assert.False(t, unsignedInteger.Overflow(212))
 	assert.True(t, unsignedInteger.Overflow(7653))
 
-	newInteger := unsignedInteger.Instantiate()
+	newInteger, _ := unsignedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*uint8)
@@ -1281,7 +1281,7 @@ func TestTypeOfUint16(t *testing.T) {
 	assert.False(t, unsignedInteger.Overflow(212))
 	assert.True(t, unsignedInteger.Overflow(123535))
 
-	newInteger := unsignedInteger.Instantiate()
+	newInteger, _ := unsignedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*uint16)
@@ -1339,7 +1339,7 @@ func TestTypeOfUint16Pointer(t *testing.T) {
 	assert.False(t, unsignedInteger.Overflow(212))
 	assert.True(t, unsignedInteger.Overflow(123535))
 
-	newInteger := unsignedInteger.Instantiate()
+	newInteger, _ := unsignedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*uint16)
@@ -1386,7 +1386,7 @@ func TestTypeOfUint16Object(t *testing.T) {
 	assert.False(t, unsignedInteger.Overflow(212))
 	assert.True(t, unsignedInteger.Overflow(123535))
 
-	newInteger := unsignedInteger.Instantiate()
+	newInteger, _ := unsignedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*uint16)
@@ -1451,7 +1451,7 @@ func TestTypeOfUint16ObjectPointer(t *testing.T) {
 	assert.False(t, unsignedInteger.Overflow(212))
 	assert.True(t, unsignedInteger.Overflow(123535))
 
-	newInteger := unsignedInteger.Instantiate()
+	newInteger, _ := unsignedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*uint16)
@@ -1495,7 +1495,7 @@ func TestTypeOfUint32(t *testing.T) {
 	assert.False(t, unsignedInteger.Overflow(110))
 	assert.False(t, unsignedInteger.Overflow(212))
 
-	newInteger := unsignedInteger.Instantiate()
+	newInteger, _ := unsignedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*uint32)
@@ -1552,7 +1552,7 @@ func TestTypeOfUint32Pointer(t *testing.T) {
 	assert.False(t, unsignedInteger.Overflow(110))
 	assert.False(t, unsignedInteger.Overflow(212))
 
-	newInteger := unsignedInteger.Instantiate()
+	newInteger, _ := unsignedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*uint32)
@@ -1598,7 +1598,7 @@ func TestTypeOfUint32Object(t *testing.T) {
 	assert.False(t, unsignedInteger.Overflow(110))
 	assert.False(t, unsignedInteger.Overflow(212))
 
-	newInteger := unsignedInteger.Instantiate()
+	newInteger, _ := unsignedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*uint32)
@@ -1662,7 +1662,7 @@ func TestTypeOfUint32ObjectPointer(t *testing.T) {
 	assert.False(t, unsignedInteger.Overflow(110))
 	assert.False(t, unsignedInteger.Overflow(212))
 
-	newInteger := unsignedInteger.Instantiate()
+	newInteger, _ := unsignedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*uint32)
@@ -1702,7 +1702,7 @@ func TestTypeOfUint64(t *testing.T) {
 	err = unsignedInteger.SetValue(125)
 	assert.NotNil(t, err)
 
-	newInteger := unsignedInteger.Instantiate()
+	newInteger, _ := unsignedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*uint64)
@@ -1755,7 +1755,7 @@ func TestTypeOfUint64Pointer(t *testing.T) {
 	err = unsignedInteger.SetValue(125)
 	assert.NotNil(t, err)
 
-	newInteger := unsignedInteger.Instantiate()
+	newInteger, _ := unsignedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*uint64)
@@ -1797,7 +1797,7 @@ func TestTypeOfUint64Object(t *testing.T) {
 	err = unsignedInteger.SetValue(125)
 	assert.NotNil(t, err)
 
-	newInteger := unsignedInteger.Instantiate()
+	newInteger, _ := unsignedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*uint64)
@@ -1853,7 +1853,7 @@ func TestTypeOfUint64ObjectPointer(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, uint64(125), val)
 
-	newInteger := unsignedInteger.Instantiate()
+	newInteger, _ := unsignedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*uint64)
@@ -1893,7 +1893,7 @@ func TestTypeOfUint(t *testing.T) {
 	err = unsignedInteger.SetValue(125)
 	assert.NotNil(t, err)
 
-	newInteger := unsignedInteger.Instantiate()
+	newInteger, _ := unsignedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*uint)
@@ -1946,7 +1946,7 @@ func TestTypeOfUintPointer(t *testing.T) {
 	err = unsignedInteger.SetValue(125)
 	assert.NotNil(t, err)
 
-	newInteger := unsignedInteger.Instantiate()
+	newInteger, _ := unsignedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*uint)
@@ -1988,7 +1988,7 @@ func TestTypeOfUintObject(t *testing.T) {
 	err = unsignedInteger.SetValue(125)
 	assert.NotNil(t, err)
 
-	newInteger := unsignedInteger.Instantiate()
+	newInteger, _ := unsignedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*uint)
@@ -2044,7 +2044,7 @@ func TestTypeOfUintObjectPointer(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, uint(125), val)
 
-	newInteger := unsignedInteger.Instantiate()
+	newInteger, _ := unsignedInteger.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*uint)
@@ -2087,7 +2087,7 @@ func TestTypeOfFloat32(t *testing.T) {
 	assert.False(t, float.Overflow(110))
 	assert.False(t, float.Overflow(-127))
 
-	newInteger := float.Instantiate()
+	newInteger, _ := float.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*float32)
@@ -2143,7 +2143,7 @@ func TestTypeOfFloat32Pointer(t *testing.T) {
 	assert.False(t, float.Overflow(110))
 	assert.False(t, float.Overflow(-127))
 
-	newInteger := float.Instantiate()
+	newInteger, _ := float.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*float32)
@@ -2188,7 +2188,7 @@ func TestTypeOfFloat32Object(t *testing.T) {
 	assert.False(t, float.Overflow(110))
 	assert.False(t, float.Overflow(-127))
 
-	newInteger := float.Instantiate()
+	newInteger, _ := float.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*float32)
@@ -2246,7 +2246,7 @@ func TestTypeOfFloat32ObjectPointer(t *testing.T) {
 	assert.False(t, float.Overflow(110))
 	assert.False(t, float.Overflow(-127))
 
-	newInteger := float.Instantiate()
+	newInteger, _ := float.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*float32)
@@ -2285,7 +2285,7 @@ func TestTypeOfFloat64(t *testing.T) {
 	err = float.SetValue(125)
 	assert.NotNil(t, err)
 
-	newInteger := float.Instantiate()
+	newInteger, _ := float.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*float64)
@@ -2337,7 +2337,7 @@ func TestTypeOfFloat64Pointer(t *testing.T) {
 	err = float.SetValue(125)
 	assert.NotNil(t, err)
 
-	newInteger := float.Instantiate()
+	newInteger, _ := float.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*float64)
@@ -2378,7 +2378,7 @@ func TestTypeOfFloat64Object(t *testing.T) {
 	err = float.SetValue(125)
 	assert.NotNil(t, err)
 
-	newInteger := float.Instantiate()
+	newInteger, _ := float.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*float64)
@@ -2432,7 +2432,7 @@ func TestTypeOfFloat64ObjectPointer(t *testing.T) {
 	err = float.SetValue(125)
 	assert.Nil(t, err)
 
-	newInteger := float.Instantiate()
+	newInteger, _ := float.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*float64)
@@ -2493,7 +2493,7 @@ func TestTypeOfComplex64(t *testing.T) {
 	assert.Equal(t, complex(0, 0), value)
 	assert.NotNil(t, err)
 
-	newInteger := complexType.Instantiate()
+	newInteger, _ := complexType.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*complex64)
@@ -2567,7 +2567,7 @@ func TestTypeOfComplex64Pointer(t *testing.T) {
 	assert.Equal(t, complex(0, 0), value)
 	assert.NotNil(t, err)
 
-	newInteger := complexType.Instantiate()
+	newInteger, _ := complexType.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*complex64)
@@ -2630,7 +2630,7 @@ func TestTypeOfComplex64Object(t *testing.T) {
 	assert.Equal(t, complex(15, 2), value)
 	assert.Nil(t, err)
 
-	newInteger := complexType.Instantiate()
+	newInteger, _ := complexType.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*complex64)
@@ -2706,7 +2706,7 @@ func TestTypeOfComplex64ObjectPointer(t *testing.T) {
 	assert.Equal(t, complex(1, 2), value)
 	assert.Nil(t, err)
 
-	newInteger := complexType.Instantiate()
+	newInteger, _ := complexType.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*complex64)
@@ -2767,7 +2767,7 @@ func TestTypeOfComplex128(t *testing.T) {
 	assert.Equal(t, complex(0, 0), value)
 	assert.NotNil(t, err)
 
-	newInteger := complexType.Instantiate()
+	newInteger, _ := complexType.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*complex128)
@@ -2841,7 +2841,7 @@ func TestTypeOfComplex128Pointer(t *testing.T) {
 	assert.Equal(t, complex(0, 0), value)
 	assert.NotNil(t, err)
 
-	newInteger := complexType.Instantiate()
+	newInteger, _ := complexType.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*complex128)
@@ -2904,7 +2904,7 @@ func TestTypeOfComplex128Object(t *testing.T) {
 	assert.Equal(t, complex(15, 2), value)
 	assert.Nil(t, err)
 
-	newInteger := complexType.Instantiate()
+	newInteger, _ := complexType.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*complex128)
@@ -2980,7 +2980,7 @@ func TestTypeOfComplex128ObjectPointer(t *testing.T) {
 	assert.Equal(t, complex(1, 2), value)
 	assert.Nil(t, err)
 
-	newInteger := complexType.Instantiate()
+	newInteger, _ := complexType.Instantiate()
 	assert.NotNil(t, newInteger)
 
 	integerPtrVal, ok := newInteger.Val().(*complex128)

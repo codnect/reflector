@@ -22,12 +22,12 @@ func TestTypeOfFunction(t *testing.T) {
 	assert.True(t, isFunction)
 
 	assert.True(t, functionType.IsVariadic())
-	assert.False(t, functionType.HasReceiver())
+	//assert.False(t, functionType.HasReceiver())
 	assert.False(t, functionType.IsExported())
-	receiverType, ok := functionType.Receiver()
+	//receiverType, ok := functionType.Receiver()
 
-	assert.Nil(t, receiverType)
-	assert.False(t, ok)
+	//assert.Nil(t, receiverType)
+	//assert.False(t, ok)
 
 	assert.Equal(t, 3, functionType.NumParameter())
 	params := functionType.Parameters()
@@ -97,12 +97,12 @@ func TestTypeOfFunctionPointer(t *testing.T) {
 	assert.True(t, isFunction)
 
 	assert.True(t, functionType.IsVariadic())
-	assert.False(t, functionType.HasReceiver())
+	//assert.False(t, functionType.HasReceiver())
 	assert.False(t, functionType.IsExported())
-	receiverType, ok := functionType.Receiver()
+	//receiverType, ok := functionType.Receiver()
 
-	assert.Nil(t, receiverType)
-	assert.False(t, ok)
+	//assert.Nil(t, receiverType)
+	//assert.False(t, ok)
 
 	assert.Equal(t, 3, functionType.NumParameter())
 	params := functionType.Parameters()
@@ -161,12 +161,12 @@ func TestTypeOfFunctionObject(t *testing.T) {
 	assert.True(t, isFunction)
 
 	assert.True(t, functionType.IsVariadic())
-	assert.False(t, functionType.HasReceiver())
+	//assert.False(t, functionType.HasReceiver())
 	assert.False(t, functionType.IsExported())
-	receiverType, ok := functionType.Receiver()
+	//receiverType, ok := functionType.Receiver()
 
-	assert.Nil(t, receiverType)
-	assert.False(t, ok)
+	//assert.Nil(t, receiverType)
+	//assert.False(t, ok)
 
 	assert.Equal(t, 3, functionType.NumParameter())
 	params := functionType.Parameters()
@@ -208,7 +208,7 @@ func TestTypeOfFunctionObject(t *testing.T) {
 }
 
 func TestTypeOfFunctionObjectPointer(t *testing.T) {
-	var val *func(param1 string, param2 []int, param3 ...any) (int, error)
+	var val func(param1 string, param2 []int, param3 ...any) (int, error)
 
 	ptrType := TypeOfAny(&val)
 	assert.True(t, IsPointer(ptrType))
@@ -217,7 +217,7 @@ func TestTypeOfFunctionObjectPointer(t *testing.T) {
 	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
-	assert.Equal(t, "*string", ptr.Name())
+	assert.Equal(t, "*func(string,[]int,[]any) (int,error)", ptr.Name())
 	assert.Equal(t, "", ptr.PackageName())
 	assert.NotNil(t, ptr.ReflectType())
 	assert.NotNil(t, ptr.ReflectValue())
@@ -238,12 +238,12 @@ func TestTypeOfFunctionObjectPointer(t *testing.T) {
 	assert.True(t, isFunction)
 
 	assert.True(t, functionType.IsVariadic())
-	assert.False(t, functionType.HasReceiver())
+	//assert.False(t, functionType.HasReceiver())
 	assert.False(t, functionType.IsExported())
-	receiverType, ok := functionType.Receiver()
+	//receiverType, ok := functionType.Receiver()
 
-	assert.Nil(t, receiverType)
-	assert.False(t, ok)
+	//assert.Nil(t, receiverType)
+	//assert.False(t, ok)
 
 	assert.Equal(t, 3, functionType.NumParameter())
 	params := functionType.Parameters()
@@ -307,12 +307,12 @@ func TestTypeOfTestFunction(t *testing.T) {
 	assert.True(t, isFunction)
 
 	assert.True(t, functionType.IsVariadic())
-	assert.False(t, functionType.HasReceiver())
+	//assert.False(t, functionType.HasReceiver())
 	assert.False(t, functionType.IsExported())
-	receiverType, ok := functionType.Receiver()
+	//receiverType, ok := functionType.Receiver()
 
-	assert.Nil(t, receiverType)
-	assert.False(t, ok)
+	//assert.Nil(t, receiverType)
+	//assert.False(t, ok)
 
 	assert.Equal(t, 4, functionType.NumParameter())
 	params := functionType.Parameters()

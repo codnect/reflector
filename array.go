@@ -9,10 +9,6 @@ import (
 
 type Array interface {
 	Type
-	Instantiable
-	CanSet() bool
-	Value() (any, error)
-	SetValue(val any) error
 	Elem() Type
 	Len() int
 	Get(index int) (any, error)
@@ -46,32 +42,16 @@ func (a *arrayType) PackagePath() string {
 	return ""
 }
 
-func (a *arrayType) HasValue() bool {
-	return a.reflectValue != nil
-}
-
-func (a *arrayType) Parent() Type {
-	return a.parent
-}
-
-func (a *arrayType) ReflectType() reflect.Type {
-	return a.reflectType
-}
-
-func (a *arrayType) ReflectValue() *reflect.Value {
-	return a.reflectValue
-}
-
-func (a *arrayType) Compare(another Type) bool {
-	return false
-}
-
 func (a *arrayType) CanSet() bool {
 	if a.reflectValue == nil {
 		return false
 	}
 
 	return a.reflectValue.CanSet()
+}
+
+func (a *arrayType) HasValue() bool {
+	return a.reflectValue != nil
 }
 
 func (a *arrayType) Value() (any, error) {
@@ -89,6 +69,36 @@ func (a *arrayType) SetValue(val any) error {
 
 	a.reflectValue.Set(reflect.ValueOf(val))
 	return nil
+}
+
+func (a *arrayType) Parent() Type {
+	return a.parent
+}
+
+func (a *arrayType) ReflectType() reflect.Type {
+	return a.reflectType
+}
+
+func (a *arrayType) ReflectValue() *reflect.Value {
+	return a.reflectValue
+}
+
+func (a *arrayType) Compare(another Type) bool {
+	if another == nil {
+		return false
+	}
+
+	return a.reflectType == another.ReflectType()
+}
+
+func (a *arrayType) IsInstantiable() bool {
+	return true
+}
+
+func (a *arrayType) Instantiate() (Value, error) {
+	return &value{
+		reflect.New(a.reflectType),
+	}, nil
 }
 
 func (a *arrayType) Elem() Type {
@@ -147,10 +157,4 @@ func (a *arrayType) Copy(dst any) (int, error) {
 
 	// TODO BUG: It causes app to crash
 	return reflect.Copy(reflect.ValueOf(dst), reflect.ValueOf(a.reflectValue.Slice(0, a.Len()))), nil
-}
-
-func (a *arrayType) Instantiate() Value {
-	return &value{
-		reflect.New(a.reflectType),
-	}
 }

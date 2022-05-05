@@ -1,6 +1,7 @@
 package reflector
 
 import (
+	"errors"
 	"reflect"
 	"strings"
 )
@@ -8,7 +9,7 @@ import (
 type Interface interface {
 	Type
 	Elem() Type
-	Methods() []Function
+	Methods() []Method
 	NumMethod() int
 }
 
@@ -41,8 +42,33 @@ func (i *interfaceType) PackagePath() string {
 	return i.reflectType.PkgPath()
 }
 
+func (i *interfaceType) CanSet() bool {
+	if i.reflectValue == nil {
+		return false
+	}
+
+	return i.reflectValue.CanSet()
+}
+
 func (i *interfaceType) HasValue() bool {
 	return i.reflectValue != nil
+}
+
+func (i *interfaceType) Value() (any, error) {
+	if i.reflectValue == nil {
+		return "", errors.New("value reference is nil")
+	}
+
+	return i.reflectValue.Interface(), nil
+}
+
+func (i *interfaceType) SetValue(val any) error {
+	if !i.CanSet() {
+		return errors.New("value cannot be set")
+	}
+
+	i.reflectValue.Set(reflect.ValueOf(val))
+	return nil
 }
 
 func (i *interfaceType) Parent() Type {
@@ -58,20 +84,32 @@ func (i *interfaceType) ReflectValue() *reflect.Value {
 }
 
 func (i *interfaceType) Compare(another Type) bool {
+	if another == nil {
+		return false
+	}
+
+	return i.reflectType == another.ReflectType()
+}
+
+func (i *interfaceType) IsInstantiable() bool {
 	return false
+}
+
+func (i *interfaceType) Instantiate() (Value, error) {
+	return nil, errors.New("interfaces are not instantiable")
 }
 
 func (i *interfaceType) Elem() Type {
 	return nil
 }
 
-func (i *interfaceType) Methods() []Function {
-	functions := make([]Function, 0)
+func (i *interfaceType) Methods() []Method {
+	functions := make([]Method, 0)
 	numMethod := i.reflectType.NumMethod()
 
 	for index := 0; index < numMethod; index++ {
 		function := i.reflectType.Method(index)
-		functions = append(functions, &functionType{
+		functions = append(functions, &methodType{
 			name:        function.Name,
 			pkgPath:     function.PkgPath,
 			isExported:  function.IsExported(),

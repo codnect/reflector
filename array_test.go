@@ -29,7 +29,7 @@ func TestTypeOfArray(t *testing.T) {
 	err = arrayType.SetValue([2]int{2, 5})
 	assert.NotNil(t, err)
 
-	newArray := arrayType.Instantiate()
+	newArray, _ := arrayType.Instantiate()
 	assert.NotNil(t, newArray)
 
 	arrayPtrVal, ok := newArray.Val().(*[2]int)
@@ -80,7 +80,7 @@ func TestTypeOfArrayPointer(t *testing.T) {
 	err = arrayType.SetValue([2]int{2, 5})
 	assert.NotNil(t, err)
 
-	newArray := arrayType.Instantiate()
+	newArray, _ := arrayType.Instantiate()
 	assert.NotNil(t, newArray)
 
 	arrayPtrVal, ok := newArray.Val().(*[2]int)
@@ -157,7 +157,7 @@ func TestTypeOfArrayObject(t *testing.T) {
 	assert.Nil(t, item)
 	assert.NotNil(t, err)
 
-	newArray := arrayType.Instantiate()
+	newArray, _ := arrayType.Instantiate()
 	assert.NotNil(t, newArray)
 
 	arrayPtrVal, ok := newArray.Val().(*[3]int)
@@ -248,7 +248,7 @@ func TestTypeOfArrayObjectPointer(t *testing.T) {
 	err = arrayType.Set(3, 2)
 	assert.NotNil(t, err)
 
-	newArray := arrayType.Instantiate()
+	newArray, _ := arrayType.Instantiate()
 	assert.NotNil(t, newArray)
 
 	arrayPtrVal, ok := newArray.Val().(*[3]int)

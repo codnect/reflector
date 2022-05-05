@@ -8,11 +8,16 @@ type Type interface {
 	Name() string
 	PackageName() string
 	PackagePath() string
+	CanSet() bool
 	HasValue() bool
+	Value() (any, error)
+	SetValue(val any) error
 	Parent() Type
 	ReflectType() reflect.Type
 	ReflectValue() *reflect.Value
 	Compare(another Type) bool
+	IsInstantiable() bool
+	Instantiate() (Value, error)
 }
 
 func TypeOf[T any]() Type {

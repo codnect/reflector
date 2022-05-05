@@ -60,11 +60,9 @@ func bitSize(kind reflect.Kind) BitSize {
 
 type SignedInteger interface {
 	Type
-	Instantiable
 	BitSize() BitSize
-	CanSet() bool
-	Value() (int64, error)
-	SetValue(v int64) error
+	IntegerValue() (int64, error)
+	SetIntegerValue(v int64) error
 	Overflow(v int64) bool
 }
 
@@ -88,8 +86,41 @@ func (s *signedIntegerType) PackagePath() string {
 	return ""
 }
 
+func (s *signedIntegerType) CanSet() bool {
+	if s.reflectValue == nil {
+		return false
+	}
+
+	return s.reflectValue.CanSet()
+}
+
 func (s *signedIntegerType) HasValue() bool {
 	return s.reflectValue != nil
+}
+
+func (s *signedIntegerType) Value() (any, error) {
+	return s.IntegerValue()
+}
+
+func (s *signedIntegerType) SetValue(v any) error {
+	if !s.CanSet() {
+		return errors.New("value cannot be set")
+	}
+
+	switch typedVal := v.(type) {
+	case int8:
+		return s.SetIntegerValue(int64(typedVal))
+	case int16:
+		return s.SetIntegerValue(int64(typedVal))
+	case int32:
+		return s.SetIntegerValue(int64(typedVal))
+	case int64:
+		return s.SetIntegerValue(typedVal)
+	case int:
+		return s.SetIntegerValue(int64(typedVal))
+	default:
+		return errors.New("type is not valid")
+	}
 }
 
 func (s *signedIntegerType) Parent() Type {
@@ -105,22 +136,28 @@ func (s *signedIntegerType) ReflectValue() *reflect.Value {
 }
 
 func (s *signedIntegerType) Compare(another Type) bool {
-	return false
+	if another == nil {
+		return false
+	}
+
+	return s.reflectType == another.ReflectType()
+}
+
+func (s *signedIntegerType) IsInstantiable() bool {
+	return true
+}
+
+func (s *signedIntegerType) Instantiate() (Value, error) {
+	return &value{
+		reflect.New(s.reflectType),
+	}, nil
 }
 
 func (s *signedIntegerType) BitSize() BitSize {
 	return s.bitSize
 }
 
-func (s *signedIntegerType) CanSet() bool {
-	if s.reflectValue == nil {
-		return false
-	}
-
-	return s.reflectValue.CanSet()
-}
-
-func (s *signedIntegerType) Value() (int64, error) {
+func (s *signedIntegerType) IntegerValue() (int64, error) {
 	if s.reflectValue == nil {
 		return -1, errors.New("value reference is nil")
 	}
@@ -141,7 +178,7 @@ func (s *signedIntegerType) Value() (int64, error) {
 	}
 }
 
-func (s *signedIntegerType) SetValue(v int64) error {
+func (s *signedIntegerType) SetIntegerValue(v int64) error {
 	if !s.CanSet() {
 		return errors.New("value cannot be set")
 	}
@@ -180,19 +217,11 @@ func (s *signedIntegerType) Overflow(v int64) bool {
 	return overflow
 }
 
-func (s *signedIntegerType) Instantiate() Value {
-	return &value{
-		reflect.New(s.reflectType),
-	}
-}
-
 type UnsignedInteger interface {
 	Type
-	Instantiable
 	BitSize() BitSize
-	CanSet() bool
-	Value() (uint64, error)
-	SetValue(v uint64) error
+	IntegerValue() (uint64, error)
+	SetIntegerValue(v uint64) error
 	Overflow(v uint64) bool
 }
 
@@ -216,8 +245,41 @@ func (u *unsignedIntegerType) PackagePath() string {
 	return ""
 }
 
+func (u *unsignedIntegerType) CanSet() bool {
+	if u.reflectValue == nil {
+		return false
+	}
+
+	return u.reflectValue.CanSet()
+}
+
 func (u *unsignedIntegerType) HasValue() bool {
 	return u.reflectValue != nil
+}
+
+func (u *unsignedIntegerType) Value() (any, error) {
+	return u.IntegerValue()
+}
+
+func (u *unsignedIntegerType) SetValue(v any) error {
+	if !u.CanSet() {
+		return errors.New("value cannot be set")
+	}
+
+	switch typedVal := v.(type) {
+	case uint8:
+		return u.SetIntegerValue(uint64(typedVal))
+	case uint16:
+		return u.SetIntegerValue(uint64(typedVal))
+	case uint32:
+		return u.SetIntegerValue(uint64(typedVal))
+	case uint64:
+		return u.SetIntegerValue(typedVal)
+	case uint:
+		return u.SetIntegerValue(uint64(typedVal))
+	default:
+		return errors.New("type is not valid")
+	}
 }
 
 func (u *unsignedIntegerType) Parent() Type {
@@ -233,22 +295,28 @@ func (u *unsignedIntegerType) ReflectValue() *reflect.Value {
 }
 
 func (u *unsignedIntegerType) Compare(another Type) bool {
-	return false
+	if another == nil {
+		return false
+	}
+
+	return u.reflectType == another.ReflectType()
+}
+
+func (u *unsignedIntegerType) IsInstantiable() bool {
+	return true
+}
+
+func (u *unsignedIntegerType) Instantiate() (Value, error) {
+	return &value{
+		reflect.New(u.reflectType),
+	}, nil
 }
 
 func (u *unsignedIntegerType) BitSize() BitSize {
 	return u.bitSize
 }
 
-func (u *unsignedIntegerType) CanSet() bool {
-	if u.reflectValue == nil {
-		return false
-	}
-
-	return u.reflectValue.CanSet()
-}
-
-func (u *unsignedIntegerType) Value() (uint64, error) {
+func (u *unsignedIntegerType) IntegerValue() (uint64, error) {
 	if u.reflectValue == nil {
 		return 0, errors.New("value reference is nil")
 	}
@@ -269,7 +337,7 @@ func (u *unsignedIntegerType) Value() (uint64, error) {
 	}
 }
 
-func (u *unsignedIntegerType) SetValue(v uint64) error {
+func (u *unsignedIntegerType) SetIntegerValue(v uint64) error {
 	if !u.CanSet() {
 		return errors.New("value cannot be set")
 	}
@@ -308,19 +376,11 @@ func (u *unsignedIntegerType) Overflow(v uint64) bool {
 	return overflow
 }
 
-func (u *unsignedIntegerType) Instantiate() Value {
-	return &value{
-		reflect.New(u.reflectType),
-	}
-}
-
 type Float interface {
 	Type
-	Instantiable
 	BitSize() BitSize
-	CanSet() bool
-	Value() (float64, error)
-	SetValue(v float64) error
+	FloatValue() (float64, error)
+	SetFloatValue(v float64) error
 	Overflow(v float64) bool
 }
 
@@ -344,8 +404,35 @@ func (f *floatType) PackagePath() string {
 	return ""
 }
 
+func (f *floatType) CanSet() bool {
+	if f.reflectValue == nil {
+		return false
+	}
+
+	return f.reflectValue.CanSet()
+}
+
 func (f *floatType) HasValue() bool {
 	return f.reflectValue != nil
+}
+
+func (f *floatType) Value() (any, error) {
+	return f.FloatValue()
+}
+
+func (f *floatType) SetValue(v any) error {
+	if !f.CanSet() {
+		return errors.New("value cannot be set")
+	}
+
+	switch typedVal := v.(type) {
+	case float32:
+		return f.SetFloatValue(float64(typedVal))
+	case float64:
+		return f.SetFloatValue(typedVal)
+	default:
+		return errors.New("type is not valid")
+	}
 }
 
 func (f *floatType) Parent() Type {
@@ -361,14 +448,28 @@ func (f *floatType) ReflectValue() *reflect.Value {
 }
 
 func (f *floatType) Compare(another Type) bool {
-	return false
+	if another == nil {
+		return false
+	}
+
+	return f.reflectType == another.ReflectType()
+}
+
+func (f *floatType) IsInstantiable() bool {
+	return true
+}
+
+func (f *floatType) Instantiate() (Value, error) {
+	return &value{
+		reflect.New(f.reflectType),
+	}, nil
 }
 
 func (f *floatType) BitSize() BitSize {
 	return f.bitSize
 }
 
-func (f *floatType) Value() (float64, error) {
+func (f *floatType) FloatValue() (float64, error) {
 	if f.reflectValue == nil {
 		return 0, errors.New("value reference is nil")
 	}
@@ -383,15 +484,7 @@ func (f *floatType) Value() (float64, error) {
 	}
 }
 
-func (f *floatType) CanSet() bool {
-	if f.reflectValue == nil {
-		return false
-	}
-
-	return f.reflectValue.CanSet()
-}
-
-func (f *floatType) SetValue(v float64) error {
+func (f *floatType) SetFloatValue(v float64) error {
 	if !f.CanSet() {
 		return errors.New("value cannot be set")
 	}
@@ -420,19 +513,11 @@ func (f *floatType) Overflow(v float64) bool {
 	return overflow
 }
 
-func (f *floatType) Instantiate() Value {
-	return &value{
-		reflect.New(f.reflectType),
-	}
-}
-
 type Complex interface {
 	Type
-	Instantiable
 	BitSize() BitSize
-	CanSet() bool
-	Value() (complex128, error)
-	SetValue(v complex128) error
+	ComplexValue() (complex128, error)
+	SetComplexValue(v complex128) error
 	ImaginaryData() (float64, error)
 	RealData() (float64, error)
 	SetImaginaryData(val float64) error
@@ -459,8 +544,35 @@ func (c *complexType) PackagePath() string {
 	return ""
 }
 
+func (c *complexType) CanSet() bool {
+	if c.reflectValue == nil {
+		return false
+	}
+
+	return c.reflectValue.CanSet()
+}
+
 func (c *complexType) HasValue() bool {
 	return c.reflectValue != nil
+}
+
+func (c *complexType) Value() (any, error) {
+	return c.ComplexValue()
+}
+
+func (c *complexType) SetValue(v any) error {
+	if !c.CanSet() {
+		return errors.New("value cannot be set")
+	}
+
+	switch typedVal := v.(type) {
+	case complex64:
+		return c.SetComplexValue(complex128(typedVal))
+	case complex128:
+		return c.SetComplexValue(typedVal)
+	default:
+		return errors.New("type is not valid")
+	}
 }
 
 func (c *complexType) Parent() Type {
@@ -476,22 +588,28 @@ func (c *complexType) ReflectValue() *reflect.Value {
 }
 
 func (c *complexType) Compare(another Type) bool {
-	return false
+	if another == nil {
+		return false
+	}
+
+	return c.reflectType == another.ReflectType()
+}
+
+func (c *complexType) IsInstantiable() bool {
+	return true
+}
+
+func (c *complexType) Instantiate() (Value, error) {
+	return &value{
+		reflect.New(c.reflectType),
+	}, nil
 }
 
 func (c *complexType) BitSize() BitSize {
 	return c.bitSize
 }
 
-func (c *complexType) CanSet() bool {
-	if c.reflectValue == nil {
-		return false
-	}
-
-	return c.reflectValue.CanSet()
-}
-
-func (c *complexType) Value() (complex128, error) {
+func (c *complexType) ComplexValue() (complex128, error) {
 	if c.reflectValue == nil {
 		return 0, errors.New("value reference is nil")
 	}
@@ -506,7 +624,7 @@ func (c *complexType) Value() (complex128, error) {
 	}
 }
 
-func (c *complexType) SetValue(v complex128) error {
+func (c *complexType) SetComplexValue(v complex128) error {
 	if !c.CanSet() {
 		return errors.New("value cannot be set")
 	}
@@ -579,10 +697,4 @@ func (c *complexType) SetRealData(val float64) error {
 
 	c.reflectValue.SetComplex(complex(val, imaginary))
 	return nil
-}
-
-func (c *complexType) Instantiate() Value {
-	return &value{
-		reflect.New(c.reflectType),
-	}
 }

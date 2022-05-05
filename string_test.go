@@ -21,15 +21,26 @@ func TestTypeOfString(t *testing.T) {
 	assert.True(t, isString)
 
 	assert.False(t, stringType.CanSet())
+	assert.True(t, stringType.IsInstantiable())
+	assert.False(t, stringType.Compare(TypeOf[bool]()))
+	assert.False(t, stringType.Compare(TypeOf[*bool]()))
+	assert.True(t, stringType.Compare(TypeOf[string]()))
 
 	value, err := stringType.Value()
 	assert.Empty(t, value)
 	assert.NotNil(t, err)
 
-	err = stringType.SetValue("hello")
+	err = stringType.SetValue("anyTestValue")
 	assert.NotNil(t, err)
 
-	newString := stringType.Instantiate()
+	stringValue, err := stringType.StringValue()
+	assert.Empty(t, stringValue)
+	assert.NotNil(t, err)
+
+	err = stringType.SetStringValue("anyTestValue")
+	assert.NotNil(t, err)
+
+	newString, _ := stringType.Instantiate()
 	assert.NotNil(t, newString)
 
 	stringPtrVal, ok := newString.Val().(*string)
@@ -54,6 +65,34 @@ func TestTypeOfStringPointer(t *testing.T) {
 	assert.NotNil(t, ptr.ReflectType())
 	assert.Nil(t, ptr.ReflectValue())
 
+	assert.False(t, ptrType.CanSet())
+	assert.True(t, ptrType.IsInstantiable())
+	assert.False(t, ptrType.Compare(TypeOf[string]()))
+	assert.True(t, ptrType.Compare(TypeOf[*string]()))
+	assert.False(t, ptrType.Compare(TypeOf[bool]()))
+
+	value, err := ptrType.Value()
+	assert.Nil(t, value)
+	assert.NotNil(t, err)
+
+	err = ptrType.SetValue(nil)
+	assert.NotNil(t, err)
+
+	value, err = ptrType.Value()
+	assert.Nil(t, value)
+	assert.NotNil(t, err)
+
+	newString, _ := ptrType.Instantiate()
+	assert.NotNil(t, newString)
+
+	stringPtrVal, ok := newString.Val().(*string)
+	assert.True(t, ok)
+	assert.Empty(t, *stringPtrVal)
+
+	stringVal, ok := newString.Elem().(string)
+	assert.True(t, ok)
+	assert.Empty(t, stringVal)
+
 	typ := ptr.Elem()
 
 	assert.True(t, IsString(typ))
@@ -70,22 +109,33 @@ func TestTypeOfStringPointer(t *testing.T) {
 	assert.True(t, isString)
 
 	assert.False(t, stringType.CanSet())
+	assert.True(t, stringType.IsInstantiable())
+	assert.False(t, stringType.Compare(TypeOf[bool]()))
+	assert.False(t, stringType.Compare(TypeOf[*bool]()))
+	assert.True(t, stringType.Compare(TypeOf[string]()))
 
-	value, err := stringType.Value()
+	value, err = stringType.Value()
 	assert.Empty(t, value)
 	assert.NotNil(t, err)
 
-	err = stringType.SetValue("hello")
+	err = stringType.SetValue("anyTestValue")
 	assert.NotNil(t, err)
 
-	newString := stringType.Instantiate()
+	stringValue, err := stringType.StringValue()
+	assert.Empty(t, stringValue)
+	assert.NotNil(t, err)
+
+	err = stringType.SetStringValue("anyTestValue")
+	assert.NotNil(t, err)
+
+	newString, _ = stringType.Instantiate()
 	assert.NotNil(t, newString)
 
-	stringPtrVal, ok := newString.Val().(*string)
+	stringPtrVal, ok = newString.Val().(*string)
 	assert.True(t, ok)
 	assert.Empty(t, *stringPtrVal)
 
-	stringVal, ok := newString.Elem().(string)
+	stringVal, ok = newString.Elem().(string)
 	assert.True(t, ok)
 	assert.Empty(t, stringVal)
 }
@@ -108,16 +158,28 @@ func TestTypeOfStringObject(t *testing.T) {
 	assert.True(t, isString)
 
 	assert.False(t, stringType.CanSet())
+	assert.True(t, stringType.IsInstantiable())
+	assert.False(t, stringType.Compare(TypeOf[bool]()))
+	assert.False(t, stringType.Compare(TypeOf[*bool]()))
+	assert.True(t, stringType.Compare(TypeOf[string]()))
 
 	value, err := stringType.Value()
 	assert.NotEmpty(t, value)
+	assert.Equal(t, val, value)
 	assert.Nil(t, err)
 
-	err = stringType.SetValue("world")
+	err = stringType.SetValue("anyTestValue")
 	assert.NotNil(t, err)
-	assert.NotEqual(t, "world", val)
 
-	newString := stringType.Instantiate()
+	stringValue, err := stringType.StringValue()
+	assert.NotNil(t, stringValue)
+	assert.Equal(t, val, value)
+	assert.Nil(t, err)
+
+	err = stringType.SetStringValue("anyTestValue")
+	assert.NotNil(t, err)
+
+	newString, _ := stringType.Instantiate()
 	assert.NotNil(t, newString)
 
 	stringPtrVal, ok := newString.Val().(*string)
@@ -144,6 +206,36 @@ func TestTypeOfStringObjectPointer(t *testing.T) {
 	assert.NotNil(t, ptr.ReflectType())
 	assert.NotNil(t, ptr.ReflectValue())
 
+	assert.False(t, ptrType.CanSet())
+	assert.True(t, ptrType.IsInstantiable())
+	assert.False(t, ptrType.Compare(TypeOf[string]()))
+	assert.True(t, ptrType.Compare(TypeOf[*string]()))
+	assert.False(t, ptrType.Compare(TypeOf[bool]()))
+
+	value, err := ptrType.Value()
+	assert.NotEmpty(t, value)
+	assert.Equal(t, &val, value)
+	assert.Nil(t, err)
+
+	err = ptrType.SetValue("anyTestValue")
+	assert.NotNil(t, err)
+
+	value, err = ptrType.Value()
+	assert.NotEmpty(t, value)
+	assert.Equal(t, &val, value)
+	assert.Nil(t, err)
+
+	newString, _ := ptrType.Instantiate()
+	assert.NotNil(t, newString)
+
+	stringPtrVal, ok := newString.Val().(*string)
+	assert.True(t, ok)
+	assert.Empty(t, *stringPtrVal)
+
+	stringVal, ok := newString.Elem().(string)
+	assert.True(t, ok)
+	assert.Empty(t, stringVal)
+
 	typ := ptr.Elem()
 
 	assert.True(t, IsString(typ))
@@ -160,23 +252,35 @@ func TestTypeOfStringObjectPointer(t *testing.T) {
 	assert.True(t, isString)
 
 	assert.True(t, stringType.CanSet())
+	assert.True(t, stringType.IsInstantiable())
+	assert.False(t, stringType.Compare(TypeOf[bool]()))
+	assert.False(t, stringType.Compare(TypeOf[*bool]()))
+	assert.True(t, stringType.Compare(TypeOf[string]()))
 
-	value, err := stringType.Value()
+	value, err = stringType.Value()
 	assert.NotEmpty(t, value)
+	assert.Equal(t, val, value)
 	assert.Nil(t, err)
 
-	err = stringType.SetValue("world")
+	err = stringType.SetValue("anyTestValue")
 	assert.Nil(t, err)
-	assert.Equal(t, "world", val)
 
-	newString := stringType.Instantiate()
+	stringValue, err := stringType.StringValue()
+	assert.NotEmpty(t, stringValue)
+	assert.Equal(t, "anyTestValue", stringValue)
+	assert.Nil(t, err)
+
+	err = stringType.SetStringValue("anyTestValue2")
+	assert.Nil(t, err)
+
+	newString, _ = stringType.Instantiate()
 	assert.NotNil(t, newString)
 
-	stringPtrVal, ok := newString.Val().(*string)
+	stringPtrVal, ok = newString.Val().(*string)
 	assert.True(t, ok)
 	assert.Empty(t, *stringPtrVal)
 
-	stringVal, ok := newString.Elem().(string)
+	stringVal, ok = newString.Elem().(string)
 	assert.True(t, ok)
 	assert.Empty(t, stringVal)
 }

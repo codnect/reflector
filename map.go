@@ -27,10 +27,6 @@ func (e entry) Value() any {
 
 type Map interface {
 	Type
-	Instantiable
-	CanSet() bool
-	Value() (any, error)
-	SetValue(val any) error
 	Key() Type
 	Elem() Type
 	Len() (int, error)
@@ -70,40 +66,16 @@ func (m *mapType) PackagePath() string {
 	return ""
 }
 
-func (m *mapType) HasValue() bool {
-	return m.reflectValue != nil
-}
-
-func (m *mapType) Parent() Type {
-	return m.parent
-}
-
-func (m *mapType) ReflectType() reflect.Type {
-	return m.reflectType
-}
-
-func (m *mapType) ReflectValue() *reflect.Value {
-	return m.reflectValue
-}
-
-func (m *mapType) Compare(another Type) bool {
-	return false
-}
-
-func (m *mapType) Key() Type {
-	return m.key
-}
-
-func (m *mapType) Elem() Type {
-	return m.elem
-}
-
 func (m *mapType) CanSet() bool {
 	if m.reflectValue == nil {
 		return false
 	}
 
 	return m.reflectValue.CanSet()
+}
+
+func (m *mapType) HasValue() bool {
+	return m.reflectValue != nil
 }
 
 func (m *mapType) Value() (any, error) {
@@ -121,6 +93,47 @@ func (m *mapType) SetValue(val any) error {
 
 	m.reflectValue.Set(reflect.ValueOf(val))
 	return nil
+}
+
+func (m *mapType) Parent() Type {
+	return m.parent
+}
+
+func (m *mapType) ReflectType() reflect.Type {
+	return m.reflectType
+}
+
+func (m *mapType) ReflectValue() *reflect.Value {
+	return m.reflectValue
+}
+
+func (m *mapType) Compare(another Type) bool {
+	if another == nil {
+		return false
+	}
+
+	return m.reflectType == another.ReflectType()
+}
+
+func (m *mapType) IsInstantiable() bool {
+	return true
+}
+
+func (m *mapType) Instantiate() (Value, error) {
+	ptr := reflect.New(m.reflectType).Interface()
+	emptyMap := reflect.MakeMapWithSize(reflect.MapOf(m.key.ReflectType(), m.elem.ReflectType()), 0)
+	reflect.ValueOf(ptr).Elem().Set(emptyMap)
+	return &value{
+		reflect.ValueOf(ptr),
+	}, nil
+}
+
+func (m *mapType) Key() Type {
+	return m.key
+}
+
+func (m *mapType) Elem() Type {
+	return m.elem
 }
 
 func (m *mapType) Len() (int, error) {
@@ -231,13 +244,4 @@ func (m *mapType) Clear() error {
 		m.reflectValue.SetMapIndex(key, reflect.Value{})
 	}
 	return nil
-}
-
-func (m *mapType) Instantiate() Value {
-	ptr := reflect.New(m.reflectType).Interface()
-	emptyMap := reflect.MakeMapWithSize(reflect.MapOf(m.key.ReflectType(), m.elem.ReflectType()), 0)
-	reflect.ValueOf(ptr).Elem().Set(emptyMap)
-	return &value{
-		reflect.ValueOf(ptr),
-	}
 }

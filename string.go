@@ -7,10 +7,8 @@ import (
 
 type String interface {
 	Type
-	Instantiable
-	CanSet() bool
-	Value() (string, error)
-	SetValue(val string) error
+	StringValue() (string, error)
+	SetStringValue(val string) error
 }
 
 type stringType struct {
@@ -31,8 +29,37 @@ func (s *stringType) PackagePath() string {
 	return ""
 }
 
+func (s *stringType) CanSet() bool {
+	if s.reflectValue == nil {
+		return false
+	}
+
+	return s.reflectValue.CanSet()
+}
+
 func (s *stringType) HasValue() bool {
 	return s.reflectValue != nil
+}
+
+func (s *stringType) Value() (any, error) {
+	if s.reflectValue == nil {
+		return "", errors.New("value reference is nil")
+	}
+
+	return s.reflectValue.Interface(), nil
+}
+
+func (s *stringType) SetValue(val any) error {
+	if !s.CanSet() {
+		return errors.New("value cannot be set")
+	}
+
+	switch typedVal := val.(type) {
+	case string:
+		return s.SetStringValue(typedVal)
+	default:
+		return errors.New("type is not valid")
+	}
 }
 
 func (s *stringType) Parent() Type {
@@ -48,18 +75,24 @@ func (s *stringType) ReflectValue() *reflect.Value {
 }
 
 func (s *stringType) Compare(another Type) bool {
-	return false
-}
-
-func (s *stringType) CanSet() bool {
-	if s.reflectValue == nil {
+	if another == nil {
 		return false
 	}
 
-	return s.reflectValue.CanSet()
+	return s.reflectType == another.ReflectType()
 }
 
-func (s *stringType) Value() (string, error) {
+func (s *stringType) IsInstantiable() bool {
+	return true
+}
+
+func (s *stringType) Instantiate() (Value, error) {
+	return &value{
+		reflect.New(s.reflectType),
+	}, nil
+}
+
+func (s *stringType) StringValue() (string, error) {
 	if s.reflectValue == nil {
 		return "", errors.New("value reference is nil")
 	}
@@ -67,17 +100,11 @@ func (s *stringType) Value() (string, error) {
 	return s.reflectValue.Interface().(string), nil
 }
 
-func (s *stringType) SetValue(val string) error {
+func (s *stringType) SetStringValue(val string) error {
 	if !s.CanSet() {
 		return errors.New("value cannot be set")
 	}
 
 	s.reflectValue.Set(reflect.ValueOf(val))
 	return nil
-}
-
-func (s *stringType) Instantiate() Value {
-	return &value{
-		reflect.New(s.reflectType),
-	}
 }

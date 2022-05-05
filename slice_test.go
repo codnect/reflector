@@ -56,7 +56,7 @@ func TestTypeOfSlice(t *testing.T) {
 	err = sliceType.SetValue([]int{2, 5})
 	assert.NotNil(t, err)
 
-	newSliceVal := sliceType.Instantiate()
+	newSliceVal, _ := sliceType.Instantiate()
 	assert.NotNil(t, newSliceVal)
 
 	slicePtrVal, ok := newSliceVal.Val().(*[]int)
@@ -134,7 +134,7 @@ func TestTypeOfSlicePointer(t *testing.T) {
 	err = sliceType.SetValue([]int{2, 5})
 	assert.NotNil(t, err)
 
-	newSliceVal := sliceType.Instantiate()
+	newSliceVal, _ := sliceType.Instantiate()
 	assert.NotNil(t, newSliceVal)
 
 	slicePtrVal, ok := newSliceVal.Val().(*[]int)
@@ -209,7 +209,7 @@ func TestTypeOfSliceObject(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, []int{5, 1, 8}, value)
 
-	newSliceVal := sliceType.Instantiate()
+	newSliceVal, _ := sliceType.Instantiate()
 	assert.NotNil(t, newSliceVal)
 
 	slicePtrVal, ok := newSliceVal.Val().(*[]int)
@@ -309,7 +309,7 @@ func TestTypeOfSliceObjectPointer(t *testing.T) {
 	assert.Equal(t, 2, cap)
 	assert.Nil(t, err)
 
-	newSliceVal := sliceType.Instantiate()
+	newSliceVal, _ := sliceType.Instantiate()
 	assert.NotNil(t, newSliceVal)
 
 	slicePtrVal, ok := newSliceVal.Val().(*[]int)

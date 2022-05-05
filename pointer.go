@@ -1,6 +1,7 @@
 package reflector
 
 import (
+	"errors"
 	"reflect"
 	"strings"
 )
@@ -36,6 +37,31 @@ func (p *pointer) HasValue() bool {
 	return p.reflectValue != nil
 }
 
+func (p *pointer) CanSet() bool {
+	if p.reflectValue == nil {
+		return false
+	}
+
+	return p.reflectValue.CanSet()
+}
+
+func (p *pointer) Value() (any, error) {
+	if p.reflectValue == nil {
+		return nil, errors.New("value reference is nil")
+	}
+
+	return p.reflectValue.Interface(), nil
+}
+
+func (p *pointer) SetValue(val any) error {
+	if !p.CanSet() {
+		return errors.New("value cannot be set")
+	}
+
+	p.reflectValue.Set(reflect.ValueOf(val))
+	return nil
+}
+
 func (p *pointer) ReflectType() reflect.Type {
 	return p.reflectType
 }
@@ -53,5 +79,17 @@ func (p *pointer) Elem() Type {
 }
 
 func (p *pointer) Compare(another Type) bool {
-	return false
+	if another == nil {
+		return false
+	}
+
+	return p.reflectType == another.ReflectType()
+}
+
+func (p *pointer) IsInstantiable() bool {
+	return p.base.IsInstantiable()
+}
+
+func (p *pointer) Instantiate() (Value, error) {
+	return p.base.Instantiate()
 }

@@ -52,7 +52,7 @@ func TestTypeOfChan(t *testing.T) {
 	assert.Equal(t, -1, capacity)
 	assert.NotNil(t, err)
 
-	newChan := chanType.Instantiate()
+	newChan, _ := chanType.Instantiate()
 	assert.NotNil(t, newChan)
 
 	chanPtrVal, ok := newChan.Val().(*chan string)
@@ -122,7 +122,7 @@ func TestTypeOfChanPointer(t *testing.T) {
 	assert.Equal(t, -1, capacity)
 	assert.NotNil(t, err)
 
-	newChan := chanType.Instantiate()
+	newChan, _ := chanType.Instantiate()
 	assert.NotNil(t, newChan)
 
 	chanPtrVal, ok := newChan.Val().(*<-chan string)
@@ -215,7 +215,7 @@ func TestTypeOfChanObject(t *testing.T) {
 	assert.Equal(t, 10, capacity)
 	assert.Nil(t, err)
 
-	newChan := chanType.Instantiate()
+	newChan, _ := chanType.Instantiate()
 	assert.NotNil(t, newChan)
 
 	chanPtrVal, ok := newChan.Val().(*chan string)
@@ -321,7 +321,7 @@ func TestTypeOfChanObjectPointer(t *testing.T) {
 	assert.Equal(t, 0, capacity)
 	assert.Nil(t, err)
 
-	newChan := chanType.Instantiate()
+	newChan, _ := chanType.Instantiate()
 	assert.NotNil(t, newChan)
 
 	chanPtrVal, ok := newChan.Val().(*chan string)

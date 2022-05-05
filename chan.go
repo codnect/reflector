@@ -16,10 +16,6 @@ const (
 
 type Chan interface {
 	Type
-	Instantiable
-	CanSet() bool
-	Value() (any, error)
-	SetValue(val any) error
 	Direction() ChanDirection
 	Elem() Type
 	Cap() (int, error)
@@ -63,32 +59,16 @@ func (c *chanType) PackagePath() string {
 	return ""
 }
 
-func (c *chanType) HasValue() bool {
-	return c.reflectValue != nil
-}
-
-func (c *chanType) Parent() Type {
-	return c.parent
-}
-
-func (c *chanType) ReflectType() reflect.Type {
-	return c.reflectType
-}
-
-func (c *chanType) ReflectValue() *reflect.Value {
-	return c.reflectValue
-}
-
-func (c *chanType) Compare(another Type) bool {
-	return false
-}
-
 func (c *chanType) CanSet() bool {
 	if c.reflectValue == nil {
 		return false
 	}
 
 	return c.reflectValue.CanSet()
+}
+
+func (c *chanType) HasValue() bool {
+	return c.reflectValue != nil
 }
 
 func (c *chanType) Value() (any, error) {
@@ -106,6 +86,36 @@ func (c *chanType) SetValue(val any) error {
 
 	c.reflectValue.Set(reflect.ValueOf(val))
 	return nil
+}
+
+func (c *chanType) Parent() Type {
+	return c.parent
+}
+
+func (c *chanType) ReflectType() reflect.Type {
+	return c.reflectType
+}
+
+func (c *chanType) ReflectValue() *reflect.Value {
+	return c.reflectValue
+}
+
+func (c *chanType) Compare(another Type) bool {
+	if another == nil {
+		return false
+	}
+
+	return c.reflectType == another.ReflectType()
+}
+
+func (c *chanType) IsInstantiable() bool {
+	return true
+}
+
+func (c *chanType) Instantiate() (Value, error) {
+	return &value{
+		reflect.New(c.reflectType),
+	}, nil
 }
 
 func (c *chanType) Send(value any) error {
@@ -178,10 +188,4 @@ func (c *chanType) Cap() (int, error) {
 	}
 
 	return c.reflectValue.Cap(), nil
-}
-
-func (c *chanType) Instantiate() Value {
-	return &value{
-		reflect.New(c.reflectType),
-	}
 }
