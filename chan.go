@@ -118,6 +118,38 @@ func (c *chanType) Instantiate() (Value, error) {
 	}, nil
 }
 
+func (c *chanType) CanConvert(typ Type) bool {
+	if typ == nil {
+		return false
+	}
+
+	if c.reflectValue == nil {
+		return c.reflectType.ConvertibleTo(typ.ReflectType())
+	}
+
+	return c.reflectValue.CanConvert(typ.ReflectType())
+}
+
+func (c *chanType) Convert(typ Type) (Value, error) {
+	if typ == nil {
+		return nil, errors.New("typ should not be nil")
+	}
+
+	if c.reflectValue == nil {
+		return nil, errors.New("value reference is nil")
+	}
+
+	if !c.CanConvert(typ) {
+		return nil, errors.New("type is not valid")
+	}
+
+	val := c.reflectValue.Convert(typ.ReflectType())
+
+	return &value{
+		val,
+	}, nil
+}
+
 func (c *chanType) Send(value any) error {
 	if c.reflectValue == nil {
 		return errors.New("value reference is nil")

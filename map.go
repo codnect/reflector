@@ -128,6 +128,38 @@ func (m *mapType) Instantiate() (Value, error) {
 	}, nil
 }
 
+func (m *mapType) CanConvert(typ Type) bool {
+	if typ == nil {
+		return false
+	}
+
+	if m.reflectValue == nil {
+		return m.reflectType.ConvertibleTo(typ.ReflectType())
+	}
+
+	return m.reflectValue.CanConvert(typ.ReflectType())
+}
+
+func (m *mapType) Convert(typ Type) (Value, error) {
+	if typ == nil {
+		return nil, errors.New("typ should not be nil")
+	}
+
+	if m.reflectValue == nil {
+		return nil, errors.New("value reference is nil")
+	}
+
+	if !m.CanConvert(typ) {
+		return nil, errors.New("type is not valid")
+	}
+
+	val := m.reflectValue.Convert(typ.ReflectType())
+
+	return &value{
+		val,
+	}, nil
+}
+
 func (m *mapType) Key() Type {
 	return m.key
 }

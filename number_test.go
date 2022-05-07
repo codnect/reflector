@@ -26,6 +26,16 @@ func TestTypeOfInt8(t *testing.T) {
 	assert.Equal(t, BitSize8, signedInteger.BitSize())
 
 	assert.False(t, signedInteger.CanSet())
+	assert.True(t, signedInteger.IsInstantiable())
+	assert.True(t, signedInteger.Compare(TypeOf[int8]()))
+	assert.False(t, signedInteger.Compare(TypeOf[*int8]()))
+	assert.False(t, signedInteger.Compare(TypeOf[string]()))
+	assert.True(t, signedInteger.CanConvert(TypeOf[string]()))
+	assert.True(t, signedInteger.CanConvert(TypeOf[float32]()))
+
+	floatValue, err := signedInteger.Convert(TypeOf[float32]())
+	assert.Nil(t, floatValue)
+	assert.NotNil(t, err)
 
 	value, err := signedInteger.Value()
 	assert.Equal(t, int64(-1), value)
@@ -84,6 +94,16 @@ func TestTypeOfInt8Pointer(t *testing.T) {
 	assert.Equal(t, BitSize8, signedInteger.BitSize())
 
 	assert.False(t, signedInteger.CanSet())
+	assert.True(t, signedInteger.IsInstantiable())
+	assert.True(t, signedInteger.Compare(TypeOf[int8]()))
+	assert.False(t, signedInteger.Compare(TypeOf[*int8]()))
+	assert.False(t, signedInteger.Compare(TypeOf[string]()))
+	assert.True(t, signedInteger.CanConvert(TypeOf[string]()))
+	assert.True(t, signedInteger.CanConvert(TypeOf[float32]()))
+
+	floatValue, err := signedInteger.Convert(TypeOf[float32]())
+	assert.Nil(t, floatValue)
+	assert.NotNil(t, err)
 
 	value, err := signedInteger.Value()
 	assert.Equal(t, int64(-1), value)
@@ -131,6 +151,17 @@ func TestTypeOfInt8Object(t *testing.T) {
 	assert.Equal(t, BitSize8, signedInteger.BitSize())
 
 	assert.False(t, signedInteger.CanSet())
+	assert.True(t, signedInteger.IsInstantiable())
+	assert.True(t, signedInteger.Compare(TypeOf[int8]()))
+	assert.False(t, signedInteger.Compare(TypeOf[*int8]()))
+	assert.False(t, signedInteger.Compare(TypeOf[string]()))
+	assert.True(t, signedInteger.CanConvert(TypeOf[string]()))
+	assert.True(t, signedInteger.CanConvert(TypeOf[float32]()))
+
+	floatValue, err := signedInteger.Convert(TypeOf[float32]())
+	assert.NotNil(t, floatValue)
+	assert.Equal(t, float32(15.0), floatValue.Val())
+	assert.Nil(t, err)
 
 	value, err := signedInteger.Value()
 	assert.Equal(t, int64(15), value)
@@ -191,6 +222,17 @@ func TestTypeOfInt8ObjectPointer(t *testing.T) {
 	assert.Equal(t, BitSize8, signedInteger.BitSize())
 
 	assert.True(t, signedInteger.CanSet())
+	assert.True(t, signedInteger.IsInstantiable())
+	assert.True(t, signedInteger.Compare(TypeOf[int8]()))
+	assert.False(t, signedInteger.Compare(TypeOf[*int8]()))
+	assert.False(t, signedInteger.Compare(TypeOf[string]()))
+	assert.True(t, signedInteger.CanConvert(TypeOf[string]()))
+	assert.True(t, signedInteger.CanConvert(TypeOf[float32]()))
+
+	floatValue, err := signedInteger.Convert(TypeOf[float32]())
+	assert.NotNil(t, floatValue)
+	assert.Equal(t, float32(15.0), floatValue.Val())
+	assert.Nil(t, err)
 
 	value, err := signedInteger.Value()
 	assert.Equal(t, int64(15), value)
@@ -241,6 +283,16 @@ func TestTypeOfInt16(t *testing.T) {
 	assert.Equal(t, BitSize16, signedInteger.BitSize())
 
 	assert.False(t, signedInteger.CanSet())
+	assert.True(t, signedInteger.IsInstantiable())
+	assert.True(t, signedInteger.Compare(TypeOf[int16]()))
+	assert.False(t, signedInteger.Compare(TypeOf[*int16]()))
+	assert.False(t, signedInteger.Compare(TypeOf[string]()))
+	assert.True(t, signedInteger.CanConvert(TypeOf[string]()))
+	assert.True(t, signedInteger.CanConvert(TypeOf[float32]()))
+
+	stringValue, err := signedInteger.Convert(TypeOf[string]())
+	assert.Nil(t, stringValue)
+	assert.NotNil(t, err)
 
 	value, err := signedInteger.Value()
 	assert.Equal(t, int64(-1), value)
@@ -299,6 +351,16 @@ func TestTypeOfInt16Pointer(t *testing.T) {
 	assert.Equal(t, BitSize16, signedInteger.BitSize())
 
 	assert.False(t, signedInteger.CanSet())
+	assert.True(t, signedInteger.IsInstantiable())
+	assert.True(t, signedInteger.Compare(TypeOf[int16]()))
+	assert.False(t, signedInteger.Compare(TypeOf[*int16]()))
+	assert.False(t, signedInteger.Compare(TypeOf[string]()))
+	assert.True(t, signedInteger.CanConvert(TypeOf[string]()))
+	assert.True(t, signedInteger.CanConvert(TypeOf[float32]()))
+
+	stringValue, err := signedInteger.Convert(TypeOf[string]())
+	assert.Nil(t, stringValue)
+	assert.NotNil(t, err)
 
 	value, err := signedInteger.Value()
 	assert.Equal(t, int64(-1), value)
@@ -346,6 +408,17 @@ func TestTypeOfInt16Object(t *testing.T) {
 	assert.Equal(t, BitSize16, signedInteger.BitSize())
 
 	assert.False(t, signedInteger.CanSet())
+	assert.True(t, signedInteger.IsInstantiable())
+	assert.True(t, signedInteger.Compare(TypeOf[int16]()))
+	assert.False(t, signedInteger.Compare(TypeOf[*int16]()))
+	assert.False(t, signedInteger.Compare(TypeOf[string]()))
+	assert.True(t, signedInteger.CanConvert(TypeOf[string]()))
+	assert.True(t, signedInteger.CanConvert(TypeOf[float32]()))
+
+	intValue, err := signedInteger.Convert(TypeOf[int]())
+	assert.NotNil(t, intValue)
+	assert.Equal(t, 1024, intValue.Val())
+	assert.Nil(t, err)
 
 	value, err := signedInteger.Value()
 	assert.Equal(t, int64(1024), value)
@@ -406,6 +479,17 @@ func TestTypeOfInt16ObjectPointer(t *testing.T) {
 	assert.Equal(t, BitSize16, signedInteger.BitSize())
 
 	assert.True(t, signedInteger.CanSet())
+	assert.True(t, signedInteger.IsInstantiable())
+	assert.True(t, signedInteger.Compare(TypeOf[int16]()))
+	assert.False(t, signedInteger.Compare(TypeOf[*int16]()))
+	assert.False(t, signedInteger.Compare(TypeOf[string]()))
+	assert.True(t, signedInteger.CanConvert(TypeOf[string]()))
+	assert.True(t, signedInteger.CanConvert(TypeOf[float32]()))
+
+	intValue, err := signedInteger.Convert(TypeOf[int]())
+	assert.NotNil(t, intValue)
+	assert.Equal(t, 1024, intValue.Val())
+	assert.Nil(t, err)
 
 	value, err := signedInteger.Value()
 	assert.Equal(t, int64(1024), value)
@@ -456,6 +540,16 @@ func TestTypeOfInt32(t *testing.T) {
 	assert.Equal(t, BitSize32, signedInteger.BitSize())
 
 	assert.False(t, signedInteger.CanSet())
+	assert.True(t, signedInteger.IsInstantiable())
+	assert.True(t, signedInteger.Compare(TypeOf[int32]()))
+	assert.False(t, signedInteger.Compare(TypeOf[*int32]()))
+	assert.False(t, signedInteger.Compare(TypeOf[string]()))
+	assert.True(t, signedInteger.CanConvert(TypeOf[string]()))
+	assert.True(t, signedInteger.CanConvert(TypeOf[float32]()))
+
+	intValue, err := signedInteger.Convert(TypeOf[int]())
+	assert.Nil(t, intValue)
+	assert.NotNil(t, err)
 
 	value, err := signedInteger.Value()
 	assert.Equal(t, int64(-1), value)
@@ -514,6 +608,16 @@ func TestTypeOfInt32Pointer(t *testing.T) {
 	assert.Equal(t, BitSize32, signedInteger.BitSize())
 
 	assert.False(t, signedInteger.CanSet())
+	assert.True(t, signedInteger.IsInstantiable())
+	assert.True(t, signedInteger.Compare(TypeOf[int32]()))
+	assert.False(t, signedInteger.Compare(TypeOf[*int32]()))
+	assert.False(t, signedInteger.Compare(TypeOf[string]()))
+	assert.True(t, signedInteger.CanConvert(TypeOf[string]()))
+	assert.True(t, signedInteger.CanConvert(TypeOf[float32]()))
+
+	intValue, err := signedInteger.Convert(TypeOf[int]())
+	assert.Nil(t, intValue)
+	assert.NotNil(t, err)
 
 	value, err := signedInteger.Value()
 	assert.Equal(t, int64(-1), value)
@@ -561,6 +665,17 @@ func TestTypeOfInt32Object(t *testing.T) {
 	assert.Equal(t, BitSize32, signedInteger.BitSize())
 
 	assert.False(t, signedInteger.CanSet())
+	assert.True(t, signedInteger.IsInstantiable())
+	assert.True(t, signedInteger.Compare(TypeOf[int32]()))
+	assert.False(t, signedInteger.Compare(TypeOf[*int32]()))
+	assert.False(t, signedInteger.Compare(TypeOf[string]()))
+	assert.True(t, signedInteger.CanConvert(TypeOf[string]()))
+	assert.True(t, signedInteger.CanConvert(TypeOf[float32]()))
+
+	intValue, err := signedInteger.Convert(TypeOf[int]())
+	assert.NotNil(t, intValue)
+	assert.Equal(t, 52123, intValue.Val())
+	assert.Nil(t, err)
 
 	value, err := signedInteger.Value()
 	assert.Equal(t, int64(52123), value)
@@ -621,6 +736,17 @@ func TestTypeOfInt32ObjectPointer(t *testing.T) {
 	assert.Equal(t, BitSize32, signedInteger.BitSize())
 
 	assert.True(t, signedInteger.CanSet())
+	assert.True(t, signedInteger.IsInstantiable())
+	assert.True(t, signedInteger.Compare(TypeOf[int32]()))
+	assert.False(t, signedInteger.Compare(TypeOf[*int32]()))
+	assert.False(t, signedInteger.Compare(TypeOf[string]()))
+	assert.True(t, signedInteger.CanConvert(TypeOf[string]()))
+	assert.True(t, signedInteger.CanConvert(TypeOf[float32]()))
+
+	intValue, err := signedInteger.Convert(TypeOf[int]())
+	assert.NotNil(t, intValue)
+	assert.Equal(t, 1024, intValue.Val())
+	assert.Nil(t, err)
 
 	value, err := signedInteger.Value()
 	assert.Equal(t, int64(1024), value)
@@ -671,6 +797,16 @@ func TestTypeOfInt64(t *testing.T) {
 	assert.Equal(t, BitSize64, signedInteger.BitSize())
 
 	assert.False(t, signedInteger.CanSet())
+	assert.True(t, signedInteger.IsInstantiable())
+	assert.True(t, signedInteger.Compare(TypeOf[int64]()))
+	assert.False(t, signedInteger.Compare(TypeOf[*int64]()))
+	assert.False(t, signedInteger.Compare(TypeOf[string]()))
+	assert.True(t, signedInteger.CanConvert(TypeOf[string]()))
+	assert.True(t, signedInteger.CanConvert(TypeOf[float32]()))
+
+	intValue, err := signedInteger.Convert(TypeOf[int]())
+	assert.Nil(t, intValue)
+	assert.NotNil(t, err)
 
 	value, err := signedInteger.Value()
 	assert.Equal(t, int64(-1), value)
@@ -724,6 +860,16 @@ func TestTypeOfInt64Pointer(t *testing.T) {
 	assert.Equal(t, BitSize64, signedInteger.BitSize())
 
 	assert.False(t, signedInteger.CanSet())
+	assert.True(t, signedInteger.IsInstantiable())
+	assert.True(t, signedInteger.Compare(TypeOf[int64]()))
+	assert.False(t, signedInteger.Compare(TypeOf[*int64]()))
+	assert.False(t, signedInteger.Compare(TypeOf[string]()))
+	assert.True(t, signedInteger.CanConvert(TypeOf[string]()))
+	assert.True(t, signedInteger.CanConvert(TypeOf[float32]()))
+
+	intValue, err := signedInteger.Convert(TypeOf[int]())
+	assert.Nil(t, intValue)
+	assert.NotNil(t, err)
 
 	value, err := signedInteger.Value()
 	assert.Equal(t, int64(-1), value)
@@ -766,6 +912,17 @@ func TestTypeOfInt64Object(t *testing.T) {
 	assert.Equal(t, BitSize64, signedInteger.BitSize())
 
 	assert.False(t, signedInteger.CanSet())
+	assert.True(t, signedInteger.IsInstantiable())
+	assert.True(t, signedInteger.Compare(TypeOf[int64]()))
+	assert.False(t, signedInteger.Compare(TypeOf[*int64]()))
+	assert.False(t, signedInteger.Compare(TypeOf[string]()))
+	assert.True(t, signedInteger.CanConvert(TypeOf[string]()))
+	assert.True(t, signedInteger.CanConvert(TypeOf[float32]()))
+
+	intValue, err := signedInteger.Convert(TypeOf[int]())
+	assert.NotNil(t, intValue)
+	assert.Equal(t, 52123, intValue.Val())
+	assert.Nil(t, err)
 
 	value, err := signedInteger.Value()
 	assert.Equal(t, int64(52123), value)
@@ -821,6 +978,17 @@ func TestTypeOfInt64ObjectPointer(t *testing.T) {
 	assert.Equal(t, BitSize64, signedInteger.BitSize())
 
 	assert.True(t, signedInteger.CanSet())
+	assert.True(t, signedInteger.IsInstantiable())
+	assert.True(t, signedInteger.Compare(TypeOf[int64]()))
+	assert.False(t, signedInteger.Compare(TypeOf[*int64]()))
+	assert.False(t, signedInteger.Compare(TypeOf[string]()))
+	assert.True(t, signedInteger.CanConvert(TypeOf[string]()))
+	assert.True(t, signedInteger.CanConvert(TypeOf[float32]()))
+
+	intValue, err := signedInteger.Convert(TypeOf[int]())
+	assert.NotNil(t, intValue)
+	assert.Equal(t, 1024, intValue.Val())
+	assert.Nil(t, err)
 
 	value, err := signedInteger.Value()
 	assert.Equal(t, int64(1024), value)
@@ -2429,7 +2597,7 @@ func TestTypeOfFloat64ObjectPointer(t *testing.T) {
 	assert.Equal(t, float64(15), value)
 	assert.Nil(t, err)
 
-	err = float.SetValue(125)
+	err = float.SetValue(float64(125))
 	assert.Nil(t, err)
 
 	newInteger, _ := float.Instantiate()

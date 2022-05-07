@@ -4,8 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
-	"runtime"
-	"strings"
 )
 
 type Method interface {
@@ -18,128 +16,37 @@ type Method interface {
 	NumResult() int
 	IsVariadic() bool
 	Invoke(args ...any) ([]any, error)
-	//ReflectMethod() reflect.Method
+	ReflectMethod() reflect.Method
 }
 
 type methodType struct {
-	name       string
-	pkgPath    string
-	isExported bool
-	receiver   Type
-
-	parent       Type
-	reflectType  reflect.Type
-	reflectValue *reflect.Value
+	parent        Type
+	reflectValue  *reflect.Value
+	reflectMethod reflect.Method
 }
 
 func (m *methodType) Name() string {
-	if m.name != "" {
-		return m.name
-	}
-
-	if m.reflectValue == nil {
-		return m.getFunctionName()
-	}
-
-	name := runtime.FuncForPC(m.reflectValue.Pointer()).Name()
-	dotLastIndex := strings.LastIndex(name, ".")
-
-	if dotLastIndex != -1 {
-		return name[dotLastIndex+1:]
-	}
-
-	if m.name == "" {
-		return m.getFunctionName()
-	}
-
-	return name
-}
-
-func (m *methodType) getFunctionName() string {
-	var builder strings.Builder
-	builder.WriteString("func(")
-
-	for index, parameter := range m.Parameters() {
-		builder.WriteString(parameter.Name())
-		if index != m.NumParameter()-1 {
-			builder.WriteString(",")
-		}
-	}
-
-	builder.WriteString(")")
-
-	if m.NumResult() > 1 {
-		builder.WriteString(" (")
-	}
-
-	for index, result := range m.Results() {
-		builder.WriteString(result.Name())
-		if index != m.NumResult()-1 {
-			builder.WriteString(",")
-		}
-	}
-
-	if m.NumResult() > 1 {
-		builder.WriteString(")")
-	}
-
-	return builder.String()
+	return m.reflectMethod.Name
 }
 
 func (m *methodType) PackageName() string {
-	if m.pkgPath != "" {
-		name := m.pkgPath
-		slashLastIndex := strings.LastIndex(name, "/")
-
-		if slashLastIndex != -1 {
-			name = name[slashLastIndex+1:]
-		}
-
-		return name
-	}
-
-	if m.reflectValue == nil {
-		return ""
-	}
-
-	name := runtime.FuncForPC(m.reflectValue.Pointer()).Name()
-	dotLastIndex := strings.LastIndex(name, ".")
-
-	if dotLastIndex != -1 {
-		name = name[:dotLastIndex]
-	}
-
-	slashLastIndex := strings.LastIndex(name, "/")
-
-	if slashLastIndex != -1 {
-		name = name[slashLastIndex+1:]
-	}
-
-	return name
+	return m.Parent().PackageName()
 }
 
 func (m *methodType) PackagePath() string {
-	return ""
+	return m.Parent().PackagePath()
 }
 
 func (m *methodType) CanSet() bool {
-	if m.reflectValue == nil {
-		return false
-	}
-
-	return m.reflectValue.CanSet()
+	return m.ReflectValue().CanSet()
 }
 
 func (m *methodType) HasValue() bool {
-	return m.reflectValue != nil
+	return true
 }
 
 func (m *methodType) Value() (any, error) {
-	if m.reflectValue == nil {
-		return "", errors.New("value reference is nil")
-	}
-
-	return m.reflectValue.Interface(), nil
+	return m.ReflectValue().Interface(), nil
 }
 
 func (m *methodType) SetValue(val any) error {
@@ -156,27 +63,58 @@ func (m *methodType) Parent() Type {
 }
 
 func (m *methodType) ReflectType() reflect.Type {
-	return m.reflectType
+	return m.reflectMethod.Type
 }
 
 func (m *methodType) ReflectValue() *reflect.Value {
-	return m.reflectValue
+	return &m.reflectMethod.Func
 }
 
 func (m *methodType) Compare(another Type) bool {
-	return false
-}
+	if another == nil {
+		return false
+	}
 
+	return m.reflectMethod.Type == another.ReflectType()
+}
 func (m *methodType) IsInstantiable() bool {
 	return false
 }
 
 func (m *methodType) Instantiate() (Value, error) {
-	return nil, nil
+	return nil, errors.New("methods are not instantiable")
+}
+
+func (m *methodType) CanConvert(typ Type) bool {
+	if typ == nil {
+		return false
+	}
+
+	if m.reflectValue == nil {
+		return m.ReflectType().ConvertibleTo(typ.ReflectType())
+	}
+
+	return m.reflectValue.CanConvert(typ.ReflectType())
+}
+
+func (m *methodType) Convert(typ Type) (Value, error) {
+	if typ == nil {
+		return nil, errors.New("typ should not be nil")
+	}
+
+	if m.reflectValue == nil {
+		return nil, errors.New("value reference is nil")
+	}
+
+	val := m.reflectValue.Convert(typ.ReflectType())
+
+	return &value{
+		val,
+	}, nil
 }
 
 func (m *methodType) IsExported() bool {
-	return m.isExported
+	return m.reflectMethod.IsExported()
 }
 
 func (m *methodType) Receiver() Type {
@@ -185,40 +123,50 @@ func (m *methodType) Receiver() Type {
 
 func (m *methodType) Parameters() []Type {
 	parameters := make([]Type, 0)
-	numIn := m.reflectType.NumIn()
+	numIn := m.ReflectType().NumIn()
 
-	for index := 0; index < numIn; index++ {
-		typ := m.reflectType.In(index)
+	for index := 1; index < numIn; index++ {
+		typ := m.ReflectType().In(index)
 		parameters = append(parameters, typeOf(nil, typ, nil, nil))
 	}
 	return parameters
 }
 
 func (m *methodType) NumParameter() int {
-	return m.reflectType.NumIn()
+	return m.ReflectType().NumIn() - 1
 }
 
 func (m *methodType) Results() []Type {
 	results := make([]Type, 0)
-	numOut := m.reflectType.NumOut()
+	numOut := m.ReflectType().NumOut()
 
 	for index := 0; index < numOut; index++ {
-		typ := m.reflectType.Out(index)
+		typ := m.ReflectType().Out(index)
 		results = append(results, typeOf(nil, typ, nil, nil))
 	}
 	return results
 }
 
 func (m *methodType) NumResult() int {
-	return m.reflectType.NumOut()
+	return m.ReflectType().NumOut()
 }
 
 func (m *methodType) IsVariadic() bool {
-	return m.reflectType.IsVariadic()
+	return m.ReflectType().IsVariadic()
 }
 
 func (m *methodType) Invoke(args ...any) ([]any, error) {
-	if m.reflectValue == nil {
+	reflectValue := m.Parent().ReflectValue()
+
+	if reflectValue == nil {
+		return nil, errors.New("value reference is nil")
+	}
+
+	if m.Parent().Parent() != nil {
+		reflectValue = m.Parent().Parent().ReflectValue()
+	}
+
+	if reflectValue == nil {
 		return nil, errors.New("value reference is nil")
 	}
 
@@ -263,11 +211,16 @@ func (m *methodType) Invoke(args ...any) ([]any, error) {
 	}
 
 	outputs := make([]any, 0)
-	results := m.reflectValue.Call(inputs)
+	inputs = append([]reflect.Value{*reflectValue}, inputs...)
+	results := m.reflectMethod.Func.Call(inputs)
 
 	for _, outputParam := range results {
 		outputs = append(outputs, outputParam.Interface())
 	}
 
 	return outputs, nil
+}
+
+func (m *methodType) ReflectMethod() reflect.Method {
+	return m.reflectMethod
 }

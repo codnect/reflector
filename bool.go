@@ -92,6 +92,38 @@ func (b *booleanType) Instantiate() (Value, error) {
 	}, nil
 }
 
+func (b *booleanType) CanConvert(typ Type) bool {
+	if typ == nil {
+		return false
+	}
+
+	if b.reflectValue == nil {
+		return b.reflectType.ConvertibleTo(typ.ReflectType())
+	}
+
+	return b.reflectValue.CanConvert(typ.ReflectType())
+}
+
+func (b *booleanType) Convert(typ Type) (Value, error) {
+	if typ == nil {
+		return nil, errors.New("typ should not be nil")
+	}
+
+	if b.reflectValue == nil {
+		return nil, errors.New("value reference is nil")
+	}
+
+	if !b.CanConvert(typ) {
+		return nil, errors.New("type is not valid")
+	}
+
+	val := b.reflectValue.Convert(typ.ReflectType())
+
+	return &value{
+		val,
+	}, nil
+}
+
 func (b *booleanType) BooleanValue() (bool, error) {
 	if b.reflectValue == nil {
 		return false, errors.New("value reference is nil")

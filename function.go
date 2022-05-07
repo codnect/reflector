@@ -176,6 +176,38 @@ func (f *functionType) Instantiate() (Value, error) {
 	return nil, errors.New("functions are not instantiable")
 }
 
+func (f *functionType) CanConvert(typ Type) bool {
+	if typ == nil {
+		return false
+	}
+
+	if f.reflectValue == nil {
+		return f.reflectType.ConvertibleTo(typ.ReflectType())
+	}
+
+	return f.reflectValue.CanConvert(typ.ReflectType())
+}
+
+func (f *functionType) Convert(typ Type) (Value, error) {
+	if typ == nil {
+		return nil, errors.New("typ should not be nil")
+	}
+
+	if f.reflectValue == nil {
+		return nil, errors.New("value reference is nil")
+	}
+
+	if !f.CanConvert(typ) {
+		return nil, errors.New("type is not valid")
+	}
+
+	val := f.reflectValue.Convert(typ.ReflectType())
+
+	return &value{
+		val,
+	}, nil
+}
+
 func (f *functionType) IsExported() bool {
 	return f.isExported
 }

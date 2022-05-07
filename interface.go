@@ -99,6 +99,38 @@ func (i *interfaceType) Instantiate() (Value, error) {
 	return nil, errors.New("interfaces are not instantiable")
 }
 
+func (i *interfaceType) CanConvert(typ Type) bool {
+	if typ == nil {
+		return false
+	}
+
+	if i.reflectValue == nil {
+		return i.reflectType.ConvertibleTo(typ.ReflectType())
+	}
+
+	return i.reflectValue.CanConvert(typ.ReflectType())
+}
+
+func (i *interfaceType) Convert(typ Type) (Value, error) {
+	if typ == nil {
+		return nil, errors.New("typ should not be nil")
+	}
+
+	if i.reflectValue == nil {
+		return nil, errors.New("value reference is nil")
+	}
+
+	if !i.CanConvert(typ) {
+		return nil, errors.New("type is not valid")
+	}
+
+	val := i.reflectValue.Convert(typ.ReflectType())
+
+	return &value{
+		val,
+	}, nil
+}
+
 func (i *interfaceType) Elem() Type {
 	return nil
 }
@@ -110,10 +142,7 @@ func (i *interfaceType) Methods() []Method {
 	for index := 0; index < numMethod; index++ {
 		function := i.reflectType.Method(index)
 		functions = append(functions, &methodType{
-			name:        function.Name,
-			pkgPath:     function.PkgPath,
-			isExported:  function.IsExported(),
-			reflectType: function.Type,
+			reflectMethod: function,
 		})
 	}
 

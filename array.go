@@ -101,6 +101,38 @@ func (a *arrayType) Instantiate() (Value, error) {
 	}, nil
 }
 
+func (a *arrayType) CanConvert(typ Type) bool {
+	if typ == nil {
+		return false
+	}
+
+	if a.reflectValue == nil {
+		return a.reflectType.ConvertibleTo(typ.ReflectType())
+	}
+
+	return a.reflectValue.CanConvert(typ.ReflectType())
+}
+
+func (a *arrayType) Convert(typ Type) (Value, error) {
+	if typ == nil {
+		return nil, errors.New("typ should not be nil")
+	}
+
+	if a.reflectValue == nil {
+		return nil, errors.New("value reference is nil")
+	}
+
+	if !a.CanConvert(typ) {
+		return nil, errors.New("type is not valid")
+	}
+
+	val := a.reflectValue.Convert(typ.ReflectType())
+
+	return &value{
+		val,
+	}, nil
+}
+
 func (a *arrayType) Elem() Type {
 	return a.elem
 }

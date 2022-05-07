@@ -3,7 +3,6 @@ package reflector
 import (
 	"errors"
 	"math"
-	"math/bits"
 	"reflect"
 )
 
@@ -17,45 +16,19 @@ const (
 	BitSize128 BitSize = 128
 )
 
-func bitSize(kind reflect.Kind) BitSize {
-	switch kind {
-	case reflect.Int:
-		if bits.UintSize == 32 {
-			return BitSize32
-		}
-		return BitSize64
-	case reflect.Int8:
+func toBitSize(bits int) BitSize {
+	switch bits {
+	case 8:
 		return BitSize8
-	case reflect.Int16:
+	case 16:
 		return BitSize16
-	case reflect.Int32:
+	case 32:
 		return BitSize32
-	case reflect.Int64:
+	case 64:
 		return BitSize64
-	case reflect.Uint:
-		if bits.UintSize == 32 {
-			return BitSize32
-		}
-		return BitSize64
-	case reflect.Uint8:
-		return BitSize8
-	case reflect.Uint16:
-		return BitSize16
-	case reflect.Uint32:
-		return BitSize32
-	case reflect.Uint64:
-		return BitSize64
-	case reflect.Float32:
-		return BitSize32
-	case reflect.Float64:
-		return BitSize64
-	case reflect.Complex64:
-		return BitSize64
-	case reflect.Complex128:
+	default:
 		return BitSize128
 	}
-
-	panic("Invalid kind")
 }
 
 type SignedInteger interface {
@@ -67,8 +40,6 @@ type SignedInteger interface {
 }
 
 type signedIntegerType struct {
-	bitSize BitSize
-
 	parent       Type
 	reflectType  reflect.Type
 	reflectValue *reflect.Value
@@ -153,8 +124,40 @@ func (s *signedIntegerType) Instantiate() (Value, error) {
 	}, nil
 }
 
+func (s *signedIntegerType) CanConvert(typ Type) bool {
+	if typ == nil {
+		return false
+	}
+
+	if s.reflectValue == nil {
+		return s.reflectType.ConvertibleTo(typ.ReflectType())
+	}
+
+	return s.reflectValue.CanConvert(typ.ReflectType())
+}
+
+func (s *signedIntegerType) Convert(typ Type) (Value, error) {
+	if typ == nil {
+		return nil, errors.New("typ should not be nil")
+	}
+
+	if s.reflectValue == nil {
+		return nil, errors.New("value reference is nil")
+	}
+
+	if !s.CanConvert(typ) {
+		return nil, errors.New("type is not valid")
+	}
+
+	val := s.reflectValue.Convert(typ.ReflectType())
+
+	return &value{
+		val,
+	}, nil
+}
+
 func (s *signedIntegerType) BitSize() BitSize {
-	return s.bitSize
+	return toBitSize(s.reflectType.Bits())
 }
 
 func (s *signedIntegerType) IntegerValue() (int64, error) {
@@ -206,11 +209,13 @@ func (s *signedIntegerType) SetIntegerValue(v int64) error {
 func (s *signedIntegerType) Overflow(v int64) bool {
 	overflow := false
 
-	if BitSize8 == s.bitSize && (math.MinInt8 > v || math.MaxInt8 < v) {
+	bitSize := s.BitSize()
+
+	if BitSize8 == bitSize && (math.MinInt8 > v || math.MaxInt8 < v) {
 		overflow = true
-	} else if BitSize16 == s.bitSize && (math.MinInt16 > v || math.MaxInt16 < v) {
+	} else if BitSize16 == bitSize && (math.MinInt16 > v || math.MaxInt16 < v) {
 		overflow = true
-	} else if BitSize32 == s.bitSize && (math.MinInt32 > v || math.MaxInt32 < v) {
+	} else if BitSize32 == bitSize && (math.MinInt32 > v || math.MaxInt32 < v) {
 		overflow = true
 	}
 
@@ -226,8 +231,6 @@ type UnsignedInteger interface {
 }
 
 type unsignedIntegerType struct {
-	bitSize BitSize
-
 	parent       Type
 	reflectType  reflect.Type
 	reflectValue *reflect.Value
@@ -312,8 +315,40 @@ func (u *unsignedIntegerType) Instantiate() (Value, error) {
 	}, nil
 }
 
+func (u *unsignedIntegerType) CanConvert(typ Type) bool {
+	if typ == nil {
+		return false
+	}
+
+	if u.reflectValue == nil {
+		return u.reflectType.ConvertibleTo(typ.ReflectType())
+	}
+
+	return u.reflectValue.CanConvert(typ.ReflectType())
+}
+
+func (u *unsignedIntegerType) Convert(typ Type) (Value, error) {
+	if typ == nil {
+		return nil, errors.New("typ should not be nil")
+	}
+
+	if u.reflectValue == nil {
+		return nil, errors.New("value reference is nil")
+	}
+
+	if !u.CanConvert(typ) {
+		return nil, errors.New("type is not valid")
+	}
+
+	val := u.reflectValue.Convert(typ.ReflectType())
+
+	return &value{
+		val,
+	}, nil
+}
+
 func (u *unsignedIntegerType) BitSize() BitSize {
-	return u.bitSize
+	return toBitSize(u.reflectType.Bits())
 }
 
 func (u *unsignedIntegerType) IntegerValue() (uint64, error) {
@@ -365,11 +400,12 @@ func (u *unsignedIntegerType) SetIntegerValue(v uint64) error {
 func (u *unsignedIntegerType) Overflow(v uint64) bool {
 	overflow := false
 
-	if BitSize8 == u.bitSize && math.MaxUint8 < v {
+	bitSize := u.BitSize()
+	if BitSize8 == bitSize && math.MaxUint8 < v {
 		overflow = true
-	} else if BitSize16 == u.bitSize && math.MaxUint16 < v {
+	} else if BitSize16 == bitSize && math.MaxUint16 < v {
 		overflow = true
-	} else if BitSize32 == u.bitSize && math.MaxUint32 < v {
+	} else if BitSize32 == bitSize && math.MaxUint32 < v {
 		overflow = true
 	}
 
@@ -385,8 +421,6 @@ type Float interface {
 }
 
 type floatType struct {
-	bitSize BitSize
-
 	parent       Type
 	reflectType  reflect.Type
 	reflectValue *reflect.Value
@@ -465,8 +499,40 @@ func (f *floatType) Instantiate() (Value, error) {
 	}, nil
 }
 
+func (f *floatType) CanConvert(typ Type) bool {
+	if typ == nil {
+		return false
+	}
+
+	if f.reflectValue == nil {
+		return f.reflectType.ConvertibleTo(typ.ReflectType())
+	}
+
+	return f.reflectValue.CanConvert(typ.ReflectType())
+}
+
+func (f *floatType) Convert(typ Type) (Value, error) {
+	if typ == nil {
+		return nil, errors.New("typ should not be nil")
+	}
+
+	if f.reflectValue == nil {
+		return nil, errors.New("value reference is nil")
+	}
+
+	if !f.CanConvert(typ) {
+		return nil, errors.New("type is not valid")
+	}
+
+	val := f.reflectValue.Convert(typ.ReflectType())
+
+	return &value{
+		val,
+	}, nil
+}
+
 func (f *floatType) BitSize() BitSize {
-	return f.bitSize
+	return toBitSize(f.reflectType.Bits())
 }
 
 func (f *floatType) FloatValue() (float64, error) {
@@ -505,9 +571,10 @@ func (f *floatType) SetFloatValue(v float64) error {
 
 func (f *floatType) Overflow(v float64) bool {
 	overflow := false
-	if BitSize32 == f.bitSize && math.MaxFloat32 < v {
+	bitSize := f.BitSize()
+	if BitSize32 == bitSize && math.MaxFloat32 < v {
 		overflow = true
-	} else if BitSize64 == f.bitSize && math.MaxFloat64 < v {
+	} else if BitSize64 == bitSize && math.MaxFloat64 < v {
 		overflow = true
 	}
 	return overflow
@@ -525,8 +592,6 @@ type Complex interface {
 }
 
 type complexType struct {
-	bitSize BitSize
-
 	parent       Type
 	reflectType  reflect.Type
 	reflectValue *reflect.Value
@@ -605,8 +670,40 @@ func (c *complexType) Instantiate() (Value, error) {
 	}, nil
 }
 
+func (c *complexType) CanConvert(typ Type) bool {
+	if typ == nil {
+		return false
+	}
+
+	if c.reflectValue == nil {
+		return c.reflectType.ConvertibleTo(typ.ReflectType())
+	}
+
+	return c.reflectValue.CanConvert(typ.ReflectType())
+}
+
+func (c *complexType) Convert(typ Type) (Value, error) {
+	if typ == nil {
+		return nil, errors.New("typ should not be nil")
+	}
+
+	if c.reflectValue == nil {
+		return nil, errors.New("value reference is nil")
+	}
+
+	if !c.CanConvert(typ) {
+		return nil, errors.New("type is not valid")
+	}
+
+	val := c.reflectValue.Convert(typ.ReflectType())
+
+	return &value{
+		val,
+	}, nil
+}
+
 func (c *complexType) BitSize() BitSize {
-	return c.bitSize
+	return toBitSize(c.reflectType.Bits())
 }
 
 func (c *complexType) ComplexValue() (complex128, error) {

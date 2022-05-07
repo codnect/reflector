@@ -92,6 +92,38 @@ func (s *stringType) Instantiate() (Value, error) {
 	}, nil
 }
 
+func (s *stringType) CanConvert(typ Type) bool {
+	if typ == nil {
+		return false
+	}
+
+	if s.reflectValue == nil {
+		return s.reflectType.ConvertibleTo(typ.ReflectType())
+	}
+
+	return s.reflectValue.CanConvert(typ.ReflectType())
+}
+
+func (s *stringType) Convert(typ Type) (Value, error) {
+	if typ == nil {
+		return nil, errors.New("typ should not be nil")
+	}
+
+	if s.reflectValue == nil {
+		return nil, errors.New("value reference is nil")
+	}
+
+	if !s.CanConvert(typ) {
+		return nil, errors.New("type is not valid")
+	}
+
+	val := s.reflectValue.Convert(typ.ReflectType())
+
+	return &value{
+		val,
+	}, nil
+}
+
 func (s *stringType) StringValue() (string, error) {
 	if s.reflectValue == nil {
 		return "", errors.New("value reference is nil")

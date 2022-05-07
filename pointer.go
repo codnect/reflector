@@ -93,3 +93,35 @@ func (p *pointer) IsInstantiable() bool {
 func (p *pointer) Instantiate() (Value, error) {
 	return p.base.Instantiate()
 }
+
+func (p *pointer) CanConvert(typ Type) bool {
+	if typ == nil {
+		return false
+	}
+
+	if p.reflectValue == nil {
+		return p.reflectType.ConvertibleTo(typ.ReflectType())
+	}
+
+	return p.reflectValue.CanConvert(typ.ReflectType())
+}
+
+func (p *pointer) Convert(typ Type) (Value, error) {
+	if typ == nil {
+		return nil, errors.New("typ should not be nil")
+	}
+
+	if p.reflectValue == nil {
+		return nil, errors.New("value reference is nil")
+	}
+
+	if !p.CanConvert(typ) {
+		return nil, errors.New("type is not valid")
+	}
+
+	val := p.reflectValue.Convert(typ.ReflectType())
+
+	return &value{
+		val,
+	}, nil
+}

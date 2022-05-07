@@ -18,6 +18,8 @@ type Type interface {
 	Compare(another Type) bool
 	IsInstantiable() bool
 	Instantiate() (Value, error)
+	CanConvert(typ Type) bool
+	Convert(typ Type) (Value, error)
 }
 
 func TypeOf[T any]() Type {
@@ -27,8 +29,12 @@ func TypeOf[T any]() Type {
 
 func TypeOfAny[T any](obj T) Type {
 	nilType := reflect.TypeOf((*T)(nil))
-
 	typ := reflect.TypeOf(obj)
+
+	if typ == nil {
+		return nil
+	}
+
 	val := reflect.ValueOf(obj)
 	return typeOf(nilType, typ, &val, nil)
 }
@@ -117,28 +123,24 @@ func typeOf(nilType reflect.Type, typ reflect.Type, val *reflect.Value, parent T
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 		return &signedIntegerType{
 			parent:       parent,
-			bitSize:      bitSize(typ.Kind()),
 			reflectType:  typ,
 			reflectValue: val,
 		}
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
 		return &unsignedIntegerType{
 			parent:       parent,
-			bitSize:      bitSize(typ.Kind()),
 			reflectType:  typ,
 			reflectValue: val,
 		}
 	case reflect.Float32, reflect.Float64:
 		return &floatType{
 			parent:       parent,
-			bitSize:      bitSize(typ.Kind()),
 			reflectType:  typ,
 			reflectValue: val,
 		}
 	case reflect.Complex64, reflect.Complex128:
 		return &complexType{
 			parent:       parent,
-			bitSize:      bitSize(typ.Kind()),
 			reflectType:  typ,
 			reflectValue: val,
 		}

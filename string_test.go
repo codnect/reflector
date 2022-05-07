@@ -25,6 +25,12 @@ func TestTypeOfString(t *testing.T) {
 	assert.False(t, stringType.Compare(TypeOf[bool]()))
 	assert.False(t, stringType.Compare(TypeOf[*bool]()))
 	assert.True(t, stringType.Compare(TypeOf[string]()))
+	assert.True(t, stringType.CanConvert(TypeOf[string]()))
+	assert.False(t, stringType.CanConvert(TypeOf[*string]()))
+
+	bytes, err := stringType.Convert(TypeOf[[]byte]())
+	assert.Nil(t, bytes)
+	assert.NotNil(t, err)
 
 	value, err := stringType.Value()
 	assert.Empty(t, value)
@@ -70,6 +76,12 @@ func TestTypeOfStringPointer(t *testing.T) {
 	assert.False(t, ptrType.Compare(TypeOf[string]()))
 	assert.True(t, ptrType.Compare(TypeOf[*string]()))
 	assert.False(t, ptrType.Compare(TypeOf[bool]()))
+	assert.False(t, ptrType.CanConvert(TypeOf[string]()))
+	assert.True(t, ptrType.CanConvert(TypeOf[*string]()))
+
+	strPointer, err := ptrType.Convert(TypeOf[*string]())
+	assert.Nil(t, strPointer)
+	assert.NotNil(t, err)
 
 	value, err := ptrType.Value()
 	assert.Nil(t, value)
@@ -113,6 +125,12 @@ func TestTypeOfStringPointer(t *testing.T) {
 	assert.False(t, stringType.Compare(TypeOf[bool]()))
 	assert.False(t, stringType.Compare(TypeOf[*bool]()))
 	assert.True(t, stringType.Compare(TypeOf[string]()))
+	assert.True(t, stringType.CanConvert(TypeOf[string]()))
+	assert.False(t, stringType.CanConvert(TypeOf[*string]()))
+
+	bytes, err := stringType.Convert(TypeOf[[]byte]())
+	assert.Nil(t, bytes)
+	assert.NotNil(t, err)
 
 	value, err = stringType.Value()
 	assert.Empty(t, value)
@@ -162,6 +180,13 @@ func TestTypeOfStringObject(t *testing.T) {
 	assert.False(t, stringType.Compare(TypeOf[bool]()))
 	assert.False(t, stringType.Compare(TypeOf[*bool]()))
 	assert.True(t, stringType.Compare(TypeOf[string]()))
+	assert.True(t, stringType.CanConvert(TypeOf[string]()))
+	assert.False(t, stringType.CanConvert(TypeOf[*string]()))
+
+	bytes, err := stringType.Convert(TypeOf[[]byte]())
+	assert.NotNil(t, bytes)
+	assert.Equal(t, []byte{'h', 'e', 'l', 'l', 'o'}, bytes.Val())
+	assert.Nil(t, err)
 
 	value, err := stringType.Value()
 	assert.NotEmpty(t, value)
@@ -211,6 +236,13 @@ func TestTypeOfStringObjectPointer(t *testing.T) {
 	assert.False(t, ptrType.Compare(TypeOf[string]()))
 	assert.True(t, ptrType.Compare(TypeOf[*string]()))
 	assert.False(t, ptrType.Compare(TypeOf[bool]()))
+	assert.False(t, ptrType.CanConvert(TypeOf[string]()))
+	assert.True(t, ptrType.CanConvert(TypeOf[*string]()))
+
+	strPointer, err := ptrType.Convert(TypeOf[*string]())
+	assert.NotNil(t, strPointer)
+	assert.Equal(t, "hello", strPointer.Elem())
+	assert.Nil(t, err)
 
 	value, err := ptrType.Value()
 	assert.NotEmpty(t, value)
@@ -256,6 +288,13 @@ func TestTypeOfStringObjectPointer(t *testing.T) {
 	assert.False(t, stringType.Compare(TypeOf[bool]()))
 	assert.False(t, stringType.Compare(TypeOf[*bool]()))
 	assert.True(t, stringType.Compare(TypeOf[string]()))
+	assert.True(t, stringType.CanConvert(TypeOf[string]()))
+	assert.False(t, stringType.CanConvert(TypeOf[*string]()))
+
+	bytes, err := stringType.Convert(TypeOf[[]byte]())
+	assert.NotNil(t, bytes)
+	assert.Equal(t, []byte{'h', 'e', 'l', 'l', 'o'}, bytes.Val())
+	assert.Nil(t, err)
 
 	value, err = stringType.Value()
 	assert.NotEmpty(t, value)
