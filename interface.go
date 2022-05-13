@@ -8,15 +8,16 @@ import (
 
 type Interface interface {
 	Type
-	Elem() Type
+	Underlying() Type
 	Methods() []Method
 	NumMethod() int
 }
 
 type interfaceType struct {
-	parent       Type
-	reflectType  reflect.Type
-	reflectValue *reflect.Value
+	parent         Type
+	underlyingType Type
+	reflectType    reflect.Type
+	reflectValue   *reflect.Value
 }
 
 func (i *interfaceType) Name() string {
@@ -131,8 +132,8 @@ func (i *interfaceType) Convert(typ Type) (Value, error) {
 	}, nil
 }
 
-func (i *interfaceType) Elem() Type {
-	return nil
+func (i *interfaceType) Underlying() Type {
+	return i.underlyingType
 }
 
 func (i *interfaceType) Methods() []Method {
@@ -141,9 +142,18 @@ func (i *interfaceType) Methods() []Method {
 
 	for index := 0; index < numMethod; index++ {
 		function := i.reflectType.Method(index)
-		functions = append(functions, &methodType{
+
+		method := &methodType{
+			parent:        i,
 			reflectMethod: function,
-		})
+		}
+
+		if i.reflectValue != nil {
+			underlyingMethod, _ := i.underlyingType.ReflectType().MethodByName(function.Name)
+			method.underlyingMethod = &underlyingMethod
+		}
+
+		functions = append(functions, method)
 	}
 
 	return functions

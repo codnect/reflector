@@ -20,9 +20,10 @@ type Method interface {
 }
 
 type methodType struct {
-	parent        Type
-	reflectValue  *reflect.Value
-	reflectMethod reflect.Method
+	parent           Type
+	reflectValue     *reflect.Value
+	reflectMethod    reflect.Method
+	underlyingMethod *reflect.Method
 }
 
 func (m *methodType) Name() string {
@@ -125,7 +126,12 @@ func (m *methodType) Parameters() []Type {
 	parameters := make([]Type, 0)
 	numIn := m.ReflectType().NumIn()
 
-	for index := 1; index < numIn; index++ {
+	index := 1
+	if IsInterface(m.parent) {
+		index = 0
+	}
+
+	for ; index < numIn; index++ {
 		typ := m.ReflectType().In(index)
 		parameters = append(parameters, typeOf(nil, typ, nil, nil))
 	}
@@ -133,6 +139,10 @@ func (m *methodType) Parameters() []Type {
 }
 
 func (m *methodType) NumParameter() int {
+	if IsInterface(m.parent) {
+		return m.ReflectType().NumIn()
+	}
+
 	return m.ReflectType().NumIn() - 1
 }
 
@@ -214,19 +224,26 @@ func (m *methodType) Invoke(args ...any) ([]any, error) {
 	outputs := make([]any, 0)
 
 	if parent.Parent() == nil {
-		pointer := reflect.New(parent.ReflectType())
-		pointer.Elem().Set(*reflectValue)
+		var pointer reflect.Value
+		if IsInterface(parent) {
+			inputs = append([]reflect.Value{*reflectValue}, inputs...)
+		} else {
+			pointer = reflect.New(parent.ReflectType())
+			pointer.Elem().Set(*reflectValue)
+			inputs = append([]reflect.Value{pointer}, inputs...)
+		}
 
-		inputs = append([]reflect.Value{pointer}, inputs...)
 	} else {
 		inputs = append([]reflect.Value{*reflectValue}, inputs...)
 	}
 
-	f := m.reflectMethod.Func.Interface()
-	if f != nil {
+	var results []reflect.Value
 
+	if m.underlyingMethod != nil {
+		results = m.underlyingMethod.Func.Call(inputs)
+	} else {
+		results = m.reflectMethod.Func.Call(inputs)
 	}
-	results := m.reflectMethod.Func.Call(inputs)
 
 	for _, outputParam := range results {
 		outputs = append(outputs, outputParam.Interface())
