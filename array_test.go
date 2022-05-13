@@ -262,5 +262,5 @@ func TestTypeOfArrayObjectPointer(t *testing.T) {
 	assert.NotEmpty(t, arrayVal)
 	assert.Equal(t, [3]int{0, 0, 0}, arrayVal)
 
-	//	arrayType.Copy(arrayVal)
+	arrayType.Copy(arrayVal[:])
 }

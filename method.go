@@ -156,14 +156,15 @@ func (m *methodType) IsVariadic() bool {
 }
 
 func (m *methodType) Invoke(args ...any) ([]any, error) {
-	reflectValue := m.Parent().ReflectValue()
+	parent := m.Parent()
+	reflectValue := parent.ReflectValue()
 
 	if reflectValue == nil {
 		return nil, errors.New("value reference is nil")
 	}
 
-	if m.Parent().Parent() != nil {
-		reflectValue = m.Parent().Parent().ReflectValue()
+	if parent.Parent() != nil {
+		reflectValue = parent.Parent().ReflectValue()
 	}
 
 	if reflectValue == nil {
@@ -211,7 +212,20 @@ func (m *methodType) Invoke(args ...any) ([]any, error) {
 	}
 
 	outputs := make([]any, 0)
-	inputs = append([]reflect.Value{*reflectValue}, inputs...)
+
+	if parent.Parent() == nil {
+		pointer := reflect.New(parent.ReflectType())
+		pointer.Elem().Set(*reflectValue)
+
+		inputs = append([]reflect.Value{pointer}, inputs...)
+	} else {
+		inputs = append([]reflect.Value{*reflectValue}, inputs...)
+	}
+
+	f := m.reflectMethod.Func.Interface()
+	if f != nil {
+
+	}
 	results := m.reflectMethod.Func.Call(inputs)
 
 	for _, outputParam := range results {

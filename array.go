@@ -187,6 +187,5 @@ func (a *arrayType) Copy(dst any) (int, error) {
 		return -1, errors.New("value reference is nil")
 	}
 
-	// TODO BUG: It causes app to crash
-	return reflect.Copy(reflect.ValueOf(dst), reflect.ValueOf(a.reflectValue.Slice(0, a.Len()))), nil
+	return reflect.Copy(reflect.ValueOf(dst), *a.reflectValue), nil
 }

@@ -187,7 +187,7 @@ func (s *structType) FieldByName(name string) (Field, bool) {
 }
 
 func (s *structType) Methods() []Method {
-	functions := make([]Method, 0)
+	methods := make([]Method, 0)
 
 	typ := s.nilType
 	if s.Parent() != nil {
@@ -197,23 +197,51 @@ func (s *structType) Methods() []Method {
 	numMethod := s.NumMethod()
 
 	for i := 0; i < numMethod; i++ {
-		function := typ.Method(i)
+		method := typ.Method(i)
 
-		functions = append(functions, &methodType{
+		methods = append(methods, &methodType{
 			parent:        s,
-			reflectMethod: function,
+			reflectMethod: method,
 		})
 	}
 
-	return functions
+	return methods
 }
 
 func (s *structType) Method(index int) (Method, bool) {
-	return nil, false
+	if index < 0 || index >= s.NumMethod() {
+		return nil, false
+	}
+
+	typ := s.nilType
+	if s.Parent() != nil {
+		typ = s.nilType.Elem()
+	}
+
+	method := typ.Method(index)
+
+	return &methodType{
+		parent:        s,
+		reflectMethod: method,
+	}, true
 }
 
 func (s *structType) MethodByName(name string) (Method, bool) {
-	return nil, false
+	typ := s.nilType
+	if s.Parent() != nil {
+		typ = s.nilType.Elem()
+	}
+
+	method, exists := typ.MethodByName(name)
+
+	if !exists {
+		return nil, false
+	}
+
+	return &methodType{
+		parent:        s,
+		reflectMethod: method,
+	}, true
 }
 
 func (s *structType) NumMethod() int {

@@ -243,8 +243,8 @@ func TestTypeOfInt8ObjectPointer(t *testing.T) {
 	assert.Equal(t, int8(125), val)
 
 	err = signedInteger.SetValue(150)
-	assert.NotNil(t, err)
-	assert.Equal(t, int8(125), val)
+	assert.Nil(t, err)
+	assert.Equal(t, int8(-106), val)
 
 	assert.True(t, signedInteger.Overflow(150))
 	assert.False(t, signedInteger.Overflow(110))
@@ -500,8 +500,8 @@ func TestTypeOfInt16ObjectPointer(t *testing.T) {
 	assert.Equal(t, int16(7032), val)
 
 	err = signedInteger.SetValue(50235)
-	assert.NotNil(t, err)
-	assert.Equal(t, int16(7032), val)
+	assert.Nil(t, err)
+	assert.Equal(t, int16(-15301), val)
 
 	assert.True(t, signedInteger.Overflow(33645))
 	assert.False(t, signedInteger.Overflow(9733))
@@ -757,8 +757,8 @@ func TestTypeOfInt32ObjectPointer(t *testing.T) {
 	assert.Equal(t, int32(7032), val)
 
 	err = signedInteger.SetValue(2447483647)
-	assert.NotNil(t, err)
-	assert.Equal(t, int32(7032), val)
+	assert.Nil(t, err)
+	assert.Equal(t, int32(-1847483649), val)
 
 	assert.True(t, signedInteger.Overflow(2447483647))
 	assert.False(t, signedInteger.Overflow(123643))
@@ -1396,8 +1396,8 @@ func TestTypeOfUint8ObjectPointer(t *testing.T) {
 	assert.Equal(t, uint8(125), val)
 
 	err = unsignedInteger.SetValue(363)
-	assert.NotNil(t, err)
-	assert.Equal(t, uint8(125), val)
+	assert.Nil(t, err)
+	assert.Equal(t, uint8(0x6b), val)
 
 	assert.True(t, unsignedInteger.Overflow(532))
 	assert.False(t, unsignedInteger.Overflow(110))
@@ -1611,8 +1611,8 @@ func TestTypeOfUint16ObjectPointer(t *testing.T) {
 	assert.Equal(t, uint16(125), val)
 
 	err = unsignedInteger.SetValue(70321)
-	assert.NotNil(t, err)
-	assert.Equal(t, uint16(125), val)
+	assert.Nil(t, err)
+	assert.Equal(t, uint16(0x12b1), val)
 
 	assert.True(t, unsignedInteger.Overflow(73412))
 	assert.False(t, unsignedInteger.Overflow(110))
@@ -1823,8 +1823,8 @@ func TestTypeOfUint32ObjectPointer(t *testing.T) {
 	assert.Equal(t, uint32(125), val)
 
 	err = unsignedInteger.SetValue(43213253123)
-	assert.NotNil(t, err)
-	assert.Equal(t, uint32(125), val)
+	assert.Nil(t, err)
+	assert.Equal(t, uint32(0xfb5ea03), val)
 
 	assert.True(t, unsignedInteger.Overflow(43213253123))
 	assert.False(t, unsignedInteger.Overflow(110))

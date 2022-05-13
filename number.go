@@ -79,16 +79,10 @@ func (s *signedIntegerType) SetValue(v any) error {
 	}
 
 	switch typedVal := v.(type) {
-	case int8:
-		return s.SetIntegerValue(int64(typedVal))
-	case int16:
-		return s.SetIntegerValue(int64(typedVal))
-	case int32:
-		return s.SetIntegerValue(int64(typedVal))
-	case int64:
-		return s.SetIntegerValue(typedVal)
-	case int:
-		return s.SetIntegerValue(int64(typedVal))
+	case int8, int16, int32, int64, int, uint8, uint16, uint32, uint64, uint, float32, float64:
+		convertedValue := reflect.ValueOf(typedVal).Convert(s.reflectType)
+		s.reflectValue.Set(convertedValue)
+		return nil
 	default:
 		return errors.New("type is not valid")
 	}
@@ -165,20 +159,7 @@ func (s *signedIntegerType) IntegerValue() (int64, error) {
 		return -1, errors.New("value reference is nil")
 	}
 
-	val := s.reflectValue.Interface()
-
-	switch val.(type) {
-	case int8:
-		return int64(val.(int8)), nil
-	case int16:
-		return int64(val.(int16)), nil
-	case int32:
-		return int64(val.(int32)), nil
-	case int:
-		return int64(val.(int)), nil
-	default:
-		return val.(int64), nil
-	}
+	return s.reflectValue.Convert(TypeOf[int64]().ReflectType()).Interface().(int64), nil
 }
 
 func (s *signedIntegerType) SetIntegerValue(v int64) error {
@@ -186,23 +167,7 @@ func (s *signedIntegerType) SetIntegerValue(v int64) error {
 		return errors.New("value cannot be set")
 	}
 
-	if s.Overflow(v) {
-		return errors.New("value is too large")
-	}
-
-	switch s.reflectType.Name() {
-	case "int8":
-		s.reflectValue.Set(reflect.ValueOf(int8(v)))
-	case "int16":
-		s.reflectValue.Set(reflect.ValueOf(int16(v)))
-	case "int32":
-		s.reflectValue.Set(reflect.ValueOf(int32(v)))
-	case "int":
-		s.reflectValue.Set(reflect.ValueOf(int(v)))
-	default:
-		s.reflectValue.Set(reflect.ValueOf(int64(v)))
-	}
-
+	s.reflectValue.Set(reflect.ValueOf(v).Convert(s.reflectType))
 	return nil
 }
 
@@ -270,16 +235,10 @@ func (u *unsignedIntegerType) SetValue(v any) error {
 	}
 
 	switch typedVal := v.(type) {
-	case uint8:
-		return u.SetIntegerValue(uint64(typedVal))
-	case uint16:
-		return u.SetIntegerValue(uint64(typedVal))
-	case uint32:
-		return u.SetIntegerValue(uint64(typedVal))
-	case uint64:
-		return u.SetIntegerValue(typedVal)
-	case uint:
-		return u.SetIntegerValue(uint64(typedVal))
+	case int8, int16, int32, int64, int, uint8, uint16, uint32, uint64, uint, float32, float64:
+		convertedValue := reflect.ValueOf(typedVal).Convert(u.reflectType)
+		u.reflectValue.Set(convertedValue)
+		return nil
 	default:
 		return errors.New("type is not valid")
 	}
@@ -356,20 +315,7 @@ func (u *unsignedIntegerType) IntegerValue() (uint64, error) {
 		return 0, errors.New("value reference is nil")
 	}
 
-	val := u.reflectValue.Interface()
-
-	switch val.(type) {
-	case uint8:
-		return uint64(val.(uint8)), nil
-	case uint16:
-		return uint64(val.(uint16)), nil
-	case uint32:
-		return uint64(val.(uint32)), nil
-	case uint:
-		return uint64(val.(uint)), nil
-	default:
-		return val.(uint64), nil
-	}
+	return u.reflectValue.Convert(TypeOf[uint64]().ReflectType()).Interface().(uint64), nil
 }
 
 func (u *unsignedIntegerType) SetIntegerValue(v uint64) error {
@@ -377,23 +323,7 @@ func (u *unsignedIntegerType) SetIntegerValue(v uint64) error {
 		return errors.New("value cannot be set")
 	}
 
-	if u.Overflow(v) {
-		return errors.New("value is too large")
-	}
-
-	switch u.reflectType.Name() {
-	case "uint8":
-		u.reflectValue.Set(reflect.ValueOf(uint8(v)))
-	case "uint16":
-		u.reflectValue.Set(reflect.ValueOf(uint16(v)))
-	case "uint32":
-		u.reflectValue.Set(reflect.ValueOf(uint32(v)))
-	case "uint":
-		u.reflectValue.Set(reflect.ValueOf(uint(v)))
-	default:
-		u.reflectValue.Set(reflect.ValueOf(v))
-	}
-
+	u.reflectValue.Set(reflect.ValueOf(v).Convert(u.reflectType))
 	return nil
 }
 
@@ -460,10 +390,10 @@ func (f *floatType) SetValue(v any) error {
 	}
 
 	switch typedVal := v.(type) {
-	case float32:
-		return f.SetFloatValue(float64(typedVal))
-	case float64:
-		return f.SetFloatValue(typedVal)
+	case int8, int16, int32, int64, int, uint8, uint16, uint32, uint64, uint, float32, float64:
+		convertedValue := reflect.ValueOf(typedVal).Convert(f.reflectType)
+		f.reflectValue.Set(convertedValue)
+		return nil
 	default:
 		return errors.New("type is not valid")
 	}
@@ -555,17 +485,7 @@ func (f *floatType) SetFloatValue(v float64) error {
 		return errors.New("value cannot be set")
 	}
 
-	if f.Overflow(v) {
-		return errors.New("value is too large")
-	}
-
-	switch f.reflectType.Name() {
-	case "float32":
-		f.reflectValue.Set(reflect.ValueOf(float32(v)))
-	default:
-		f.reflectValue.Set(reflect.ValueOf(v))
-	}
-
+	f.reflectValue.Set(reflect.ValueOf(v).Convert(f.reflectType))
 	return nil
 }
 

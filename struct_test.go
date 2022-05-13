@@ -48,6 +48,7 @@ func (t TestStruct1) Method1() int {
 }
 
 func (t *TestStruct1) Method2(val string) {
+	t.ExportedField = "burak"
 	return
 }
 
@@ -833,12 +834,15 @@ func TestTypeOfStructObject(t *testing.T) {
 
 	method := methods[0]
 	assert.Equal(t, "Method1", method.Name())
+	assert.Equal(t, "reflector", method.PackageName())
+	assert.Equal(t, "github.com/procyon-projects/reflector", method.PackagePath())
 	assert.Equal(t, 0, method.NumParameter())
 	assert.Equal(t, 1, method.NumResult())
 	assert.True(t, method.IsExported())
+	assert.False(t, method.CanSet())
 
 	_, err = method.Invoke()
-	assert.NotNil(t, err)
+	assert.Nil(t, err)
 
 	method = methods[1]
 	assert.Equal(t, "Method2", method.Name())
@@ -847,6 +851,10 @@ func TestTypeOfStructObject(t *testing.T) {
 	assert.True(t, method.IsExported())
 
 	assert.Equal(t, "string", method.Parameters()[0].Name())
+
+	_, err = method.Invoke("anyValue")
+	assert.Nil(t, err)
+
 }
 
 func TestTypeOfStructObjectPointer(t *testing.T) {
@@ -1241,24 +1249,6 @@ func TestTypeOfStructObjectPointer(t *testing.T) {
 	assert.True(t, method.IsExported())
 	assert.False(t, method.CanSet())
 
-	methodVal, _ := method.Value()
-
-	if methodVal == nil {
-
-	}
-
-	c := methodVal.(func(*TestStruct1) int)
-
-	if c == nil {
-
-	}
-
-	results, err := method.Invoke()
-
-	if results != nil {
-
-	}
-
 	method = methods[1]
 	assert.Equal(t, "Method2", method.Name())
 	assert.Equal(t, 1, method.NumParameter())
@@ -1267,6 +1257,6 @@ func TestTypeOfStructObjectPointer(t *testing.T) {
 
 	assert.Equal(t, "string", method.Parameters()[0].Name())
 
-	_, err = method.Invoke("hello")
-	assert.NotNil(t, err)
+	_, err = method.Invoke("anyValue")
+	assert.Nil(t, err)
 }
