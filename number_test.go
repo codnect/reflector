@@ -19,10 +19,9 @@ func TestTypeOfInt8(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	signedInteger, isSignedInteger := ToSignedInteger(typ)
+	signedInteger := ToSignedInteger(typ)
 
 	assert.NotNil(t, signedInteger)
-	assert.True(t, isSignedInteger)
 	assert.Equal(t, BitSize8, signedInteger.BitSize())
 
 	assert.False(t, signedInteger.CanSet())
@@ -64,9 +63,8 @@ func TestTypeOfInt8(t *testing.T) {
 func TestTypeOfInt8Pointer(t *testing.T) {
 	ptrType := TypeOf[*int8]()
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*int8", ptr.Name())
@@ -87,10 +85,9 @@ func TestTypeOfInt8Pointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	signedInteger, isSignedInteger := ToSignedInteger(typ)
+	signedInteger := ToSignedInteger(typ)
 
 	assert.NotNil(t, signedInteger)
-	assert.True(t, isSignedInteger)
 	assert.Equal(t, BitSize8, signedInteger.BitSize())
 
 	assert.False(t, signedInteger.CanSet())
@@ -144,10 +141,9 @@ func TestTypeOfInt8Object(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	signedInteger, isSignedInteger := ToSignedInteger(typ)
+	signedInteger := ToSignedInteger(typ)
 
 	assert.NotNil(t, signedInteger)
-	assert.True(t, isSignedInteger)
 	assert.Equal(t, BitSize8, signedInteger.BitSize())
 
 	assert.False(t, signedInteger.CanSet())
@@ -192,9 +188,8 @@ func TestTypeOfInt8ObjectPointer(t *testing.T) {
 
 	ptrType := TypeOfAny(&val)
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*int8", ptr.Name())
@@ -215,10 +210,9 @@ func TestTypeOfInt8ObjectPointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	signedInteger, isSignedInteger := ToSignedInteger(typ)
+	signedInteger := ToSignedInteger(typ)
 
 	assert.NotNil(t, signedInteger)
-	assert.True(t, isSignedInteger)
 	assert.Equal(t, BitSize8, signedInteger.BitSize())
 
 	assert.True(t, signedInteger.CanSet())
@@ -276,10 +270,9 @@ func TestTypeOfInt16(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	signedInteger, isSignedInteger := ToSignedInteger(typ)
+	signedInteger := ToSignedInteger(typ)
 
 	assert.NotNil(t, signedInteger)
-	assert.True(t, isSignedInteger)
 	assert.Equal(t, BitSize16, signedInteger.BitSize())
 
 	assert.False(t, signedInteger.CanSet())
@@ -321,9 +314,8 @@ func TestTypeOfInt16(t *testing.T) {
 func TestTypeOfInt16Pointer(t *testing.T) {
 	ptrType := TypeOf[*int16]()
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*int16", ptr.Name())
@@ -344,10 +336,9 @@ func TestTypeOfInt16Pointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	signedInteger, isSignedInteger := ToSignedInteger(typ)
+	signedInteger := ToSignedInteger(typ)
 
 	assert.NotNil(t, signedInteger)
-	assert.True(t, isSignedInteger)
 	assert.Equal(t, BitSize16, signedInteger.BitSize())
 
 	assert.False(t, signedInteger.CanSet())
@@ -401,10 +392,9 @@ func TestTypeOfInt16Object(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	signedInteger, isSignedInteger := ToSignedInteger(typ)
+	signedInteger := ToSignedInteger(typ)
 
 	assert.NotNil(t, signedInteger)
-	assert.True(t, isSignedInteger)
 	assert.Equal(t, BitSize16, signedInteger.BitSize())
 
 	assert.False(t, signedInteger.CanSet())
@@ -449,9 +439,8 @@ func TestTypeOfInt16ObjectPointer(t *testing.T) {
 
 	ptrType := TypeOfAny(&val)
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*int16", ptr.Name())
@@ -472,10 +461,9 @@ func TestTypeOfInt16ObjectPointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	signedInteger, isSignedInteger := ToSignedInteger(typ)
+	signedInteger := ToSignedInteger(typ)
 
 	assert.NotNil(t, signedInteger)
-	assert.True(t, isSignedInteger)
 	assert.Equal(t, BitSize16, signedInteger.BitSize())
 
 	assert.True(t, signedInteger.CanSet())
@@ -533,10 +521,9 @@ func TestTypeOfInt32(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	signedInteger, isSignedInteger := ToSignedInteger(typ)
+	signedInteger := ToSignedInteger(typ)
 
 	assert.NotNil(t, signedInteger)
-	assert.True(t, isSignedInteger)
 	assert.Equal(t, BitSize32, signedInteger.BitSize())
 
 	assert.False(t, signedInteger.CanSet())
@@ -578,9 +565,8 @@ func TestTypeOfInt32(t *testing.T) {
 func TestTypeOfInt32Pointer(t *testing.T) {
 	ptrType := TypeOf[*int32]()
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*int32", ptr.Name())
@@ -601,10 +587,9 @@ func TestTypeOfInt32Pointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	signedInteger, isSignedInteger := ToSignedInteger(typ)
+	signedInteger := ToSignedInteger(typ)
 
 	assert.NotNil(t, signedInteger)
-	assert.True(t, isSignedInteger)
 	assert.Equal(t, BitSize32, signedInteger.BitSize())
 
 	assert.False(t, signedInteger.CanSet())
@@ -658,10 +643,9 @@ func TestTypeOfInt32Object(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	signedInteger, isSignedInteger := ToSignedInteger(typ)
+	signedInteger := ToSignedInteger(typ)
 
 	assert.NotNil(t, signedInteger)
-	assert.True(t, isSignedInteger)
 	assert.Equal(t, BitSize32, signedInteger.BitSize())
 
 	assert.False(t, signedInteger.CanSet())
@@ -706,9 +690,8 @@ func TestTypeOfInt32ObjectPointer(t *testing.T) {
 
 	ptrType := TypeOfAny(&val)
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*int32", ptr.Name())
@@ -729,10 +712,9 @@ func TestTypeOfInt32ObjectPointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	signedInteger, isSignedInteger := ToSignedInteger(typ)
+	signedInteger := ToSignedInteger(typ)
 
 	assert.NotNil(t, signedInteger)
-	assert.True(t, isSignedInteger)
 	assert.Equal(t, BitSize32, signedInteger.BitSize())
 
 	assert.True(t, signedInteger.CanSet())
@@ -790,10 +772,9 @@ func TestTypeOfInt64(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	signedInteger, isSignedInteger := ToSignedInteger(typ)
+	signedInteger := ToSignedInteger(typ)
 
 	assert.NotNil(t, signedInteger)
-	assert.True(t, isSignedInteger)
 	assert.Equal(t, BitSize64, signedInteger.BitSize())
 
 	assert.False(t, signedInteger.CanSet())
@@ -830,9 +811,8 @@ func TestTypeOfInt64(t *testing.T) {
 func TestTypeOfInt64Pointer(t *testing.T) {
 	ptrType := TypeOf[*int64]()
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*int64", ptr.Name())
@@ -853,10 +833,9 @@ func TestTypeOfInt64Pointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	signedInteger, isSignedInteger := ToSignedInteger(typ)
+	signedInteger := ToSignedInteger(typ)
 
 	assert.NotNil(t, signedInteger)
-	assert.True(t, isSignedInteger)
 	assert.Equal(t, BitSize64, signedInteger.BitSize())
 
 	assert.False(t, signedInteger.CanSet())
@@ -905,10 +884,9 @@ func TestTypeOfInt64Object(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	signedInteger, isSignedInteger := ToSignedInteger(typ)
+	signedInteger := ToSignedInteger(typ)
 
 	assert.NotNil(t, signedInteger)
-	assert.True(t, isSignedInteger)
 	assert.Equal(t, BitSize64, signedInteger.BitSize())
 
 	assert.False(t, signedInteger.CanSet())
@@ -948,9 +926,8 @@ func TestTypeOfInt64ObjectPointer(t *testing.T) {
 
 	ptrType := TypeOfAny(&val)
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*int64", ptr.Name())
@@ -971,10 +948,9 @@ func TestTypeOfInt64ObjectPointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	signedInteger, isSignedInteger := ToSignedInteger(typ)
+	signedInteger := ToSignedInteger(typ)
 
 	assert.NotNil(t, signedInteger)
-	assert.True(t, isSignedInteger)
 	assert.Equal(t, BitSize64, signedInteger.BitSize())
 
 	assert.True(t, signedInteger.CanSet())
@@ -1023,10 +999,9 @@ func TestTypeOfInt(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	signedInteger, isSignedInteger := ToSignedInteger(typ)
+	signedInteger := ToSignedInteger(typ)
 
 	assert.NotNil(t, signedInteger)
-	assert.True(t, isSignedInteger)
 	assert.Equal(t, BitSize64, signedInteger.BitSize())
 
 	assert.False(t, signedInteger.CanSet())
@@ -1053,9 +1028,8 @@ func TestTypeOfInt(t *testing.T) {
 func TestTypeOfIntPointer(t *testing.T) {
 	ptrType := TypeOf[*int]()
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*int", ptr.Name())
@@ -1076,10 +1050,9 @@ func TestTypeOfIntPointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	signedInteger, isSignedInteger := ToSignedInteger(typ)
+	signedInteger := ToSignedInteger(typ)
 
 	assert.NotNil(t, signedInteger)
-	assert.True(t, isSignedInteger)
 	assert.Equal(t, BitSize64, signedInteger.BitSize())
 
 	assert.False(t, signedInteger.CanSet())
@@ -1118,10 +1091,9 @@ func TestTypeOfIntObject(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	signedInteger, isSignedInteger := ToSignedInteger(typ)
+	signedInteger := ToSignedInteger(typ)
 
 	assert.NotNil(t, signedInteger)
-	assert.True(t, isSignedInteger)
 	assert.Equal(t, BitSize64, signedInteger.BitSize())
 
 	assert.False(t, signedInteger.CanSet())
@@ -1150,9 +1122,8 @@ func TestTypeOfIntObjectPointer(t *testing.T) {
 
 	ptrType := TypeOfAny(&val)
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*int", ptr.Name())
@@ -1173,10 +1144,9 @@ func TestTypeOfIntObjectPointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	signedInteger, isSignedInteger := ToSignedInteger(typ)
+	signedInteger := ToSignedInteger(typ)
 
 	assert.NotNil(t, signedInteger)
-	assert.True(t, isSignedInteger)
 	assert.Equal(t, BitSize64, signedInteger.BitSize())
 
 	assert.True(t, signedInteger.CanSet())
@@ -1214,10 +1184,9 @@ func TestTypeOfUint8(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	unsignedInteger, isUnsignedInteger := ToUnsignedInteger(typ)
+	unsignedInteger := ToUnsignedInteger(typ)
 
 	assert.NotNil(t, unsignedInteger)
-	assert.True(t, isUnsignedInteger)
 	assert.Equal(t, BitSize8, unsignedInteger.BitSize())
 
 	assert.False(t, unsignedInteger.CanSet())
@@ -1249,9 +1218,8 @@ func TestTypeOfUint8(t *testing.T) {
 func TestTypeOfUint8Pointer(t *testing.T) {
 	ptrType := TypeOf[*uint8]()
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*uint8", ptr.Name())
@@ -1272,10 +1240,9 @@ func TestTypeOfUint8Pointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	unsignedInteger, isUnsignedInteger := ToUnsignedInteger(typ)
+	unsignedInteger := ToUnsignedInteger(typ)
 
 	assert.NotNil(t, unsignedInteger)
-	assert.True(t, isUnsignedInteger)
 	assert.Equal(t, BitSize8, unsignedInteger.BitSize())
 
 	assert.False(t, unsignedInteger.CanSet())
@@ -1319,10 +1286,9 @@ func TestTypeOfUint8Object(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	unsignedInteger, isUnsignedInteger := ToUnsignedInteger(typ)
+	unsignedInteger := ToUnsignedInteger(typ)
 
 	assert.NotNil(t, unsignedInteger)
-	assert.True(t, isUnsignedInteger)
 	assert.Equal(t, BitSize8, unsignedInteger.BitSize())
 
 	assert.False(t, unsignedInteger.CanSet())
@@ -1356,9 +1322,8 @@ func TestTypeOfUint8ObjectPointer(t *testing.T) {
 
 	ptrType := TypeOfAny(&val)
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*uint8", ptr.Name())
@@ -1379,10 +1344,9 @@ func TestTypeOfUint8ObjectPointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	unsignedInteger, isUnsignedInteger := ToUnsignedInteger(typ)
+	unsignedInteger := ToUnsignedInteger(typ)
 
 	assert.NotNil(t, unsignedInteger)
-	assert.True(t, isUnsignedInteger)
 	assert.Equal(t, BitSize8, unsignedInteger.BitSize())
 
 	assert.True(t, unsignedInteger.CanSet())
@@ -1429,10 +1393,9 @@ func TestTypeOfUint16(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	unsignedInteger, isUnsignedInteger := ToUnsignedInteger(typ)
+	unsignedInteger := ToUnsignedInteger(typ)
 
 	assert.NotNil(t, unsignedInteger)
-	assert.True(t, isUnsignedInteger)
 	assert.Equal(t, BitSize16, unsignedInteger.BitSize())
 
 	assert.False(t, unsignedInteger.CanSet())
@@ -1464,9 +1427,8 @@ func TestTypeOfUint16(t *testing.T) {
 func TestTypeOfUint16Pointer(t *testing.T) {
 	ptrType := TypeOf[*uint16]()
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*uint16", ptr.Name())
@@ -1487,10 +1449,9 @@ func TestTypeOfUint16Pointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	unsignedInteger, isUnsignedInteger := ToUnsignedInteger(typ)
+	unsignedInteger := ToUnsignedInteger(typ)
 
 	assert.NotNil(t, unsignedInteger)
-	assert.True(t, isUnsignedInteger)
 	assert.Equal(t, BitSize16, unsignedInteger.BitSize())
 
 	assert.False(t, unsignedInteger.CanSet())
@@ -1534,10 +1495,9 @@ func TestTypeOfUint16Object(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	unsignedInteger, isUnsignedInteger := ToUnsignedInteger(typ)
+	unsignedInteger := ToUnsignedInteger(typ)
 
 	assert.NotNil(t, unsignedInteger)
-	assert.True(t, isUnsignedInteger)
 	assert.Equal(t, BitSize16, unsignedInteger.BitSize())
 
 	assert.False(t, unsignedInteger.CanSet())
@@ -1571,9 +1531,8 @@ func TestTypeOfUint16ObjectPointer(t *testing.T) {
 
 	ptrType := TypeOfAny(&val)
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*uint16", ptr.Name())
@@ -1594,10 +1553,9 @@ func TestTypeOfUint16ObjectPointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	unsignedInteger, isUnsignedInteger := ToUnsignedInteger(typ)
+	unsignedInteger := ToUnsignedInteger(typ)
 
 	assert.NotNil(t, unsignedInteger)
-	assert.True(t, isUnsignedInteger)
 	assert.Equal(t, BitSize16, unsignedInteger.BitSize())
 
 	assert.True(t, unsignedInteger.CanSet())
@@ -1644,10 +1602,9 @@ func TestTypeOfUint32(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	unsignedInteger, isUnsignedInteger := ToUnsignedInteger(typ)
+	unsignedInteger := ToUnsignedInteger(typ)
 
 	assert.NotNil(t, unsignedInteger)
-	assert.True(t, isUnsignedInteger)
 	assert.Equal(t, BitSize32, unsignedInteger.BitSize())
 
 	assert.False(t, unsignedInteger.CanSet())
@@ -1678,9 +1635,8 @@ func TestTypeOfUint32(t *testing.T) {
 func TestTypeOfUint32Pointer(t *testing.T) {
 	ptrType := TypeOf[*uint32]()
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*uint32", ptr.Name())
@@ -1701,10 +1657,9 @@ func TestTypeOfUint32Pointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	unsignedInteger, isUnsignedInteger := ToUnsignedInteger(typ)
+	unsignedInteger := ToUnsignedInteger(typ)
 
 	assert.NotNil(t, unsignedInteger)
-	assert.True(t, isUnsignedInteger)
 	assert.Equal(t, BitSize32, unsignedInteger.BitSize())
 
 	assert.False(t, unsignedInteger.CanSet())
@@ -1747,10 +1702,9 @@ func TestTypeOfUint32Object(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	unsignedInteger, isUnsignedInteger := ToUnsignedInteger(typ)
+	unsignedInteger := ToUnsignedInteger(typ)
 
 	assert.NotNil(t, unsignedInteger)
-	assert.True(t, isUnsignedInteger)
 	assert.Equal(t, BitSize32, unsignedInteger.BitSize())
 
 	assert.False(t, unsignedInteger.CanSet())
@@ -1783,9 +1737,8 @@ func TestTypeOfUint32ObjectPointer(t *testing.T) {
 
 	ptrType := TypeOfAny(&val)
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*uint32", ptr.Name())
@@ -1806,10 +1759,9 @@ func TestTypeOfUint32ObjectPointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	unsignedInteger, isUnsignedInteger := ToUnsignedInteger(typ)
+	unsignedInteger := ToUnsignedInteger(typ)
 
 	assert.NotNil(t, unsignedInteger)
-	assert.True(t, isUnsignedInteger)
 	assert.Equal(t, BitSize32, unsignedInteger.BitSize())
 
 	assert.True(t, unsignedInteger.CanSet())
@@ -1855,10 +1807,9 @@ func TestTypeOfUint64(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	unsignedInteger, isUnsignedInteger := ToUnsignedInteger(typ)
+	unsignedInteger := ToUnsignedInteger(typ)
 
 	assert.NotNil(t, unsignedInteger)
-	assert.True(t, isUnsignedInteger)
 	assert.Equal(t, BitSize64, unsignedInteger.BitSize())
 
 	assert.False(t, unsignedInteger.CanSet())
@@ -1885,9 +1836,8 @@ func TestTypeOfUint64(t *testing.T) {
 func TestTypeOfUint64Pointer(t *testing.T) {
 	ptrType := TypeOf[*uint64]()
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*uint64", ptr.Name())
@@ -1908,10 +1858,9 @@ func TestTypeOfUint64Pointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	unsignedInteger, isUnsignedInteger := ToUnsignedInteger(typ)
+	unsignedInteger := ToUnsignedInteger(typ)
 
 	assert.NotNil(t, unsignedInteger)
-	assert.True(t, isUnsignedInteger)
 	assert.Equal(t, BitSize64, unsignedInteger.BitSize())
 
 	assert.False(t, unsignedInteger.CanSet())
@@ -1950,10 +1899,9 @@ func TestTypeOfUint64Object(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	unsignedInteger, isUnsignedInteger := ToUnsignedInteger(typ)
+	unsignedInteger := ToUnsignedInteger(typ)
 
 	assert.NotNil(t, unsignedInteger)
-	assert.True(t, isUnsignedInteger)
 	assert.Equal(t, BitSize64, unsignedInteger.BitSize())
 
 	assert.False(t, unsignedInteger.CanSet())
@@ -1982,9 +1930,8 @@ func TestTypeOfUint64ObjectPointer(t *testing.T) {
 
 	ptrType := TypeOfAny(&val)
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*uint64", ptr.Name())
@@ -2005,10 +1952,9 @@ func TestTypeOfUint64ObjectPointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	unsignedInteger, isUnsignedInteger := ToUnsignedInteger(typ)
+	unsignedInteger := ToUnsignedInteger(typ)
 
 	assert.NotNil(t, unsignedInteger)
-	assert.True(t, isUnsignedInteger)
 	assert.Equal(t, BitSize64, unsignedInteger.BitSize())
 
 	assert.True(t, unsignedInteger.CanSet())
@@ -2046,10 +1992,9 @@ func TestTypeOfUint(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	unsignedInteger, isUnsignedInteger := ToUnsignedInteger(typ)
+	unsignedInteger := ToUnsignedInteger(typ)
 
 	assert.NotNil(t, unsignedInteger)
-	assert.True(t, isUnsignedInteger)
 	assert.Equal(t, BitSize64, unsignedInteger.BitSize())
 
 	assert.False(t, unsignedInteger.CanSet())
@@ -2076,9 +2021,8 @@ func TestTypeOfUint(t *testing.T) {
 func TestTypeOfUintPointer(t *testing.T) {
 	ptrType := TypeOf[*uint]()
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*uint", ptr.Name())
@@ -2099,10 +2043,9 @@ func TestTypeOfUintPointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	unsignedInteger, isUnsignedInteger := ToUnsignedInteger(typ)
+	unsignedInteger := ToUnsignedInteger(typ)
 
 	assert.NotNil(t, unsignedInteger)
-	assert.True(t, isUnsignedInteger)
 	assert.Equal(t, BitSize64, unsignedInteger.BitSize())
 
 	assert.False(t, unsignedInteger.CanSet())
@@ -2141,10 +2084,9 @@ func TestTypeOfUintObject(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	unsignedInteger, isUnsignedInteger := ToUnsignedInteger(typ)
+	unsignedInteger := ToUnsignedInteger(typ)
 
 	assert.NotNil(t, unsignedInteger)
-	assert.True(t, isUnsignedInteger)
 	assert.Equal(t, BitSize64, unsignedInteger.BitSize())
 
 	assert.False(t, unsignedInteger.CanSet())
@@ -2173,9 +2115,8 @@ func TestTypeOfUintObjectPointer(t *testing.T) {
 
 	ptrType := TypeOfAny(&val)
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*uint", ptr.Name())
@@ -2196,10 +2137,9 @@ func TestTypeOfUintObjectPointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	unsignedInteger, isUnsignedInteger := ToUnsignedInteger(typ)
+	unsignedInteger := ToUnsignedInteger(typ)
 
 	assert.NotNil(t, unsignedInteger)
-	assert.True(t, isUnsignedInteger)
 	assert.Equal(t, BitSize64, unsignedInteger.BitSize())
 
 	assert.True(t, unsignedInteger.CanSet())
@@ -2236,10 +2176,9 @@ func TestTypeOfFloat32(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	float, isFloat := ToFloat(typ)
+	float := ToFloat(typ)
 
 	assert.NotNil(t, float)
-	assert.True(t, isFloat)
 	assert.Equal(t, BitSize32, float.BitSize())
 
 	assert.False(t, float.CanSet())
@@ -2270,9 +2209,8 @@ func TestTypeOfFloat32(t *testing.T) {
 func TestTypeOfFloat32Pointer(t *testing.T) {
 	ptrType := TypeOf[*float32]()
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*float32", ptr.Name())
@@ -2292,10 +2230,9 @@ func TestTypeOfFloat32Pointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	float, isFloat := ToFloat(typ)
+	float := ToFloat(typ)
 
 	assert.NotNil(t, float)
-	assert.True(t, isFloat)
 	assert.Equal(t, BitSize32, float.BitSize())
 
 	assert.False(t, float.CanSet())
@@ -2337,10 +2274,9 @@ func TestTypeOfFloat32Object(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	float, isFloat := ToFloat(typ)
+	float := ToFloat(typ)
 
 	assert.NotNil(t, float)
-	assert.True(t, isFloat)
 	assert.Equal(t, BitSize32, float.BitSize())
 
 	assert.False(t, float.CanSet())
@@ -2373,9 +2309,8 @@ func TestTypeOfFloat32ObjectPointer(t *testing.T) {
 
 	ptrType := TypeOfAny(&val)
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*float32", ptr.Name())
@@ -2395,10 +2330,9 @@ func TestTypeOfFloat32ObjectPointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	float, isFloat := ToFloat(typ)
+	float := ToFloat(typ)
 
 	assert.NotNil(t, float)
-	assert.True(t, isFloat)
 	assert.Equal(t, BitSize32, float.BitSize())
 
 	assert.True(t, float.CanSet())
@@ -2438,10 +2372,9 @@ func TestTypeOfFloat64(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	float, isFloat := ToFloat(typ)
+	float := ToFloat(typ)
 
 	assert.NotNil(t, float)
-	assert.True(t, isFloat)
 	assert.Equal(t, BitSize64, float.BitSize())
 
 	assert.False(t, float.CanSet())
@@ -2468,9 +2401,8 @@ func TestTypeOfFloat64(t *testing.T) {
 func TestTypeOfFloat64Pointer(t *testing.T) {
 	ptrType := TypeOf[*float64]()
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*float64", ptr.Name())
@@ -2490,10 +2422,9 @@ func TestTypeOfFloat64Pointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	float, isFloat := ToFloat(typ)
+	float := ToFloat(typ)
 
 	assert.NotNil(t, float)
-	assert.True(t, isFloat)
 	assert.Equal(t, BitSize64, float.BitSize())
 
 	assert.False(t, float.CanSet())
@@ -2531,10 +2462,9 @@ func TestTypeOfFloat64Object(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	float, isFloat := ToFloat(typ)
+	float := ToFloat(typ)
 
 	assert.NotNil(t, float)
-	assert.True(t, isFloat)
 	assert.Equal(t, BitSize64, float.BitSize())
 
 	assert.False(t, float.CanSet())
@@ -2563,9 +2493,8 @@ func TestTypeOfFloat64ObjectPointer(t *testing.T) {
 
 	ptrType := TypeOfAny(&val)
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*float64", ptr.Name())
@@ -2585,10 +2514,9 @@ func TestTypeOfFloat64ObjectPointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	float, isFloat := ToFloat(typ)
+	float := ToFloat(typ)
 
 	assert.NotNil(t, float)
-	assert.True(t, isFloat)
 	assert.Equal(t, BitSize64, float.BitSize())
 
 	assert.True(t, float.CanSet())
@@ -2624,10 +2552,9 @@ func TestTypeOfComplex64(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	complexType, isComplex := ToComplex(typ)
+	complexType := ToComplex(typ)
 
 	assert.NotNil(t, complexType)
-	assert.True(t, isComplex)
 	assert.Equal(t, BitSize64, complexType.BitSize())
 
 	assert.False(t, complexType.CanSet())
@@ -2676,9 +2603,8 @@ func TestTypeOfComplex64(t *testing.T) {
 func TestTypeOfComplex64Pointer(t *testing.T) {
 	ptrType := TypeOf[*complex64]()
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*complex64", ptr.Name())
@@ -2698,10 +2624,9 @@ func TestTypeOfComplex64Pointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	complexType, isComplex := ToComplex(typ)
+	complexType := ToComplex(typ)
 
 	assert.NotNil(t, complexType)
-	assert.True(t, isComplex)
 	assert.Equal(t, BitSize64, complexType.BitSize())
 
 	assert.False(t, complexType.CanSet())
@@ -2761,10 +2686,9 @@ func TestTypeOfComplex64Object(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	complexType, isComplex := ToComplex(typ)
+	complexType := ToComplex(typ)
 
 	assert.NotNil(t, complexType)
-	assert.True(t, isComplex)
 	assert.Equal(t, BitSize64, complexType.BitSize())
 
 	assert.False(t, complexType.CanSet())
@@ -2815,9 +2739,8 @@ func TestTypeOfComplex64ObjectPointer(t *testing.T) {
 
 	ptrType := TypeOfAny(&val)
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*complex64", ptr.Name())
@@ -2837,10 +2760,9 @@ func TestTypeOfComplex64ObjectPointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	complexType, isComplex := ToComplex(typ)
+	complexType := ToComplex(typ)
 
 	assert.NotNil(t, complexType)
-	assert.True(t, isComplex)
 	assert.Equal(t, BitSize64, complexType.BitSize())
 
 	assert.True(t, complexType.CanSet())
@@ -2898,10 +2820,9 @@ func TestTypeOfComplex128(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	complexType, isComplex := ToComplex(typ)
+	complexType := ToComplex(typ)
 
 	assert.NotNil(t, complexType)
-	assert.True(t, isComplex)
 	assert.Equal(t, BitSize128, complexType.BitSize())
 
 	assert.False(t, complexType.CanSet())
@@ -2950,9 +2871,8 @@ func TestTypeOfComplex128(t *testing.T) {
 func TestTypeOfComplex128Pointer(t *testing.T) {
 	ptrType := TypeOf[*complex128]()
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*complex128", ptr.Name())
@@ -2972,10 +2892,9 @@ func TestTypeOfComplex128Pointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	complexType, isComplex := ToComplex(typ)
+	complexType := ToComplex(typ)
 
 	assert.NotNil(t, complexType)
-	assert.True(t, isComplex)
 	assert.Equal(t, BitSize128, complexType.BitSize())
 
 	assert.False(t, complexType.CanSet())
@@ -3035,10 +2954,9 @@ func TestTypeOfComplex128Object(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	complexType, isComplex := ToComplex(typ)
+	complexType := ToComplex(typ)
 
 	assert.NotNil(t, complexType)
-	assert.True(t, isComplex)
 	assert.Equal(t, BitSize128, complexType.BitSize())
 
 	assert.False(t, complexType.CanSet())
@@ -3089,9 +3007,8 @@ func TestTypeOfComplex128ObjectPointer(t *testing.T) {
 
 	ptrType := TypeOfAny(&val)
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*complex128", ptr.Name())
@@ -3111,10 +3028,9 @@ func TestTypeOfComplex128ObjectPointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	complexType, isComplex := ToComplex(typ)
+	complexType := ToComplex(typ)
 
 	assert.NotNil(t, complexType)
-	assert.True(t, isComplex)
 	assert.Equal(t, BitSize128, complexType.BitSize())
 
 	assert.True(t, complexType.CanSet())

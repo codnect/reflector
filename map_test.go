@@ -15,10 +15,9 @@ func TestTypeOfMap(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	mapType, isMap := ToMap(typ)
+	mapType := ToMap(typ)
 
 	assert.NotNil(t, mapType)
-	assert.True(t, isMap)
 
 	assert.False(t, mapType.CanSet())
 
@@ -137,9 +136,8 @@ func TestTypeOfMap(t *testing.T) {
 func TestTypeOfMapPointer(t *testing.T) {
 	ptrType := TypeOf[*map[string]bool]()
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*map[string]bool", ptr.Name())
@@ -157,10 +155,9 @@ func TestTypeOfMapPointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	mapType, isMap := ToMap(typ)
+	mapType := ToMap(typ)
 
 	assert.NotNil(t, mapType)
-	assert.True(t, isMap)
 
 	assert.False(t, mapType.CanSet())
 
@@ -288,10 +285,9 @@ func TestTypeOfMapObject(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	mapType, isMap := ToMap(typ)
+	mapType := ToMap(typ)
 
 	assert.NotNil(t, mapType)
-	assert.True(t, isMap)
 
 	assert.False(t, mapType.CanSet())
 
@@ -428,9 +424,8 @@ func TestTypeOfMapObjectPointer(t *testing.T) {
 
 	ptrType := TypeOfAny(&val)
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*map[string]any", ptr.Name())
@@ -448,10 +443,9 @@ func TestTypeOfMapObjectPointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	mapType, isMap := ToMap(typ)
+	mapType := ToMap(typ)
 
 	assert.NotNil(t, mapType)
-	assert.True(t, isMap)
 
 	assert.True(t, mapType.CanSet())
 

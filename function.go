@@ -261,7 +261,7 @@ func (f *functionType) Invoke(args ...any) ([]any, error) {
 
 	if f.IsVariadic() {
 		paramType := f.Parameters()[f.NumParameter()-1]
-		variadicType, _ = ToSlice(paramType)
+		variadicType = ToSlice(paramType)
 	}
 
 	for index, arg := range args {

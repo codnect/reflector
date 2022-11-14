@@ -15,10 +15,9 @@ func TestTypeOfArray(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	arrayType, isArray := ToArray(typ)
+	arrayType := ToArray(typ)
 
 	assert.NotNil(t, arrayType)
-	assert.True(t, isArray)
 
 	assert.False(t, arrayType.CanSet())
 
@@ -46,9 +45,8 @@ func TestTypeOfArray(t *testing.T) {
 func TestTypeOfArrayPointer(t *testing.T) {
 	ptrType := TypeOf[*[2]int]()
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*[2]int", ptr.Name())
@@ -66,10 +64,9 @@ func TestTypeOfArrayPointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	arrayType, isArray := ToArray(typ)
+	arrayType := ToArray(typ)
 
 	assert.NotNil(t, arrayType)
-	assert.True(t, isArray)
 
 	assert.False(t, arrayType.CanSet())
 
@@ -106,10 +103,9 @@ func TestTypeOfArrayObject(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	arrayType, isArray := ToArray(typ)
+	arrayType := ToArray(typ)
 
 	assert.NotNil(t, arrayType)
-	assert.True(t, isArray)
 
 	assert.False(t, arrayType.CanSet())
 
@@ -176,9 +172,8 @@ func TestTypeOfArrayObjectPointer(t *testing.T) {
 
 	ptrType := TypeOfAny(&val)
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*[3]int", ptr.Name())
@@ -196,10 +191,9 @@ func TestTypeOfArrayObjectPointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	arrayType, isArray := ToArray(typ)
+	arrayType := ToArray(typ)
 
 	assert.NotNil(t, arrayType)
-	assert.True(t, isArray)
 
 	assert.True(t, arrayType.CanSet())
 

@@ -15,10 +15,9 @@ func TestTypeOfBoolean(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	booleanType, isBoolean := ToBoolean(typ)
+	booleanType := ToBoolean(typ)
 
 	assert.NotNil(t, booleanType)
-	assert.True(t, isBoolean)
 
 	assert.False(t, booleanType.CanSet())
 	assert.True(t, booleanType.IsInstantiable())
@@ -56,9 +55,8 @@ func TestTypeOfBoolean(t *testing.T) {
 func TestTypeOfBooleanPointer(t *testing.T) {
 	ptrType := TypeOf[*bool]()
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*bool", ptr.Name())
@@ -105,10 +103,9 @@ func TestTypeOfBooleanPointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	booleanType, isBoolean := ToBoolean(typ)
+	booleanType := ToBoolean(typ)
 
 	assert.NotNil(t, booleanType)
-	assert.True(t, isBoolean)
 
 	assert.False(t, booleanType.CanSet())
 	assert.True(t, booleanType.IsInstantiable())
@@ -155,10 +152,9 @@ func TestTypeOfBooleanObject(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	booleanType, isBoolean := ToBoolean(typ)
+	booleanType := ToBoolean(typ)
 
 	assert.NotNil(t, booleanType)
-	assert.True(t, isBoolean)
 
 	assert.False(t, booleanType.CanSet())
 	assert.True(t, booleanType.IsInstantiable())
@@ -198,9 +194,8 @@ func TestTypeOfBooleanObjectPointer(t *testing.T) {
 
 	ptrType := TypeOfAny(&val)
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*bool", ptr.Name())
@@ -247,10 +242,9 @@ func TestTypeOfBooleanObjectPointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	booleanType, isBoolean := ToBoolean(typ)
+	booleanType := ToBoolean(typ)
 
 	assert.NotNil(t, booleanType)
-	assert.True(t, isBoolean)
 
 	assert.True(t, booleanType.CanSet())
 	assert.True(t, booleanType.IsInstantiable())

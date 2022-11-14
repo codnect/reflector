@@ -38,10 +38,9 @@ func TestTypeOfInterface(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	iface, isInterface := ToInterface(typ)
+	iface := ToInterface(typ)
 
 	assert.NotNil(t, iface)
-	assert.True(t, isInterface)
 
 	assert.Equal(t, 2, iface.NumMethod())
 
@@ -105,10 +104,9 @@ func TestTypeOfGenericInterface(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	iface, isInterface := ToInterface(typ)
+	iface := ToInterface(typ)
 
 	assert.NotNil(t, iface)
-	assert.True(t, isInterface)
 
 	assert.Equal(t, 2, iface.NumMethod())
 
@@ -173,10 +171,9 @@ func TestTypeOfInterfaceObject(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	iface, isInterface := ToInterface(typ)
+	iface := ToInterface(typ)
 
 	assert.NotNil(t, iface)
-	assert.True(t, isInterface)
 
 	assert.Equal(t, 2, iface.NumMethod())
 
