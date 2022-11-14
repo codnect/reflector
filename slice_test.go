@@ -15,10 +15,9 @@ func TestTypeOfSlice(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	sliceType, isSlice := ToSlice(typ)
+	sliceType := ToSlice(typ)
 
 	assert.NotNil(t, sliceType)
-	assert.True(t, isSlice)
 
 	assert.False(t, sliceType.CanSet())
 
@@ -73,9 +72,8 @@ func TestTypeOfSlice(t *testing.T) {
 func TestTypeOfSlicePointer(t *testing.T) {
 	ptrType := TypeOf[*[]int]()
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*[]int", ptr.Name())
@@ -93,10 +91,9 @@ func TestTypeOfSlicePointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	sliceType, isSlice := ToSlice(typ)
+	sliceType := ToSlice(typ)
 
 	assert.NotNil(t, sliceType)
-	assert.True(t, isSlice)
 
 	assert.False(t, sliceType.CanSet())
 
@@ -160,10 +157,9 @@ func TestTypeOfSliceObject(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	sliceType, isSlice := ToSlice(typ)
+	sliceType := ToSlice(typ)
 
 	assert.NotNil(t, sliceType)
-	assert.True(t, isSlice)
 
 	assert.False(t, sliceType.CanSet())
 
@@ -228,9 +224,8 @@ func TestTypeOfSliceObjectPointer(t *testing.T) {
 
 	ptrType := TypeOfAny(&val)
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*[]int", ptr.Name())
@@ -248,10 +243,9 @@ func TestTypeOfSliceObjectPointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	sliceType, isSlice := ToSlice(typ)
+	sliceType := ToSlice(typ)
 
 	assert.NotNil(t, sliceType)
-	assert.True(t, isSlice)
 
 	assert.True(t, sliceType.CanSet())
 

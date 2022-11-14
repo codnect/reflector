@@ -16,10 +16,9 @@ func TestTypeOfFunction(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	functionType, isFunction := ToFunction(typ)
+	functionType := ToFunction(typ)
 
 	assert.NotNil(t, functionType)
-	assert.True(t, isFunction)
 
 	assert.True(t, functionType.IsVariadic())
 	//assert.False(t, functionType.HasReceiver())
@@ -34,18 +33,15 @@ func TestTypeOfFunction(t *testing.T) {
 	assert.Len(t, params, 3)
 
 	param := functionType.Parameters()[0]
-	stringParamType, isString := ToString(param)
-	assert.True(t, isString)
+	stringParamType := ToString(param)
 	assert.Equal(t, "string", stringParamType.Name())
 
 	param = functionType.Parameters()[1]
-	sliceParamType, isSlice := ToSlice(param)
-	assert.True(t, isSlice)
+	sliceParamType := ToSlice(param)
 	assert.Equal(t, "[]int", sliceParamType.Name())
 
 	param = functionType.Parameters()[2]
-	sliceParamType, isSlice = ToSlice(param)
-	assert.True(t, isSlice)
+	sliceParamType = ToSlice(param)
 	assert.Equal(t, "[]any", sliceParamType.Name())
 
 	assert.Equal(t, 2, functionType.NumResult())
@@ -54,13 +50,11 @@ func TestTypeOfFunction(t *testing.T) {
 	assert.Len(t, results, 2)
 
 	result := functionType.Results()[0]
-	integerResultType, isInteger := ToSignedInteger(result)
-	assert.True(t, isInteger)
+	integerResultType := ToSignedInteger(result)
 	assert.Equal(t, "int", integerResultType.Name())
 
 	param = functionType.Results()[1]
-	interfaceResultType, isInterface := ToInterface(param)
-	assert.True(t, isInterface)
+	interfaceResultType := ToInterface(param)
 	assert.Equal(t, "error", interfaceResultType.Name())
 
 	outputs, err := functionType.Invoke("anyTestValue1", []int{2, 5}, "anyTestValue2", 6)
@@ -71,9 +65,8 @@ func TestTypeOfFunction(t *testing.T) {
 func TestTypeOfFunctionPointer(t *testing.T) {
 	ptrType := TypeOf[*func(param1 string, param2 []int, param3 ...any) (int, error)]()
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*func(string,[]int,[]any) (int,error)", ptr.Name())
@@ -91,10 +84,9 @@ func TestTypeOfFunctionPointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	functionType, isFunction := ToFunction(typ)
+	functionType := ToFunction(typ)
 
 	assert.NotNil(t, functionType)
-	assert.True(t, isFunction)
 
 	assert.True(t, functionType.IsVariadic())
 	//assert.False(t, functionType.HasReceiver())
@@ -109,18 +101,15 @@ func TestTypeOfFunctionPointer(t *testing.T) {
 	assert.Len(t, params, 3)
 
 	param := functionType.Parameters()[0]
-	stringParamType, isString := ToString(param)
-	assert.True(t, isString)
+	stringParamType := ToString(param)
 	assert.Equal(t, "string", stringParamType.Name())
 
 	param = functionType.Parameters()[1]
-	sliceParamType, isSlice := ToSlice(param)
-	assert.True(t, isSlice)
+	sliceParamType := ToSlice(param)
 	assert.Equal(t, "[]int", sliceParamType.Name())
 
 	param = functionType.Parameters()[2]
-	sliceParamType, isSlice = ToSlice(param)
-	assert.True(t, isSlice)
+	sliceParamType = ToSlice(param)
 	assert.Equal(t, "[]any", sliceParamType.Name())
 
 	assert.Equal(t, 2, functionType.NumResult())
@@ -129,13 +118,11 @@ func TestTypeOfFunctionPointer(t *testing.T) {
 	assert.Len(t, results, 2)
 
 	result := functionType.Results()[0]
-	integerResultType, isInteger := ToSignedInteger(result)
-	assert.True(t, isInteger)
+	integerResultType := ToSignedInteger(result)
 	assert.Equal(t, "int", integerResultType.Name())
 
 	param = functionType.Results()[1]
-	interfaceResultType, isInterface := ToInterface(param)
-	assert.True(t, isInterface)
+	interfaceResultType := ToInterface(param)
 	assert.Equal(t, "error", interfaceResultType.Name())
 
 	outputs, err := functionType.Invoke("anyTestValue1", []int{2, 5}, "anyTestValue2", 6)
@@ -155,10 +142,9 @@ func TestTypeOfFunctionObject(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	functionType, isFunction := ToFunction(typ)
+	functionType := ToFunction(typ)
 
 	assert.NotNil(t, functionType)
-	assert.True(t, isFunction)
 
 	assert.True(t, functionType.IsVariadic())
 	//assert.False(t, functionType.HasReceiver())
@@ -173,18 +159,15 @@ func TestTypeOfFunctionObject(t *testing.T) {
 	assert.Len(t, params, 3)
 
 	param := functionType.Parameters()[0]
-	stringParamType, isString := ToString(param)
-	assert.True(t, isString)
+	stringParamType := ToString(param)
 	assert.Equal(t, "string", stringParamType.Name())
 
 	param = functionType.Parameters()[1]
-	sliceParamType, isSlice := ToSlice(param)
-	assert.True(t, isSlice)
+	sliceParamType := ToSlice(param)
 	assert.Equal(t, "[]int", sliceParamType.Name())
 
 	param = functionType.Parameters()[2]
-	sliceParamType, isSlice = ToSlice(param)
-	assert.True(t, isSlice)
+	sliceParamType = ToSlice(param)
 	assert.Equal(t, "[]any", sliceParamType.Name())
 
 	assert.Equal(t, 2, functionType.NumResult())
@@ -193,13 +176,11 @@ func TestTypeOfFunctionObject(t *testing.T) {
 	assert.Len(t, results, 2)
 
 	result := functionType.Results()[0]
-	integerResultType, isInteger := ToSignedInteger(result)
-	assert.True(t, isInteger)
+	integerResultType := ToSignedInteger(result)
 	assert.Equal(t, "int", integerResultType.Name())
 
 	param = functionType.Results()[1]
-	interfaceResultType, isInterface := ToInterface(param)
-	assert.True(t, isInterface)
+	interfaceResultType := ToInterface(param)
 	assert.Equal(t, "error", interfaceResultType.Name())
 
 	outputs, err := functionType.Invoke("anyTestValue1", []int{2, 5}, "anyTestValue2", 6)
@@ -212,9 +193,8 @@ func TestTypeOfFunctionObjectPointer(t *testing.T) {
 
 	ptrType := TypeOfAny(&val)
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*func(string,[]int,[]any) (int,error)", ptr.Name())
@@ -232,10 +212,9 @@ func TestTypeOfFunctionObjectPointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	functionType, isFunction := ToFunction(typ)
+	functionType := ToFunction(typ)
 
 	assert.NotNil(t, functionType)
-	assert.True(t, isFunction)
 
 	assert.True(t, functionType.IsVariadic())
 	//assert.False(t, functionType.HasReceiver())
@@ -250,18 +229,15 @@ func TestTypeOfFunctionObjectPointer(t *testing.T) {
 	assert.Len(t, params, 3)
 
 	param := functionType.Parameters()[0]
-	stringParamType, isString := ToString(param)
-	assert.True(t, isString)
+	stringParamType := ToString(param)
 	assert.Equal(t, "string", stringParamType.Name())
 
 	param = functionType.Parameters()[1]
-	sliceParamType, isSlice := ToSlice(param)
-	assert.True(t, isSlice)
+	sliceParamType := ToSlice(param)
 	assert.Equal(t, "[]int", sliceParamType.Name())
 
 	param = functionType.Parameters()[2]
-	sliceParamType, isSlice = ToSlice(param)
-	assert.True(t, isSlice)
+	sliceParamType = ToSlice(param)
 	assert.Equal(t, "[]any", sliceParamType.Name())
 
 	assert.Equal(t, 2, functionType.NumResult())
@@ -270,13 +246,11 @@ func TestTypeOfFunctionObjectPointer(t *testing.T) {
 	assert.Len(t, results, 2)
 
 	result := functionType.Results()[0]
-	integerResultType, isInteger := ToSignedInteger(result)
-	assert.True(t, isInteger)
+	integerResultType := ToSignedInteger(result)
 	assert.Equal(t, "int", integerResultType.Name())
 
 	param = functionType.Results()[1]
-	interfaceResultType, isInterface := ToInterface(param)
-	assert.True(t, isInterface)
+	interfaceResultType := ToInterface(param)
 	assert.Equal(t, "error", interfaceResultType.Name())
 
 	outputs, err := functionType.Invoke("anyTestValue1", []int{2, 5}, "anyTestValue2", 6)
@@ -301,10 +275,9 @@ func TestTypeOfTestFunction(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	functionType, isFunction := ToFunction(typ)
+	functionType := ToFunction(typ)
 
 	assert.NotNil(t, functionType)
-	assert.True(t, isFunction)
 
 	assert.True(t, functionType.IsVariadic())
 	//assert.False(t, functionType.HasReceiver())
@@ -320,28 +293,23 @@ func TestTypeOfTestFunction(t *testing.T) {
 
 	param := functionType.Parameters()[0]
 	assert.True(t, IsPointer(param))
-	ptr, isPtr := ToPointer(param)
+	ptr := ToPointer(param)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
-	stringParamType, isString := ToString(ptr.Elem())
-	assert.True(t, isString)
+	stringParamType := ToString(ptr.Elem())
 	assert.Equal(t, "string", stringParamType.Name())
 
 	param = functionType.Parameters()[1]
-	sliceParamType, isSlice := ToSlice(param)
-	assert.True(t, isSlice)
+	sliceParamType := ToSlice(param)
 	assert.Equal(t, "[]int", sliceParamType.Name())
 
 	param = functionType.Parameters()[2]
-	stringParamType, isString = ToString(param)
-	assert.True(t, isString)
+	stringParamType = ToString(param)
 	assert.Equal(t, "string", stringParamType.Name())
 
 	param = functionType.Parameters()[3]
-	sliceParamType, isSlice = ToSlice(param)
-	assert.True(t, isSlice)
+	sliceParamType = ToSlice(param)
 	assert.Equal(t, "[]any", sliceParamType.Name())
 
 	assert.Equal(t, 2, functionType.NumResult())
@@ -350,13 +318,11 @@ func TestTypeOfTestFunction(t *testing.T) {
 	assert.Len(t, results, 2)
 
 	result := functionType.Results()[0]
-	integerResultType, isInteger := ToSignedInteger(result)
-	assert.True(t, isInteger)
+	integerResultType := ToSignedInteger(result)
 	assert.Equal(t, "int", integerResultType.Name())
 
 	param = functionType.Results()[1]
-	interfaceResultType, isInterface := ToInterface(param)
-	assert.True(t, isInterface)
+	interfaceResultType := ToInterface(param)
 	assert.Equal(t, "error", interfaceResultType.Name())
 
 	outputs, err := functionType.Invoke(new(string), []int{2, 5}, nil, nil, 6, 8, 10)

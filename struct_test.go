@@ -83,52 +83,46 @@ func TestTypeOfStruct(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	structType, isStruct := ToStruct(typ)
+	structType := ToStruct(typ)
 
 	assert.NotNil(t, structType)
-	assert.True(t, isStruct)
 
 	assert.Equal(t, 6, structType.NumMethod())
 	assert.Equal(t, 8, structType.NumField())
 
 	testInterface1 := TypeOf[TestInterface1]()
-	interfaceType, isInterface := ToInterface(testInterface1)
+	interfaceType := ToInterface(testInterface1)
 	assert.NotNil(t, interfaceType)
-	assert.True(t, isInterface)
 
-	implements, _ := structType.Implements(interfaceType)
+	implements := structType.Implements(interfaceType)
 	assert.False(t, implements)
 
 	testInterface2 := TypeOf[TestInterface2]()
-	interfaceType, isInterface = ToInterface(testInterface2)
+	interfaceType = ToInterface(testInterface2)
 	assert.NotNil(t, interfaceType)
-	assert.True(t, isInterface)
 
-	implements, _ = structType.Implements(interfaceType)
+	implements = structType.Implements(interfaceType)
 	assert.False(t, implements)
 
 	testInterface3 := TypeOf[TestInterface3]()
-	interfaceType, isInterface = ToInterface(testInterface3)
+	interfaceType = ToInterface(testInterface3)
 	assert.NotNil(t, interfaceType)
-	assert.True(t, isInterface)
 
-	implements, _ = structType.Implements(interfaceType)
+	implements = structType.Implements(interfaceType)
 	assert.True(t, implements)
 
 	testInterface4 := TypeOf[TestInterface4]()
-	interfaceType, isInterface = ToInterface(testInterface4)
+	interfaceType = ToInterface(testInterface4)
 	assert.NotNil(t, interfaceType)
-	assert.True(t, isInterface)
 
-	implements, _ = structType.Implements(interfaceType)
+	implements = structType.Implements(interfaceType)
 	assert.False(t, implements)
 
 	testInterface5 := TypeOf[TestInterface5]()
-	interfaceType, isInterface = ToInterface(testInterface5)
+	interfaceType = ToInterface(testInterface5)
 	assert.NotNil(t, interfaceType)
-	assert.True(t, isInterface)
 
-	implements, _ = structType.Implements(interfaceType)
+	implements = structType.Implements(interfaceType)
 	assert.True(t, implements)
 
 	fields := structType.Fields()
@@ -321,9 +315,8 @@ func TestTypeOfStruct(t *testing.T) {
 func TestTypeOfStructPointer(t *testing.T) {
 	ptrType := TypeOf[*TestStruct1]()
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*TestStruct1", ptr.Name())
@@ -341,52 +334,46 @@ func TestTypeOfStructPointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	structType, isStruct := ToStruct(typ)
+	structType := ToStruct(typ)
 
 	assert.NotNil(t, structType)
-	assert.True(t, isStruct)
 
 	assert.Equal(t, 6, structType.NumMethod())
 	assert.Equal(t, 8, structType.NumField())
 
 	testInterface1 := TypeOf[TestInterface1]()
-	interfaceType, isInterface := ToInterface(testInterface1)
+	interfaceType := ToInterface(testInterface1)
 	assert.NotNil(t, interfaceType)
-	assert.True(t, isInterface)
 
-	implements, _ := structType.Implements(interfaceType)
+	implements := structType.Implements(interfaceType)
 	assert.True(t, implements)
 
 	testInterface2 := TypeOf[TestInterface2]()
-	interfaceType, isInterface = ToInterface(testInterface2)
+	interfaceType = ToInterface(testInterface2)
 	assert.NotNil(t, interfaceType)
-	assert.True(t, isInterface)
 
-	implements, _ = structType.Implements(interfaceType)
+	implements = structType.Implements(interfaceType)
 	assert.False(t, implements)
 
 	testInterface3 := TypeOf[TestInterface3]()
-	interfaceType, isInterface = ToInterface(testInterface3)
+	interfaceType = ToInterface(testInterface3)
 	assert.NotNil(t, interfaceType)
-	assert.True(t, isInterface)
 
-	implements, _ = structType.Implements(interfaceType)
+	implements = structType.Implements(interfaceType)
 	assert.True(t, implements)
 
 	testInterface4 := TypeOf[TestInterface4]()
-	interfaceType, isInterface = ToInterface(testInterface4)
+	interfaceType = ToInterface(testInterface4)
 	assert.NotNil(t, interfaceType)
-	assert.True(t, isInterface)
 
-	implements, _ = structType.Implements(interfaceType)
+	implements = structType.Implements(interfaceType)
 	assert.True(t, implements)
 
 	testInterface5 := TypeOf[TestInterface5]()
-	interfaceType, isInterface = ToInterface(testInterface5)
+	interfaceType = ToInterface(testInterface5)
 	assert.NotNil(t, interfaceType)
-	assert.True(t, isInterface)
 
-	implements, _ = structType.Implements(interfaceType)
+	implements = structType.Implements(interfaceType)
 	assert.True(t, implements)
 
 	fields := structType.Fields()
@@ -601,52 +588,46 @@ func TestTypeOfStructObject(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	structType, isStruct := ToStruct(typ)
+	structType := ToStruct(typ)
 
 	assert.NotNil(t, structType)
-	assert.True(t, isStruct)
 
 	assert.Equal(t, 6, structType.NumMethod())
 	assert.Equal(t, 8, structType.NumField())
 
 	testInterface1 := TypeOf[TestInterface1]()
-	interfaceType, isInterface := ToInterface(testInterface1)
+	interfaceType := ToInterface(testInterface1)
 	assert.NotNil(t, interfaceType)
-	assert.True(t, isInterface)
 
-	implements, _ := structType.Implements(interfaceType)
+	implements := structType.Implements(interfaceType)
 	assert.False(t, implements)
 
 	testInterface2 := TypeOf[TestInterface2]()
-	interfaceType, isInterface = ToInterface(testInterface2)
+	interfaceType = ToInterface(testInterface2)
 	assert.NotNil(t, interfaceType)
-	assert.True(t, isInterface)
 
-	implements, _ = structType.Implements(interfaceType)
+	implements = structType.Implements(interfaceType)
 	assert.False(t, implements)
 
 	testInterface3 := TypeOf[TestInterface3]()
-	interfaceType, isInterface = ToInterface(testInterface3)
+	interfaceType = ToInterface(testInterface3)
 	assert.NotNil(t, interfaceType)
-	assert.True(t, isInterface)
 
-	implements, _ = structType.Implements(interfaceType)
+	implements = structType.Implements(interfaceType)
 	assert.True(t, implements)
 
 	testInterface4 := TypeOf[TestInterface4]()
-	interfaceType, isInterface = ToInterface(testInterface4)
+	interfaceType = ToInterface(testInterface4)
 	assert.NotNil(t, interfaceType)
-	assert.True(t, isInterface)
 
-	implements, _ = structType.Implements(interfaceType)
+	implements = structType.Implements(interfaceType)
 	assert.False(t, implements)
 
 	testInterface5 := TypeOf[TestInterface5]()
-	interfaceType, isInterface = ToInterface(testInterface5)
+	interfaceType = ToInterface(testInterface5)
 	assert.NotNil(t, interfaceType)
-	assert.True(t, isInterface)
 
-	implements, _ = structType.Implements(interfaceType)
+	implements = structType.Implements(interfaceType)
 	assert.True(t, implements)
 
 	fields := structType.Fields()
@@ -880,9 +861,8 @@ func TestTypeOfStructObjectPointer(t *testing.T) {
 
 	ptrType := TypeOfAny(&val)
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*TestStruct1", ptr.Name())
@@ -900,52 +880,46 @@ func TestTypeOfStructObjectPointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	structType, isStruct := ToStruct(typ)
+	structType := ToStruct(typ)
 
 	assert.NotNil(t, structType)
-	assert.True(t, isStruct)
 
 	assert.Equal(t, 6, structType.NumMethod())
 	assert.Equal(t, 8, structType.NumField())
 
 	testInterface1 := TypeOf[TestInterface1]()
-	interfaceType, isInterface := ToInterface(testInterface1)
+	interfaceType := ToInterface(testInterface1)
 	assert.NotNil(t, interfaceType)
-	assert.True(t, isInterface)
 
-	implements, _ := structType.Implements(interfaceType)
+	implements := structType.Implements(interfaceType)
 	assert.True(t, implements)
 
 	testInterface2 := TypeOf[TestInterface2]()
-	interfaceType, isInterface = ToInterface(testInterface2)
+	interfaceType = ToInterface(testInterface2)
 	assert.NotNil(t, interfaceType)
-	assert.True(t, isInterface)
 
-	implements, _ = structType.Implements(interfaceType)
+	implements = structType.Implements(interfaceType)
 	assert.False(t, implements)
 
 	testInterface3 := TypeOf[TestInterface3]()
-	interfaceType, isInterface = ToInterface(testInterface3)
+	interfaceType = ToInterface(testInterface3)
 	assert.NotNil(t, interfaceType)
-	assert.True(t, isInterface)
 
-	implements, _ = structType.Implements(interfaceType)
+	implements = structType.Implements(interfaceType)
 	assert.True(t, implements)
 
 	testInterface4 := TypeOf[TestInterface4]()
-	interfaceType, isInterface = ToInterface(testInterface4)
+	interfaceType = ToInterface(testInterface4)
 	assert.NotNil(t, interfaceType)
-	assert.True(t, isInterface)
 
-	implements, _ = structType.Implements(interfaceType)
+	implements = structType.Implements(interfaceType)
 	assert.True(t, implements)
 
 	testInterface5 := TypeOf[TestInterface5]()
-	interfaceType, isInterface = ToInterface(testInterface5)
+	interfaceType = ToInterface(testInterface5)
 	assert.NotNil(t, interfaceType)
-	assert.True(t, isInterface)
 
-	implements, _ = structType.Implements(interfaceType)
+	implements = structType.Implements(interfaceType)
 	assert.True(t, implements)
 
 	fields := structType.Fields()
@@ -1037,8 +1011,7 @@ func TestTypeOfStructObjectPointer(t *testing.T) {
 	assert.Equal(t, val.ExportedStructField, testStruct2Val)
 
 	fieldType := field.Type()
-	testStruct2Type, isStruct := ToStruct(fieldType)
-	assert.True(t, isStruct)
+	testStruct2Type := ToStruct(fieldType)
 	assert.NotNil(t, testStruct2Type)
 
 	fieldVal, err = testStruct2Type.Value()

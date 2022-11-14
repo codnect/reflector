@@ -5,12 +5,12 @@ func IsPointer(typ Type) bool {
 	return ok
 }
 
-func ToPointer(typ Type) (Pointer, bool) {
+func ToPointer(typ Type) Pointer {
 	if ptr, ok := typ.(*pointer); ok {
-		return ptr, true
+		return ptr
 	}
 
-	return nil, false
+	return nil
 }
 
 func IsStruct(typ Type) bool {
@@ -18,12 +18,12 @@ func IsStruct(typ Type) bool {
 	return ok
 }
 
-func ToStruct(typ Type) (Struct, bool) {
-	if structType, ok := typ.(*structType); ok {
-		return structType, true
+func ToStruct(typ Type) Struct {
+	if structTyp, ok := typ.(*structType); ok {
+		return structTyp
 	}
 
-	return nil, false
+	return nil
 }
 
 func IsCustom(typ Type) bool {
@@ -31,12 +31,12 @@ func IsCustom(typ Type) bool {
 	return ok
 }
 
-func ToCustom(typ Type) (Custom, bool) {
-	if customType, ok := typ.(*customType); ok {
-		return customType, true
+func ToCustom(typ Type) Custom {
+	if customTyp, ok := typ.(*customType); ok {
+		return customTyp
 	}
 
-	return nil, false
+	return nil
 }
 
 func IsInterface(typ Type) bool {
@@ -44,12 +44,12 @@ func IsInterface(typ Type) bool {
 	return ok
 }
 
-func ToInterface(typ Type) (Interface, bool) {
-	if interfaceType, ok := typ.(*interfaceType); ok {
-		return interfaceType, true
+func ToInterface(typ Type) Interface {
+	if interfaceTyp, ok := typ.(*interfaceType); ok {
+		return interfaceTyp
 	}
 
-	return nil, false
+	return nil
 }
 
 func IsFunction(typ Type) bool {
@@ -57,12 +57,12 @@ func IsFunction(typ Type) bool {
 	return ok
 }
 
-func ToFunction(typ Type) (Function, bool) {
-	if functionType, ok := typ.(*functionType); ok {
-		return functionType, true
+func ToFunction(typ Type) Function {
+	if functionTyp, ok := typ.(*functionType); ok {
+		return functionTyp
 	}
 
-	return nil, false
+	return nil
 }
 
 func IsArray(typ Type) bool {
@@ -70,12 +70,12 @@ func IsArray(typ Type) bool {
 	return ok
 }
 
-func ToArray(typ Type) (Array, bool) {
-	if arrayType, ok := typ.(*arrayType); ok {
-		return arrayType, true
+func ToArray(typ Type) Array {
+	if arrayTyp, ok := typ.(*arrayType); ok {
+		return arrayTyp
 	}
 
-	return nil, false
+	return nil
 }
 
 func IsSlice(typ Type) bool {
@@ -83,12 +83,12 @@ func IsSlice(typ Type) bool {
 	return ok
 }
 
-func ToSlice(typ Type) (Slice, bool) {
-	if sliceType, ok := typ.(*sliceType); ok {
-		return sliceType, true
+func ToSlice(typ Type) Slice {
+	if sliceTyp, ok := typ.(*sliceType); ok {
+		return sliceTyp
 	}
 
-	return nil, false
+	return nil
 }
 
 func IsMap(typ Type) bool {
@@ -96,12 +96,12 @@ func IsMap(typ Type) bool {
 	return ok
 }
 
-func ToMap(typ Type) (Map, bool) {
-	if mapType, ok := typ.(*mapType); ok {
-		return mapType, true
+func ToMap(typ Type) Map {
+	if mapTyp, ok := typ.(*mapType); ok {
+		return mapTyp
 	}
 
-	return nil, false
+	return nil
 }
 
 func IsString(typ Type) bool {
@@ -109,12 +109,12 @@ func IsString(typ Type) bool {
 	return ok
 }
 
-func ToString(typ Type) (String, bool) {
-	if stringType, ok := typ.(*stringType); ok {
-		return stringType, true
+func ToString(typ Type) String {
+	if strTyp, ok := typ.(*stringType); ok {
+		return strTyp
 	}
 
-	return nil, false
+	return nil
 }
 
 func IsBoolean(typ Type) bool {
@@ -122,12 +122,12 @@ func IsBoolean(typ Type) bool {
 	return ok
 }
 
-func ToBoolean(typ Type) (Boolean, bool) {
-	if stringType, ok := typ.(*booleanType); ok {
-		return stringType, true
+func ToBoolean(typ Type) Boolean {
+	if boolTyp, ok := typ.(*booleanType); ok {
+		return boolTyp
 	}
 
-	return nil, false
+	return nil
 }
 
 func IsInteger(typ Type) bool {
@@ -139,12 +139,12 @@ func IsSignedInteger(typ Type) bool {
 	return ok
 }
 
-func ToSignedInteger(typ Type) (SignedInteger, bool) {
-	if signedIntegerType, ok := typ.(*signedIntegerType); ok {
-		return signedIntegerType, true
+func ToSignedInteger(typ Type) SignedInteger {
+	if intType, ok := typ.(*signedIntegerType); ok {
+		return intType
 	}
 
-	return nil, false
+	return nil
 }
 
 func IsUnsignedInteger(typ Type) bool {
@@ -152,12 +152,12 @@ func IsUnsignedInteger(typ Type) bool {
 	return ok
 }
 
-func ToUnsignedInteger(typ Type) (UnsignedInteger, bool) {
-	if unsignedIntegerType, ok := typ.(*unsignedIntegerType); ok {
-		return unsignedIntegerType, true
+func ToUnsignedInteger(typ Type) UnsignedInteger {
+	if intType, ok := typ.(*unsignedIntegerType); ok {
+		return intType
 	}
 
-	return nil, false
+	return nil
 }
 
 func IsFloat(typ Type) bool {
@@ -165,12 +165,12 @@ func IsFloat(typ Type) bool {
 	return ok
 }
 
-func ToFloat(typ Type) (Float, bool) {
-	if floatType, ok := typ.(*floatType); ok {
-		return floatType, true
+func ToFloat(typ Type) Float {
+	if floatTyp, ok := typ.(*floatType); ok {
+		return floatTyp
 	}
 
-	return nil, false
+	return nil
 }
 
 func IsComplex(typ Type) bool {
@@ -178,12 +178,12 @@ func IsComplex(typ Type) bool {
 	return ok
 }
 
-func ToComplex(typ Type) (Complex, bool) {
-	if complexType, ok := typ.(*complexType); ok {
-		return complexType, true
+func ToComplex(typ Type) Complex {
+	if complexTyp, ok := typ.(*complexType); ok {
+		return complexTyp
 	}
 
-	return nil, false
+	return nil
 }
 
 func IsNumber(typ Type) bool {
@@ -199,10 +199,10 @@ func IsChan(typ Type) bool {
 	return ok
 }
 
-func ToChan(typ Type) (Chan, bool) {
-	if chanType, ok := typ.(*chanType); ok {
-		return chanType, true
+func ToChan(typ Type) Chan {
+	if chanTyp, ok := typ.(*chanType); ok {
+		return chanTyp
 	}
 
-	return nil, false
+	return nil
 }

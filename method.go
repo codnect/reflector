@@ -191,7 +191,7 @@ func (m *methodType) Invoke(args ...any) ([]any, error) {
 
 	if m.IsVariadic() {
 		paramType := m.Parameters()[m.NumParameter()-1]
-		variadicType, _ = ToSlice(paramType)
+		variadicType = ToSlice(paramType)
 	}
 
 	for index, arg := range args {

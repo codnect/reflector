@@ -15,10 +15,9 @@ func TestTypeOfString(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	stringType, isString := ToString(typ)
+	stringType := ToString(typ)
 
 	assert.NotNil(t, stringType)
-	assert.True(t, isString)
 
 	assert.False(t, stringType.CanSet())
 	assert.True(t, stringType.IsInstantiable())
@@ -61,9 +60,8 @@ func TestTypeOfString(t *testing.T) {
 func TestTypeOfStringPointer(t *testing.T) {
 	ptrType := TypeOf[*string]()
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*string", ptr.Name())
@@ -115,10 +113,9 @@ func TestTypeOfStringPointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	stringType, isString := ToString(typ)
+	stringType := ToString(typ)
 
 	assert.NotNil(t, stringType)
-	assert.True(t, isString)
 
 	assert.False(t, stringType.CanSet())
 	assert.True(t, stringType.IsInstantiable())
@@ -170,10 +167,9 @@ func TestTypeOfStringObject(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	stringType, isString := ToString(typ)
+	stringType := ToString(typ)
 
 	assert.NotNil(t, stringType)
-	assert.True(t, isString)
 
 	assert.False(t, stringType.CanSet())
 	assert.True(t, stringType.IsInstantiable())
@@ -221,9 +217,8 @@ func TestTypeOfStringObjectPointer(t *testing.T) {
 
 	ptrType := TypeOfAny(&val)
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*string", ptr.Name())
@@ -278,10 +273,9 @@ func TestTypeOfStringObjectPointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	stringType, isString := ToString(typ)
+	stringType := ToString(typ)
 
 	assert.NotNil(t, stringType)
-	assert.True(t, isString)
 
 	assert.True(t, stringType.CanSet())
 	assert.True(t, stringType.IsInstantiable())

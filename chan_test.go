@@ -17,10 +17,9 @@ func TestTypeOfChan(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	chanType, isChan := ToChan(typ)
+	chanType := ToChan(typ)
 
 	assert.NotNil(t, chanType)
-	assert.True(t, isChan)
 
 	assert.False(t, chanType.CanSet())
 
@@ -37,9 +36,8 @@ func TestTypeOfChan(t *testing.T) {
 	assert.NotNil(t, chanElement)
 	assert.Equal(t, "string", chanElement.Name())
 
-	chanElementString, isString := ToString(chanElement)
+	chanElementString := ToString(chanElement)
 	assert.NotNil(t, chanElementString)
-	assert.True(t, isString)
 
 	err = chanType.Send("test-value")
 	assert.NotNil(t, err)
@@ -67,9 +65,8 @@ func TestTypeOfChan(t *testing.T) {
 func TestTypeOfChanPointer(t *testing.T) {
 	ptrType := TypeOf[*<-chan string]()
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*<-chan string", ptr.Name())
@@ -87,10 +84,9 @@ func TestTypeOfChanPointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.Nil(t, typ.ReflectValue())
 
-	chanType, isChan := ToChan(typ)
+	chanType := ToChan(typ)
 
 	assert.NotNil(t, chanType)
-	assert.True(t, isChan)
 
 	assert.False(t, chanType.CanSet())
 
@@ -107,9 +103,8 @@ func TestTypeOfChanPointer(t *testing.T) {
 	assert.NotNil(t, chanElement)
 	assert.Equal(t, "string", chanElement.Name())
 
-	chanElementString, isString := ToString(chanElement)
+	chanElementString := ToString(chanElement)
 	assert.NotNil(t, chanElementString)
-	assert.True(t, isString)
 
 	err = chanType.Send("test-value")
 	assert.NotNil(t, err)
@@ -146,10 +141,9 @@ func TestTypeOfChanObject(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	chanType, isChan := ToChan(typ)
+	chanType := ToChan(typ)
 
 	assert.NotNil(t, chanType)
-	assert.True(t, isChan)
 
 	assert.False(t, chanType.CanSet())
 
@@ -166,9 +160,8 @@ func TestTypeOfChanObject(t *testing.T) {
 	assert.NotNil(t, chanElement)
 	assert.Equal(t, "string", chanElement.Name())
 
-	chanElementString, isString := ToString(chanElement)
+	chanElementString := ToString(chanElement)
 	assert.NotNil(t, chanElementString)
-	assert.True(t, isString)
 
 	wg := sync.WaitGroup{}
 	wg.Add(1)
@@ -232,9 +225,8 @@ func TestTypeOfChanObjectPointer(t *testing.T) {
 
 	ptrType := TypeOfAny(&val)
 	assert.True(t, IsPointer(ptrType))
-	ptr, isPtr := ToPointer(ptrType)
+	ptr := ToPointer(ptrType)
 
-	assert.True(t, isPtr)
 	assert.NotNil(t, ptr)
 
 	assert.Equal(t, "*chan string", ptr.Name())
@@ -252,10 +244,9 @@ func TestTypeOfChanObjectPointer(t *testing.T) {
 	assert.NotNil(t, typ.ReflectType())
 	assert.NotNil(t, typ.ReflectValue())
 
-	chanType, isChan := ToChan(typ)
+	chanType := ToChan(typ)
 
 	assert.NotNil(t, chanType)
-	assert.True(t, isChan)
 
 	assert.True(t, chanType.CanSet())
 
@@ -272,9 +263,8 @@ func TestTypeOfChanObjectPointer(t *testing.T) {
 	assert.NotNil(t, chanElement)
 	assert.Equal(t, "string", chanElement.Name())
 
-	chanElementString, isString := ToString(chanElement)
+	chanElementString := ToString(chanElement)
 	assert.NotNil(t, chanElementString)
-	assert.True(t, isString)
 
 	wg := sync.WaitGroup{}
 	wg.Add(1)

@@ -289,9 +289,9 @@ func (s *structType) embeds(candidate Type, visitedMap map[string]bool) bool {
 				return true
 			}
 
-			structType, isStruct := ToStruct(fieldType)
+			if IsStruct(fieldType) {
+				structType := ToStruct(fieldType)
 
-			if isStruct {
 				if structType.NumField() == 0 {
 					continue
 				}
@@ -303,9 +303,9 @@ func (s *structType) embeds(candidate Type, visitedMap map[string]bool) bool {
 				}
 			}
 
-			interfaceType, isInterface := ToInterface(fieldType)
-
-			if isInterface {
+			if IsInterface(fieldType) {
+				// TODO complete method
+				interfaceType := ToInterface(fieldType)
 				interfaceType.Methods()
 			}
 		}

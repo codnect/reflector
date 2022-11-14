@@ -109,6 +109,13 @@ func typeOf(nilType reflect.Type, typ reflect.Type, val *reflect.Value, parent T
 			reflectType:  typ,
 			reflectValue: val,
 		}
+
+		z := typ.PkgPath()
+		y := typ.Name()
+		x := typ.String()
+		if x == "" || y == "" || z == "" {
+
+		}
 		return structType
 	case reflect.Interface:
 		interfaceType := &interfaceType{
