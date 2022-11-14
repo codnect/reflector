@@ -16,8 +16,8 @@ type Struct interface {
 	Method(index int) (Method, bool)
 	MethodByName(name string) (Method, bool)
 	NumMethod() int
-	Implements(i Interface) (bool, error)
-	Embeds(another Type) (bool, error)
+	Implements(i Interface) bool
+	Embeds(another Type) bool
 }
 
 type structType struct {
@@ -252,28 +252,28 @@ func (s *structType) NumMethod() int {
 	return s.nilType.NumMethod()
 }
 
-func (s *structType) Implements(i Interface) (bool, error) {
+func (s *structType) Implements(i Interface) bool {
 	if i == nil {
-		return false, errors.New("given interface cannot be nil")
+		return false
 	}
 
 	if s.Parent() != nil {
-		return s.Parent().ReflectType().Implements(i.ReflectType()), nil
+		return s.Parent().ReflectType().Implements(i.ReflectType())
 	}
 
-	return s.reflectType.Implements(i.ReflectType()), nil
+	return s.reflectType.Implements(i.ReflectType())
 }
 
-func (s *structType) Embeds(another Type) (bool, error) {
+func (s *structType) Embeds(another Type) bool {
 	if another == nil {
-		return false, errors.New("another cannot be nil")
+		return false
 	}
 
 	visitedMap := make(map[string]bool, 0)
 	return s.embeds(another, visitedMap)
 }
 
-func (s *structType) embeds(candidate Type, visitedMap map[string]bool) (bool, error) {
+func (s *structType) embeds(candidate Type, visitedMap map[string]bool) bool {
 
 	for _, field := range s.Fields() {
 		if field.IsAnonymous() {
@@ -286,7 +286,7 @@ func (s *structType) embeds(candidate Type, visitedMap map[string]bool) (bool, e
 			visitedMap[fieldType.PackagePath()+"@"+fieldType.PackageName()] = true
 
 			if candidate.Compare(fieldType) {
-				return true, nil
+				return true
 			}
 
 			structType, isStruct := ToStruct(fieldType)
@@ -296,14 +296,10 @@ func (s *structType) embeds(candidate Type, visitedMap map[string]bool) (bool, e
 					continue
 				}
 
-				returnValue, err := structType.Embeds(candidate)
-
-				if err != nil {
-					return false, err
-				}
+				returnValue := structType.Embeds(candidate)
 
 				if returnValue {
-					return true, nil
+					return true
 				}
 			}
 
@@ -315,5 +311,5 @@ func (s *structType) embeds(candidate Type, visitedMap map[string]bool) (bool, e
 		}
 	}
 
-	return false, nil
+	return false
 }
