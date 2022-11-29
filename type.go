@@ -59,27 +59,6 @@ func TypeOfAny[T any](obj T) Type {
 }
 
 func typeOf(nilType reflect.Type, typ reflect.Type, val *reflect.Value, parent Type) Type {
-	if nilType != nil && nilType.Elem().Kind() == reflect.Interface {
-
-		if (typ.Kind() == reflect.Ptr && typ.Elem().Kind() == reflect.Struct) || (typ.Kind() != reflect.Ptr && typ.Kind() == reflect.Struct) {
-			interfaceType := &interfaceType{
-				parent:       parent,
-				reflectType:  nilType.Elem(),
-				reflectValue: val,
-			}
-
-			if val != nil {
-				if typ.Kind() == reflect.Struct {
-					interfaceType.underlyingType = typeOf(reflect.New(typ).Type(), typ, val, interfaceType)
-				} else {
-					interfaceType.underlyingType = typeOf(typ, typ, val, interfaceType)
-				}
-			}
-
-			return interfaceType
-		}
-	}
-
 	switch typ.Kind() {
 	case reflect.Ptr:
 		ptr := &pointer{
