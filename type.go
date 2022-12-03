@@ -66,7 +66,9 @@ func typeOf(nilType reflect.Type, typ reflect.Type, val *reflect.Value, parent T
 			reflectValue: val,
 		}
 
-		if val != nil {
+		if parent != nil && val != nil {
+			ptr.base = typeOf(nilType, typ.Elem(), val, ptr)
+		} else if val != nil {
 			elem := val.Elem()
 			ptr.base = typeOf(nilType, typ.Elem(), &elem, ptr)
 		} else {
