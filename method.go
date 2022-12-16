@@ -201,7 +201,7 @@ func (m *methodType) Invoke(args ...any) ([]any, error) {
 			if arg == nil {
 				inputs = append(inputs, reflect.New(variadicType.Elem().ReflectType()).Elem())
 				continue
-			} else if variadicType.Elem().Name() != "any" && actualParamType.Name() != variadicType.Elem().Name() {
+			} else if !actualParamType.CanConvert(variadicType.Elem()) {
 				return nil, fmt.Errorf("expected %s but got %s at index %d", variadicType.Elem().Name(), actualParamType.Name(), index)
 			}
 
@@ -214,7 +214,7 @@ func (m *methodType) Invoke(args ...any) ([]any, error) {
 		if arg == nil {
 			inputs = append(inputs, reflect.New(expectedParamType.ReflectType()).Elem())
 		} else {
-			if expectedParamType.Name() != "any" && actualParamType.Name() != expectedParamType.Name() {
+			if !actualParamType.CanConvert(expectedParamType) {
 				return nil, fmt.Errorf("expected %s but got %s at index %d", expectedParamType.Name(), actualParamType.Name(), index)
 			}
 			inputs = append(inputs, reflect.ValueOf(arg))
