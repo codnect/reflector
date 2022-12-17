@@ -42,10 +42,10 @@ func (f *functionType) Name() string {
 	dotLastIndex := strings.LastIndex(name, ".")
 
 	if dotLastIndex != -1 {
-		dotLastIndex = strings.LastIndex(name, ".")
+		dotLastSecondIndex := strings.LastIndex(name[dotLastIndex+1:], ".")
 
-		if dotLastIndex != -1 {
-			name = name[dotLastIndex+1:]
+		if dotLastSecondIndex != -1 {
+			return name[dotLastSecondIndex+1:]
 		}
 
 		return name[dotLastIndex+1:]
