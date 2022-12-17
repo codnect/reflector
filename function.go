@@ -131,6 +131,12 @@ func (f *functionType) PackagePath() string {
 		name = name[:dotLastIndex]
 	}
 
+	dotLastIndex = strings.LastIndex(name, ".")
+
+	if dotLastIndex != -1 {
+		name = name[:dotLastIndex]
+	}
+
 	return name
 }
 
