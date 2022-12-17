@@ -116,7 +116,22 @@ func (f *functionType) PackageName() string {
 }
 
 func (f *functionType) PackagePath() string {
-	return ""
+	if f.pkgPath != "" {
+		return f.pkgPath
+	}
+
+	if f.reflectValue == nil {
+		return ""
+	}
+
+	name := runtime.FuncForPC(f.reflectValue.Pointer()).Name()
+	dotLastIndex := strings.LastIndex(name, ".")
+
+	if dotLastIndex != -1 {
+		name = name[:dotLastIndex]
+	}
+
+	return name
 }
 
 func (f *functionType) CanSet() bool {
