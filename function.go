@@ -42,6 +42,12 @@ func (f *functionType) Name() string {
 	dotLastIndex := strings.LastIndex(name, ".")
 
 	if dotLastIndex != -1 {
+		dotLastIndex = strings.LastIndex(name, ".")
+
+		if dotLastIndex != -1 {
+			name = name[dotLastIndex+1:]
+		}
+
 		return name[dotLastIndex+1:]
 	}
 
@@ -101,6 +107,12 @@ func (f *functionType) PackageName() string {
 
 	name := runtime.FuncForPC(f.reflectValue.Pointer()).Name()
 	dotLastIndex := strings.LastIndex(name, ".")
+
+	if dotLastIndex != -1 {
+		name = name[:dotLastIndex]
+	}
+
+	dotLastIndex = strings.LastIndex(name, ".")
 
 	if dotLastIndex != -1 {
 		name = name[:dotLastIndex]
