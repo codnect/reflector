@@ -1,4 +1,4 @@
-module github.com/procyon-projects/reflector
+module codnect.io/reflector
 
 go 1.18
 

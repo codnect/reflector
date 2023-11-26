@@ -816,7 +816,7 @@ func TestTypeOfStructObject(t *testing.T) {
 	method := methods[0]
 	assert.Equal(t, "Method1", method.Name())
 	assert.Equal(t, "reflector", method.PackageName())
-	assert.Equal(t, "github.com/procyon-projects/reflector", method.PackagePath())
+	assert.Equal(t, "codnect.io/reflector", method.PackagePath())
 	assert.Equal(t, 0, method.NumParameter())
 	assert.Equal(t, 1, method.NumResult())
 	assert.True(t, method.IsExported())
@@ -1216,7 +1216,7 @@ func TestTypeOfStructObjectPointer(t *testing.T) {
 	method := methods[0]
 	assert.Equal(t, "Method1", method.Name())
 	assert.Equal(t, "reflector", method.PackageName())
-	assert.Equal(t, "github.com/procyon-projects/reflector", method.PackagePath())
+	assert.Equal(t, "codnect.io/reflector", method.PackagePath())
 	assert.Equal(t, 0, method.NumParameter())
 	assert.Equal(t, 1, method.NumResult())
 	assert.True(t, method.IsExported())
